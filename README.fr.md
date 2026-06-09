@@ -1,6 +1,6 @@
-# Dépôt des Problèmes d'Erdős
+# Problèmes d'Erdős
 
-Bienvenue sur le **Dépôt des Problèmes d'Erdős** ! Ce projet a pour but de centraliser, organiser et documenter les divers problèmes mathématiques posés par le légendaire mathématicien Paul Erdős.
+Ce projet a pour but de centraliser, organiser et documenter les divers problèmes mathématiques posés par le légendaire mathématicien Paul Erdős.
 
 Erdős offrait des prix en argent pour la résolution de nombre de ces problèmes, qui vont de la théorie des graphes et de la combinatoire à la théorie des nombres. Ce dépôt est structuré pour suivre le statut actuel de ces problèmes.
 

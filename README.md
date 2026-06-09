@@ -1,8 +1,8 @@
 [🇫🇷 Version Française](README.fr.md)
 
-# Erdős Problems Repository
+# Erdős Problems
 
-Welcome to the **Erdős Problems Repository**! This project aims to centralize, organize, and document the various mathematical problems posed by the legendary mathematician Paul Erdős.
+This project aims to centralize, organize, and document the various mathematical problems posed by the legendary mathematician Paul Erdős.
 
 Erdős offered cash prizes for the solution of many of these problems, which range from graph theory and combinatorics to number theory. This repository is structured to track the current status of these problems.
 

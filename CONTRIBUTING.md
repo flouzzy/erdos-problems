@@ -1,6 +1,6 @@
 # Contributing to Erdős Problems
 
-Thank you for your interest in contributing to the **Erdős Problems Repository**! This document provides guidelines for contributing to ensure that all problem statements, proofs, and discussions meet the rigorous standards expected in this project.
+Thank you for your interest in contributing to the **Erdős Problems**! This document provides guidelines for contributing to ensure that all problem statements, proofs, and discussions meet the rigorous standards expected in this project.
 
 ## 🌐 Bilingual Requirement
 

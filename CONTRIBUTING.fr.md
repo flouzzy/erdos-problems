@@ -1,3 +1,4 @@
+[🇬🇧 English Version](CONTRIBUTING.md)
 # Contribution aux Problèmes d'Erdős
 
 Nous vous remercions de l'intérêt que vous portez à la contribution aux **Problèmes d'Erdős** ! Ce document établit les directives de contribution afin de garantir que l'ensemble des énoncés, démonstrations et discussions satisfassent aux exigences de rigueur inhérentes à ce projet.

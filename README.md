@@ -1,4 +1,4 @@
-# Erdős Problems Repository
+# Erdős Problems
 
 Welcome to the **Erdős Problems Repository**! This project aims to centralize, organize, and document the various mathematical problems posed by the legendary mathematician Paul Erdős.
 

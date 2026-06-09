@@ -1,3 +1,5 @@
+[🇬🇧 English Version](README.md)
+
 # 02 - Conjecture d'Erdős-Straus
 
 ## Énoncé

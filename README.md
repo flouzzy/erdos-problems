@@ -1,3 +1,5 @@
+[🇫🇷 Version Française](README.fr.md)
+
 # Erdős Problems Repository
 
 Welcome to the **Erdős Problems Repository**! This project aims to centralize, organize, and document the various mathematical problems posed by the legendary mathematician Paul Erdős.
@@ -11,9 +13,9 @@ This repository is primarily maintained in **English** (default), but a **French
 
 The repository is organized into three main directories, representing the current status of the problems:
 
-- `resolved/`: Contains problems that have been fully solved. Each problem is located in a sub-folder named in the format `[Number]-[Problem-Name]` (e.g., `01-Intitule-Problem`). Inside, you will find detailed explanations of the problem, the solution, and references.
+- `resolved/`: Contains problems that have been fully solved. Each problem is located in a sub-folder named in the format `N-Problem-Label` where N is the number and Problem-Label is its short title (e.g., `01-Erdos-Discrepancy`). Inside, you will find detailed explanations of the problem, the solution, and references.
 - `inprogress/`: Contains problems that are well advanced but only partially solved, with significant ongoing research and open leads. The folder structure follows the same format as above.
-- `todo/`: Contains a listing of all open Erdős problems. Each folder follows the format `[Number]-[Problem-Name]` and contains the formal statement of the problem and any relevant background information.
+- `todo/`: Contains a listing of all open Erdős problems. Each folder follows the format `N-Problem-Label` and contains the formal statement of the problem and any relevant background information.
 
 ## 🤝 How to Contribute
 

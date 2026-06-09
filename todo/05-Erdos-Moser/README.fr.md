@@ -1,3 +1,5 @@
+[🇬🇧 English Version](README.md)
+
 # 05 - Équation d'Erdős-Moser
 
 ## Énoncé

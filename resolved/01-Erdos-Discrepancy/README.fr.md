@@ -1,3 +1,5 @@
+[🇬🇧 English Version](README.md)
+
 # 01 - Problème de Discrépance d'Erdős
 
 ## Énoncé

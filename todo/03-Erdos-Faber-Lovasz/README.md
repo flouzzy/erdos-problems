@@ -1,3 +1,5 @@
+[🇫🇷 Version Française](README.fr.md)
+
 # 03 - Erdős–Faber–Lovász Conjecture
 
 ## Statement

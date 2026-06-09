@@ -1,3 +1,5 @@
+[🇬🇧 English Version](README.md)
+
 # Dépôt des Problèmes d'Erdős
 
 Bienvenue sur le **Dépôt des Problèmes d'Erdős** ! Ce projet a pour but de centraliser, organiser et documenter les divers problèmes mathématiques posés par le légendaire mathématicien Paul Erdős.
@@ -11,9 +13,9 @@ Ce dépôt propose une version en **anglais** (par défaut) et une version en **
 
 Le dépôt est organisé en trois dossiers principaux, représentant le statut actuel des problèmes :
 
-- `resolved/` : Contient les problèmes qui ont été entièrement résolus. Chaque problème est situé dans un sous-dossier nommé selon le format `[Numéro]-[Nom-du-Problème]` (par exemple, `01-Intitule-Problem`). À l'intérieur, vous trouverez des explications détaillées du problème, de la solution et des références.
+- `resolved/` : Contient les problèmes qui ont été entièrement résolus. Chaque problème est situé dans un sous-dossier nommé selon le format `N-Problem-Label` où N est le numéro et Problem-Label est son intitulé court (par exemple, `01-Erdos-Discrepancy`). À l'intérieur, vous trouverez des explications détaillées du problème, de la solution et des références.
 - `inprogress/` : Contient des problèmes bien avancés mais partiellement résolus, avec des pistes de recherche ouvertes et prometteuses. La structure des dossiers suit le même format que ci-dessus.
-- `todo/` : Contient un listing de tous les problèmes d'Erdős ouverts. Chaque dossier suit le format `[Numéro]-[Nom-du-Problème]` et contient l'énoncé formel du problème ainsi que toute information de contexte pertinente.
+- `todo/` : Contient un listing de tous les problèmes d'Erdős ouverts. Chaque dossier suit le format `N-Problem-Label` et contient l'énoncé formel du problème ainsi que toute information de contexte pertinente.
 
 ## 🤝 Comment Contribuer
 

@@ -1,3 +1,5 @@
+[🇫🇷 Version Française](README.fr.md)
+
 # 01 - Erdős Discrepancy Problem
 
 ## Statement

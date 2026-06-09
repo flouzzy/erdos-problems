@@ -1,3 +1,5 @@
+[🇬🇧 English Version](README.md)
+
 # 03 - Conjecture d'Erdős-Faber-Lovász
 
 ## Énoncé

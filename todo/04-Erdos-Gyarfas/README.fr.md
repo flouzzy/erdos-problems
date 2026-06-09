@@ -1,3 +1,5 @@
+[🇬🇧 English Version](README.md)
+
 # 04 - Conjecture d'Erdős-Gyárfás
 
 ## Énoncé

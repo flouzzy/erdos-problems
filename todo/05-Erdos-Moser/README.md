@@ -1,3 +1,5 @@
+[🇫🇷 Version Française](README.fr.md)
+
 # 05 - Erdős–Moser Equation
 
 ## Statement

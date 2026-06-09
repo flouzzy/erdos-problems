@@ -1,3 +1,5 @@
+[🇫🇷 Version Française](README.fr.md)
+
 # 02 - Erdős–Straus Conjecture
 
 ## Statement

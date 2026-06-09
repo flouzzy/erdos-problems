@@ -1,3 +1,5 @@
+[🇫🇷 Version Française](README.fr.md)
+
 # 04 - Erdős–Gyárfás Conjecture
 
 ## Statement

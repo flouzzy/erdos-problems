@@ -47,7 +47,7 @@ $$ \forall e = \{u, v\} \in E, \quad c(u) \neq c(v) $$
 \end{definition}
 
 \begin{definition}[Hypergraphe Linéaire]
-Un hypergraphe $H = (V_H, E_H)$ est constitué d'un ensemble fini de sommets $V_H$ et d'une famille d'arêtes $E_H$ (sous-ensembles de $V_H$). Il est dit \emph{linéaire} si pour toutes arêtes distinctes $e_1, e_2 \in E_H$, $|e_1 \cap e_2| \le 1$.
+Un hypergraphe $H = (V_H, E_H, I)$ est constitué d'un ensemble fini de sommets $V_H$, d'un ensemble abstrait fini d'hyperarêtes $E_H$, et d'une fonction d'incidence $I : E_H \to \mathcal{P}(V_H)$. Il est dit \emph{linéaire} si pour toutes arêtes distinctes $e_1, e_2 \in E_H$, $|I(e_1) \cap I(e_2)| \le 1$. (La notion de multi-arêtes est permise tant qu'elles ne violent pas cette condition d'intersection. Cependant, deux arêtes ayant exactement la même incidence de taille $\ge 2$ enfreindraient la linéarité. Les singletons peuvent exister avec multiplicité).
 \end{definition}
 
 \section{Littérature et Analogies}
@@ -58,29 +58,30 @@ La conjecture d'Erdős-Faber-Lovász trouve des échos profonds avec le théorè
 
 \subsection{Lemme 1 : L'équivalence par Hypergraphe Dual}
 \begin{lemma}
-La conjecture d'Erdős-Faber-Lovász sur le système de cliques $\mathcal{C}$ est équivalente au problème suivant : pour tout hypergraphe linéaire $H = (V_H, E_H)$ avec $|V_H| = k$, la coloration des arêtes $E_H$ telle que des arêtes incidentes ont des couleurs différentes nécessite au plus $k$ couleurs.
+La conjecture d'Erdős-Faber-Lovász sur le système de cliques $\mathcal{C}$ est équivalente au problème suivant : pour tout hypergraphe linéaire $H = (V_H, E_H, I)$ avec $|V_H| = k$, la coloration des arêtes $E_H$ telle que des arêtes incidentes ont des couleurs différentes nécessite au plus $k$ couleurs.
 \end{lemma}
 \begin{proof}
-Construisons l'hypergraphe dual $H = (V_H, E_H)$ de notre graphe de cliques $G$.
+Construisons l'hypergraphe dual $H = (V_H, E_H, I)$ de notre graphe de cliques $G$.
 Posons l'ensemble des sommets $V_H$ comme étant l'ensemble des indices des cliques : $V_H = \{1, 2, \dots, k\}$. Ainsi, $|V_H| = k$.
-Pour chaque sommet $v \in V$ du graphe original $G$, on associe une hyperarête $e_v \in E_H$ définie par :
-$$ e_v = \{ i \in \{1, \dots, k\} \mid v \in C_i \} $$
-Deux sommets $u, v \in V$ sont reliés par une arête dans $G$ si et seulement si ils appartiennent à une même clique $C_i$, c'est-à-dire si et seulement si $i \in e_u \cap e_v$, ce qui équivaut à $e_u \cap e_v \neq \emptyset$.
-Colorer les sommets de $G$ de manière propre revient donc exactement à attribuer à chaque hyperarête $e_v \in E_H$ une couleur de sorte que si $e_u \cap e_v \neq \emptyset$, alors les hyperarêtes reçoivent des couleurs distinctes.
+L'ensemble des hyperarêtes $E_H$ est mis en bijection avec l'ensemble des sommets $V$ du graphe original. Soit $e_v \in E_H$ correspondant au sommet $v \in V$.
+L'incidence est définie par :
+$$ I(e_v) = \{ i \in \{1, \dots, k\} \mid v \in C_i \} $$
+Deux sommets $u, v \in V$ distincts sont reliés par une arête dans $G$ si et seulement si ils appartiennent à une même clique $C_i$, c'est-à-dire si et seulement si $i \in I(e_u) \cap I(e_v)$, ce qui équivaut à $I(e_u) \cap I(e_v) \neq \emptyset$.
+Colorer les sommets de $G$ de manière propre revient donc exactement à attribuer à chaque hyperarête $e_v \in E_H$ une couleur de sorte que si $I(e_u) \cap I(e_v) \neq \emptyset$, alors les hyperarêtes reçoivent des couleurs distinctes. Notons que si plusieurs sommets n'appartiennent qu'à une seule et même clique $C_i$, leurs hyperarêtes duales sont des singletons $\{i\}$. Ils ont une intersection non vide et devront recevoir des couleurs distinctes, d'où l'importance de distinguer les hyperarêtes par un ensemble abstrait $E_H$ et non comme un simple sous-ensemble de $\mathcal{P}(V_H)$.
 
-Vérifions que $H$ est linéaire. Soient deux hyperarêtes distinctes $e_u, e_v \in E_H$. L'intersection $e_u \cap e_v$ correspond aux cliques contenant à la fois $u$ et $v$. Par définition de $\mathcal{C}$, deux cliques distinctes partagent au plus un sommet. Réciproquement, deux sommets distincts $u, v$ ne peuvent appartenir conjointement à plus d'une clique (sinon ces deux cliques partageraient au moins deux sommets, contredisant l'hypothèse de $\mathcal{C}$). Ainsi, $|e_u \cap e_v| \le 1$. $H$ est donc linéaire.
+Vérifions que $H$ est linéaire. Soient deux hyperarêtes distinctes $e_u, e_v \in E_H$. L'intersection $I(e_u) \cap I(e_v)$ correspond aux cliques contenant à la fois $u$ et $v$. Par définition de $\mathcal{C}$, deux cliques distinctes partagent au plus un sommet. Réciproquement, deux sommets distincts $u, v$ ne peuvent appartenir conjointement à plus d'une clique (sinon ces deux cliques partageraient au moins deux sommets, contredisant l'hypothèse de $\mathcal{C}$). Ainsi, $|I(e_u) \cap I(e_v)| \le 1$. $H$ est donc linéaire.
 
-La conjecture EFL est donc rigoureusement transformée en l'énoncé de la borne sur l'indice chromatique fort des hypergraphes linéaires à $k$ sommets.
+La conjecture EFL est donc rigoureusement transformée en l'énoncé de la borne sur l'indice chromatique des hypergraphes linéaires à $k$ sommets.
 \end{proof}
 
 \subsection{Lemme 2 : Borne maximale sur le degré du graphe dual}
 \begin{lemma}
-Dans l'hypergraphe dual $H = (V_H, E_H)$, le degré de chaque sommet $i \in V_H$, noté $d_H(i)$, vérifie $d_H(i) \le k$.
+Dans l'hypergraphe dual $H = (V_H, E_H, I)$, le degré de chaque sommet $i \in V_H$, noté $d_H(i)$, vérifie $d_H(i) \le k$.
 \end{lemma}
 \begin{proof}
 Soit un sommet arbitraire $i \in V_H$. Par définition de l'hypergraphe dual, $i$ correspond à la clique $C_i$ dans le système original.
-Le degré $d_H(i)$ est le nombre d'hyperarêtes dans $H$ qui contiennent le sommet $i$.
-Une hyperarête $e_v$ contient $i$ si et seulement si le sommet correspondant $v$ dans le système original appartient à $C_i$.
+Le degré $d_H(i)$ est le nombre d'hyperarêtes dans $E_H$ dont l'incidence contient le sommet $i$.
+Une hyperarête $e_v$ contient $i$ (i.e., $i \in I(e_v)$) si et seulement si le sommet correspondant $v$ dans le système original appartient à $C_i$.
 Or, la clique $C_i$ contient exactement $k$ sommets de $V$ par l'hypothèse 1 du système de cliques sécantes.
 Par conséquent, il existe exactement $k$ sommets $v \in V$ tels que $v \in C_i$, ce qui génère au plus $k$ hyperarêtes $e_v$ distinctes contenant $i$ (en supposant qu'il n'y ait pas de sommets identiques).
 Ainsi, le nombre d'hyperarêtes incidentes à $i$ est exactement $|C_i| = k$.
@@ -92,13 +93,13 @@ On a donc $d_H(i) \le k$ (et plus précisément $d_H(i) = k$ si l'on ne considè
 L'union des graphes complets peut toujours être colorée avec au plus $2k-1$ couleurs.
 \end{lemma}
 \begin{proof}
-Nous raisonnons sur l'hypergraphe dual $H$. Nous devons colorer de manière propre un ensemble d'hyperarêtes $E_H$.
-Une coloration d'hyperarêtes est propre si des hyperarêtes sécantes reçoivent des couleurs différentes.
-Pour une hyperarête $e_v \in E_H$ arbitraire, considérons le nombre d'autres hyperarêtes $e_u$ avec lesquelles elle a une intersection non vide.
-Soit $e_v = \{i_1, i_2, \dots, i_m\}$. L'hyperarête $e_v$ relie $m$ sommets dans $V_H$. Remarquons que $m \le k$ car $V_H$ a une taille de $k$.
-Pour chaque $j \in e_v$, le sommet $j \in V_H$ est contenu dans au plus $k$ hyperarêtes (Lemme 2).
+Nous raisonnons sur l'hypergraphe dual $H$. Nous devons colorer de manière propre l'ensemble des hyperarêtes $E_H$.
+Une coloration d'hyperarêtes est propre si des hyperarêtes ayant une incidence sécante reçoivent des couleurs différentes.
+Pour une hyperarête $e_v \in E_H$ arbitraire, considérons le nombre d'autres hyperarêtes $e_u$ avec lesquelles son incidence a une intersection non vide.
+Soit $I(e_v) = \{i_1, i_2, \dots, i_m\}$. L'hyperarête $e_v$ est incidente à $m$ sommets dans $V_H$. Remarquons que $m \le k$ car $V_H$ a une taille de $k$.
+Pour chaque $j \in I(e_v)$, le sommet $j \in V_H$ est contenu dans l'incidence d'au plus $k$ hyperarêtes (Lemme 2).
 En excluant $e_v$ elle-même, le sommet $j$ connecte $e_v$ à au plus $k-1$ autres hyperarêtes.
-Étant donné que $H$ est linéaire, pour deux sommets distincts $j, j' \in e_v$, les ensembles d'hyperarêtes (autres que $e_v$) contenant $j$ et $j'$ sont disjoints. Si une hyperarête $e_u$ contenait à la fois $j$ et $j'$, alors $|e_u \cap e_v| \ge 2$, ce qui contredirait la linéarité de $H$.
+Étant donné que $H$ est linéaire, pour deux sommets distincts $j, j' \in I(e_v)$, les ensembles d'hyperarêtes (autres que $e_v$) incidentes à $j$ et $j'$ sont disjoints. Si une hyperarête $e_u$ était incidente à la fois à $j$ et $j'$, alors $|I(e_u) \cap I(e_v)| \ge 2$, ce qui contredirait la linéarité de $H$.
 
 Cependant, nous ne devons compter que le degré d'un sommet $v$ dans le graphe original $G$. Dans $G$, le sommet $v$ appartient à $m$ cliques, disons $C_{i_1}, \dots, C_{i_m}$.
 Le degré du sommet $v$ dans le graphe $G$, noté $deg_G(v)$, est donné par les sommets partageant une clique avec $v$.
@@ -171,19 +172,19 @@ def Erdos_Faber_Lovasz_Conjecture :=
 
 -- Lemmes intermediaires pour l'autoformalisation
 
--- Definition d'un hypergraphe lineaire dual
-structure LinearHypergraph (H_V : Type*) [Fintype H_V] [DecidableEq H_V] where
-  (edges : Finset (Finset H_V))
-  (linear : forall e1 e2 \in edges, e1 != e2 -> (e1 \inter e2).card <= 1)
+-- Definition d'un hypergraphe lineaire dual permettant les aretes paralleles via une fonction d'incidence
+structure LinearHypergraph (H_V : Type*) (H_E : Type*) [Fintype H_V] [Fintype H_E] [DecidableEq H_V] [DecidableEq H_E] where
+  (incidence : H_E -> Finset H_V)
+  (linear : forall e1 e2 : H_E, e1 != e2 -> (incidence e1 \inter incidence e2).card <= 1)
 
 lemma efl_equivalence_dual (k : Nat) (sys : IntersectingCliqueSystem k) :
-  exists H : LinearHypergraph (Fin k),
-    -- La preuve constructive du Lemme 1 vient ici
+  exists H : LinearHypergraph (Fin k) V,
+    -- La preuve constructive du Lemme 1 vient ici (H_E est identifie a V)
     True := sorry
 
-lemma dual_degree_bound (k : Nat) (H : LinearHypergraph (Fin k)) (v : Fin k) :
+lemma dual_degree_bound (k : Nat) (H_E : Type*) [Fintype H_E] [DecidableEq H_E] (H : LinearHypergraph (Fin k) H_E) (v : Fin k) :
   -- Borne sur le degre d'un sommet dans l'hypergraphe
-  (H.edges.filter (fun e => v \in e)).card <= k := sorry
+  (Finset.univ.filter (fun e : H_E => v \in H.incidence e)).card <= k := sorry
 
 theorem efl_partial_bound (k : Nat) (sys : IntersectingCliqueSystem k) :
   -- Le theoreme sur la majoration du nombre chromatique

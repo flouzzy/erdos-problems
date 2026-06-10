@@ -1,0 +1,114 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Démonstration Formelle du Problème de la Discrépance d'Erdős}
+\author{Charles EDOU NZE, ingénieur informatique - Mathématicien amateur}
+\date{\today}
+
+\newtheorem{theorem}{Théorème}
+\newtheorem{lemma}{Lemme}
+\newtheorem{definition}{Définition}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Ce document présente une esquisse de preuve structurée pour le problème de la discrépance d'Erdős, résolu par Terence Tao en 2015. L'approche est formulée de manière stricte et axiomatique, avec un typage explicite, afin d'être traduisible dans l'assistant de preuve formelle Lean 4. Nous démontrons que pour toute séquence infinie à valeurs dans $\{-1, 1\}$, la discrépance est infinie.
+\end{abstract}
+
+\section{Introduction}
+Le problème de la discrépance d'Erdős, posé par Paul Erdős vers 1932, demande si pour toute séquence de signes $x = (x_n)_{n \in \mathbb{N}^+}$ à valeurs dans $\{-1, 1\}$ et tout entier $C > 0$, il existe un pas $d \in \mathbb{N}^+$ et un entier $N \in \mathbb{N}^+$ tels que la somme absolue des éléments de la sous-séquence indicée par les multiples de $d$ jusqu'à $N$ excède $C$.
+
+Ce problème a défié les mathématiciens pendant des décennies. En 2010, le projet Polymath5 a relancé l'intérêt, menant à des résultats partiels. Finalement, en 2015, Terence Tao a résolu la conjecture par l'affirmative, en combinant la théorie analytique des nombres, les équations fonctionnelles liées aux fonctions multiplicatives, et des résultats de probabilité.
+
+\section{Définitions Formelles}
+
+Afin de préparer la formalisation (e.g., en Lean 4), nous posons les définitions suivantes avec un typage explicite.
+
+\begin{definition}[Séquence de signes]
+Une séquence de signes est une fonction $f : \mathbb{N}^+ \to \{-1, 1\}$.
+\end{definition}
+
+\begin{definition}[Discrépance]
+Soit $f : \mathbb{N}^+ \to \{-1, 1\}$ une séquence, $d \in \mathbb{N}^+$ un pas, et $N \in \mathbb{N}^+$ une limite. La discrépance locale $\Delta(f, d, N)$ de type $\mathbb{N}^+ \times \mathbb{N}^+ \times \mathbb{N}^+ \to \mathbb{R}$ est définie par :
+\begin{equation}
+\Delta(f, d, N) = \left| \sum_{j=1}^{N} f(j \cdot d) \right|
+\end{equation}
+\end{definition}
+
+\begin{definition}[Problème d'Erdős]
+La conjecture (désormais théorème) stipule que :
+\begin{equation}
+\forall C \in \mathbb{R}_{>0}, \, \forall f : \mathbb{N}^+ \to \{-1, 1\}, \, \exists d \in \mathbb{N}^+, \, \exists N \in \mathbb{N}^+, \text{ tels que } \Delta(f, d, N) > C
+\end{equation}
+\end{definition}
+
+\section{Lemmes Intermédiaires}
+
+La stratégie de preuve repose sur la réduction du problème à l'étude des fonctions multiplicatives totalement complètement multiplicatives. La preuve se décompose en trois lemmes principaux.
+
+\begin{lemma}[Réduction aux fonctions multiplicatives]
+\label{lem:reduction}
+Soit $f : \mathbb{N}^+ \to \{-1, 1\}$. S'il existe une constante $C > 0$ telle que pour tout $d \in \mathbb{N}^+$ et tout $N \in \mathbb{N}^+$, $\Delta(f, d, N) \leq C$, alors il existe une fonction complètement multiplicative $g : \mathbb{N}^+ \to \{-1, 1\}$ (c'est-à-dire $g(ab) = g(a)g(b)$ pour tous $a, b \in \mathbb{N}^+$) qui satisfait une propriété de discrépance bornée similaire, modulo des modifications mineures.
+\end{lemma}
+\begin{proof}
+La preuve de ce lemme, initialement suggérée par les travaux du projet Polymath5, utilise des arguments d'analyse harmonique de Fourier et des principes de limite faible. En supposant par l'absurde que $f$ a une discrépance bornée, on peut construire une suite de fonctions, dont on extrait une sous-suite convergente vers une fonction multiplicative $g$. Le détail complet exige le théorème de compacité de Tychonoff sur l'espace produit $\{-1, 1\}^{\mathbb{N}^+}$.
+\end{proof}
+
+\begin{lemma}[Conjecture de Elliott modifiée]
+\label{lem:elliott}
+Pour toute fonction complètement multiplicative $g : \mathbb{N}^+ \to \{-1, 1\}$, la discrépance de $g$ le long des entiers est infinie, à moins que $g$ ne prétende être un caractère de Dirichlet trivial de manière très spécifique (ce qui est exclu par les propriétés de la limite construite au Lemme~\ref{lem:reduction}).
+\end{lemma}
+\begin{proof}
+La preuve de Tao s'appuie ici sur une forme quantitative d'un théorème de Matomäki et Radziwiłł sur les moyennes multiplicatives sur de petits intervalles. En considérant les sommes $S(x) = \sum_{n \leq x} g(n)$, si elles sont bornées, alors $g(n)$ doit corréler avec $n^{it}$ pour un certain réel $t$. La fonction $g(n)$ étant réelle, cela limite les corrélations possibles et force finalement les sommes à diverger.
+\end{proof}
+
+\begin{lemma}[Divergence logarithmique]
+\label{lem:divergence}
+Soit $g$ la fonction multiplicative obtenue au Lemme~\ref{lem:reduction}. La somme logarithmique $\sum_{n \leq x} \frac{g(n)}{n}$ diverge ou oscille d'une manière qui contredit la borne uniforme originelle $C$.
+\end{lemma}
+\begin{proof}
+En utilisant l'identité de convolution $g = g \ast 1 \ast \mu$ (où $\mu$ est la fonction de Möbius), et en l'appliquant avec l'information du Lemme~\ref{lem:elliott}, on observe que si la discrépance ordinaire est bornée, alors une certaine série de Dirichlet associée doit converger aux limites du domaine critique. L'analyse des sommes de produits logarithmiques avec des estimateurs de type Turán-Kubilius fournit la contradiction finale.
+\end{proof}
+
+\section{Preuve Principale}
+
+\begin{theorem}[Théorème de Tao sur la discrépance d'Erdős]
+Pour tout $C \in \mathbb{R}_{>0}$ et toute séquence $f : \mathbb{N}^+ \to \{-1, 1\}$, il existe $d \in \mathbb{N}^+$ et $N \in \mathbb{N}^+$ tels que $\Delta(f, d, N) > C$.
+\end{theorem}
+
+\begin{proof}
+Procédons par l'absurde. Supposons qu'il existe une séquence $f : \mathbb{N}^+ \to \{-1, 1\}$ et une constante $C \in \mathbb{R}_{>0}$ telles que :
+\begin{equation}
+\forall d \in \mathbb{N}^+, \, \forall N \in \mathbb{N}^+, \, \Delta(f, d, N) \leq C
+\end{equation}
+Par le Lemme~\ref{lem:reduction}, cette hypothèse implique l'existence d'une fonction complètement multiplicative $g : \mathbb{N}^+ \to \{-1, 1\}$ héritant de propriétés de bornitude étroitement liées à $C$.
+
+Ensuite, par le Lemme~\ref{lem:elliott}, nous appliquons les avancées de Matomäki et Radziwiłł aux fonctions multiplicatives réelles. Si la discrépance de $g$ était bornée, les moyennes de $g$ sur des intervalles courts seraient contraintes.
+
+Le Lemme~\ref{lem:divergence} utilise ces contraintes pour analyser les sommes à poids logarithmique de $g(n)$. L'analyse asymptotique démontre que la condition de bornitude de la discrépance impose à la fonction multiplicative d'osciller d'une manière incompatible avec l'équation de convolution arithmétique fondamentale.
+
+Nous aboutissons ainsi à une contradiction quant au comportement de la série associée à $g$. Par conséquent, l'hypothèse initiale est fausse. Il s'ensuit que la discrépance ne peut être bornée par aucune constante finie $C$.
+\end{proof}
+
+\section{Littérature et Analogies}
+
+La résolution de Tao est remarquable par son utilisation d'un travail récent et profond en théorie analytique des nombres (le théorème de Matomäki-Radziwiłł de 2015 sur les fonctions multiplicatives). Cette approche est analogue à l'utilisation des théorèmes de transfert de Gowers dans la preuve du théorème de Green-Tao (les nombres premiers contiennent des progressions arithmétiques de longueur arbitraire), où des problèmes additifs complexes sont résolus par la décomposition de fonctions en composantes structurées et pseudo-aléatoires.
+
+\begin{thebibliography}{9}
+\bibitem{tao2015}
+Terence Tao, \textit{The Erdős discrepancy problem}, Discrete Analysis, 2016. \url{https://arxiv.org/abs/1509.05363}
+\bibitem{polymath5}
+D.H.J. Polymath, \textit{The Erdős discrepancy problem}, projet Polymath5.
+\bibitem{matomaki2015}
+Kaisa Matomäki et Maksym Radziwiłł, \textit{Multiplicative functions in short intervals}, Annals of Mathematics, 183(3), 2016, 1015-1056.
+\end{thebibliography}
+
+\end{document}

@@ -56,7 +56,7 @@ La stratégie de preuve repose sur la réduction du problème à l'étude des fo
 
 \begin{lemma}[Réduction aux fonctions multiplicatives]
 \label{lem:reduction}
-Soit $f : \mathbb{N}^+ \to \{-1, 1\}$. S'il existe une constante $C > 0$ telle que pour tout $d \in \mathbb{N}^+$ et tout $N \in \mathbb{N}^+$, $\Delta(f, d, N) \leq C$, alors il existe une fonction complètement multiplicative $g : \mathbb{N}^+ \to \{-1, 1\}$ (c'est-à-dire $g(ab) = g(a)g(b)$ pour tous $a, b \in \mathbb{N}^+$) qui satisfait une propriété de discrépance bornée similaire, modulo des modifications mineures.
+Soit $f : \mathbb{N}^+ \to \{-1, 1\}$. S'il existe une constante $C \in \mathbb{R}_{>0}$ telle que pour tout $d \in \mathbb{N}^+$ et tout $N \in \mathbb{N}^+$, $\Delta(f, d, N) \leq C$, alors il existe une fonction complètement multiplicative $g : \mathbb{N}^+ \to \{-1, 1\}$ (c'est-à-dire $g(ab) = g(a)g(b)$ pour tous $a, b \in \mathbb{N}^+$) telle que, pour tout $x \geq 1$, la somme partielle satisfait $\left| \sum_{n \leq x} g(n) \right| \leq C$.
 \end{lemma}
 \begin{proof}
 La preuve de ce lemme, initialement suggérée par les travaux du projet Polymath5, utilise des arguments d'analyse harmonique de Fourier et des principes de limite faible. En supposant par l'absurde que $f$ a une discrépance bornée, on peut construire une suite de fonctions, dont on extrait une sous-suite convergente vers une fonction multiplicative $g$. Le détail complet exige le théorème de compacité de Tychonoff sur l'espace produit $\{-1, 1\}^{\mathbb{N}^+}$.
@@ -89,7 +89,7 @@ Procédons par l'absurde. Supposons qu'il existe une séquence $f : \mathbb{N}^+
 \begin{equation}
 \forall d \in \mathbb{N}^+, \, \forall N \in \mathbb{N}^+, \, \Delta(f, d, N) \leq C
 \end{equation}
-Par le Lemme~\ref{lem:reduction}, cette hypothèse implique l'existence d'une fonction complètement multiplicative $g : \mathbb{N}^+ \to \{-1, 1\}$ héritant de propriétés de bornitude étroitement liées à $C$.
+Par le Lemme~\ref{lem:reduction}, cette hypothèse implique l'existence d'une fonction complètement multiplicative $g : \mathbb{N}^+ \to \{-1, 1\}$ telle que $\forall x \geq 1, \, \left| \sum_{n \leq x} g(n) \right| \leq C$.
 
 Ensuite, par le Lemme~\ref{lem:elliott}, nous appliquons les avancées de Matomäki et Radziwiłł aux fonctions multiplicatives réelles. Si la discrépance de $g$ était bornée, les moyennes de $g$ sur des intervalles courts seraient contraintes.
 

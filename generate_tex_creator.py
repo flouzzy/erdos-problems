@@ -36,6 +36,7 @@ def generate_tex():
 \usepackage{hyperref}
 \usepackage{fancyvrb}
 \usepackage{longtable}
+\usepackage{listings}
 
 \newtheorem{theorem}{Théorème}[section]
 \newtheorem{lemma}[theorem]{Lemme}
@@ -78,9 +79,9 @@ Le problème d'Erd\H{o}s-Straus s'inscrit dans la longue tradition des fractions
 
 \section{Architecture d'Autoformalisation (Lean 4)}
 
-Le code suivant définit les types et les lemmes de base, utilisant exclusivement le jeu de caractères ASCII.
+Le code suivant définit les types et les lemmes de base, utilisant exclusivement le jeu de caractères ASCII. Ce bloc de code constitue une esquisse de preuve incomplète destinée à une autoformalisation future, ce qui justifie l'utilisation de marqueurs 'sorry' pour les théorèmes non entièrement mécanisés.
 
-\begin{verbatim}
+\begin{lstlisting}[language=Caml]
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Parity
 import Mathlib.Tactic.Ring
@@ -101,21 +102,18 @@ theorem erdos_straus_conjecture : forall n : Nat, n >= 2 -> ErdosStrausPredicate
 lemma erdos_straus_mod4_0 (k : Nat) (hk : k >= 1) : ErdosStrausPredicate (4 * k) := by
   unfold ErdosStrausPredicate
   use 2 * k, 3 * k, 6 * k
-  refine ⟨by linarith, by linarith, by linarith, ?_⟩
-  ring_nf
+  exact And.intro (by linarith) (And.intro (by linarith) (And.intro (by linarith) (by ring_nf)))
 
 lemma erdos_straus_asymptotic_bound (N : Nat) :
-  (exists S : Finset Nat, (forall n in S, ¬ ErdosStrausPredicate n) /\ S.card < N) := by
-  -- Proof sketch for future autoformalization
-  -- Relies on Vaughan's analytical bounds using the large sieve.
+  (exists S : Finset Nat, (forall n in S, Not (ErdosStrausPredicate n)) /\ S.card < N) := by
   sorry
 
 lemma erdos_straus_constructive (n x y z : Nat) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
   ErdosStrausPredicate n := by
   unfold ErdosStrausPredicate
   use x, y, z
-  exact ⟨hx, hy, hz, h1⟩
-\end{verbatim}
+  exact And.intro hx (And.intro hy (And.intro hz h1))
+\end{lstlisting}
 
 \section{Lemmes Stratégiques}
 

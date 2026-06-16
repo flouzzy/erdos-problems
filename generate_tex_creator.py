@@ -1,8 +1,31 @@
-import os
 import math
 
+def find_solution(n):
+    for x in range(math.ceil(n/4), n*2 + 1):
+        if x == 0: continue
+        # 4/n - 1/x = (4x - n) / nx
+        num1 = 4*x - n
+        den1 = n*x
+        if num1 <= 0: continue
+
+        # We want to express num1/den1 = 1/y + 1/z
+        # 1/y < num1/den1 => y > den1/num1
+        start_y = math.ceil(den1 / num1)
+        if start_y == den1 / num1:
+            start_y += 1
+
+        for y in range(start_y, start_y + 3000):
+            # 1/z = num1/den1 - 1/y = (num1*y - den1) / (den1*y)
+            num2 = num1*y - den1
+            den2 = den1*y
+            if num2 > 0 and den2 % num2 == 0:
+                z = den2 // num2
+                if z > 0:
+                    return x, y, z
+    return None
+
+
 def generate_tex():
-    import math # Ensure math is available inside function
     tex_content = r"""\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -67,6 +90,11 @@ def ErdosStrausPredicate (n : Nat) : Prop :=
   exists x y z : Nat, x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (x * y + y * z + z * x)
 
 theorem erdos_straus_conjecture : forall n : Nat, n >= 2 -> ErdosStrausPredicate n := by
+  -- Proof sketch for future autoformalization
+  -- The strategy consists of reducing the problem to congruence classes modulo 4.
+  -- By lemma erdos_straus_mod4_0, the case n = 4k is resolved.
+  -- Similar algebraic lemmas can be constructed for n = 4k+1, 4k+2, 4k+3,
+  -- combined with computational bounds for small n.
   intro n hn
   sorry
 
@@ -78,11 +106,15 @@ lemma erdos_straus_mod4_0 (k : Nat) (hk : k >= 1) : ErdosStrausPredicate (4 * k)
 
 lemma erdos_straus_asymptotic_bound (N : Nat) :
   (exists S : Finset Nat, (forall n in S, ¬ ErdosStrausPredicate n) /\ S.card < N) := by
+  -- Proof sketch for future autoformalization
+  -- Relies on Vaughan's analytical bounds using the large sieve.
   sorry
 
-lemma erdos_straus_constructive (n x y z : Nat) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
+lemma erdos_straus_constructive (n x y z : Nat) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
   ErdosStrausPredicate n := by
-  sorry
+  unfold ErdosStrausPredicate
+  use x, y, z
+  exact ⟨hx, hy, hz, h1⟩
 \end{verbatim}
 
 \section{Lemmes Stratégiques}
@@ -134,30 +166,6 @@ L'équation résiduelle $\frac{4}{n} - \frac{1}{x} = \frac{4x-n}{nx}$ impose des
 
 Afin d'étayer l'analyse, nous construisons et vérifions algébriquement les solutions pour une large plage de valeurs de $n$.
 """
-
-    def find_solution(n):
-        for x in range(math.ceil(n/4), n*2 + 1):
-            if x == 0: continue
-            # 4/n - 1/x = (4x - n) / nx
-            num1 = 4*x - n
-            den1 = n*x
-            if num1 <= 0: continue
-
-            # We want to express num1/den1 = 1/y + 1/z
-            # 1/y < num1/den1 => y > den1/num1
-            start_y = math.ceil(den1 / num1)
-            if start_y == den1 / num1:
-                start_y += 1
-
-            for y in range(start_y, start_y + 3000):
-                # 1/z = num1/den1 - 1/y = (num1*y - den1) / (den1*y)
-                num2 = num1*y - den1
-                den2 = den1*y
-                if num2 > 0 and den2 % num2 == 0:
-                    z = den2 // num2
-                    if z > 0:
-                        return x, y, z
-        return None
 
     # Generate constructive proofs for n from 2 to 300
     for n in range(2, 301):

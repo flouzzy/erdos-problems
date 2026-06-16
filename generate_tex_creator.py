@@ -1,5 +1,30 @@
 import math
 
+def find_solution(n):
+    for x in range(math.ceil(n/4), n*2 + 1):
+        if x == 0: continue
+        # 4/n - 1/x = (4x - n) / nx
+        num1 = 4*x - n
+        den1 = n*x
+        if num1 <= 0: continue
+
+        # We want to express num1/den1 = 1/y + 1/z
+        # 1/y < num1/den1 => y > den1/num1
+        start_y = math.ceil(den1 / num1)
+        if start_y == den1 / num1:
+            start_y += 1
+
+        for y in range(start_y, start_y + 3000):
+            # 1/z = num1/den1 - 1/y = (num1*y - den1) / (den1*y)
+            num2 = num1*y - den1
+            den2 = den1*y
+            if num2 > 0 and den2 % num2 == 0:
+                z = den2 // num2
+                if z > 0:
+                    return x, y, z
+    return None
+
+
 def generate_tex():
     tex_content = r"""\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -140,30 +165,6 @@ L'équation résiduelle $\frac{4}{n} - \frac{1}{x} = \frac{4x-n}{nx}$ impose des
 
 Afin d'étayer l'analyse, nous construisons et vérifions algébriquement les solutions pour une large plage de valeurs de $n$.
 """
-
-    def find_solution(n):
-        for x in range(math.ceil(n/4), n*2 + 1):
-            if x == 0: continue
-            # 4/n - 1/x = (4x - n) / nx
-            num1 = 4*x - n
-            den1 = n*x
-            if num1 <= 0: continue
-
-            # We want to express num1/den1 = 1/y + 1/z
-            # 1/y < num1/den1 => y > den1/num1
-            start_y = math.ceil(den1 / num1)
-            if start_y == den1 / num1:
-                start_y += 1
-
-            for y in range(start_y, start_y + 3000):
-                # 1/z = num1/den1 - 1/y = (num1*y - den1) / (den1*y)
-                num2 = num1*y - den1
-                den2 = den1*y
-                if num2 > 0 and den2 % num2 == 0:
-                    z = den2 // num2
-                    if z > 0:
-                        return x, y, z
-        return None
 
     # Generate constructive proofs for n from 2 to 300
     for n in range(2, 301):

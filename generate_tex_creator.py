@@ -2,7 +2,6 @@ import os
 import math
 
 def generate_tex():
-    import math # Ensure math is available inside function
     tex_content = r"""\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}

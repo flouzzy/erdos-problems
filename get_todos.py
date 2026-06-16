@@ -1,12 +1,7 @@
 import os
 import re
 
-def get_git_info():
-    return 'flouzzy', 'erdos-problems', 'HEAD'
-
-def main():
-    account, project, hash_val = get_git_info()
-
+def get_todos():
     todos = []
 
     # We found `sorry` in lean code blocks in these files.
@@ -23,20 +18,44 @@ def main():
             continue
         for file in files:
             if file.endswith('.md') or file.endswith('.tex') or file.endswith('.py'):
-                if file == 'get_todos.py':
-                    continue
-                file_path = os.path.join(root, file)
+                target_files.append(os.path.join(root, file))
 
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    for i, line in enumerate(f):
-                        if lean_sorry_pattern.search(line):
-                            path = os.path.relpath(file_path, '.')
-                            # GitHub URL format: https://github.com/account/project/blob/hash_val/path#Lline
-                            url = f"https://github.com/{account}/{project}/blob/{hash_val}/{path}#L{i+1}"
-                            todos.append(f"{path}:{i+1} - {line.strip()} - {url}")
+    for filepath in target_files:
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
 
-    for todo in todos:
-        print(todo)
+            in_lean_block = False
+            for line_num, line in enumerate(lines, 1):
+                stripped = line.strip()
+
+                # Check block start/end
+                if filepath.endswith('.md'):
+                    if stripped.startswith('```lean'):
+                        in_lean_block = True
+                    elif stripped.startswith('```') and in_lean_block:
+                        in_lean_block = False
+                elif filepath.endswith('.tex'):
+                    if stripped == r'\begin{verbatim}':
+                        in_lean_block = True
+                    elif stripped == r'\end{verbatim}':
+                        in_lean_block = False
+                elif filepath.endswith('.py'):
+                    # Python scripts generating lean blocks
+                    if r'\begin{verbatim}' in stripped or '```lean' in stripped:
+                        in_lean_block = True
+                    elif r'\end{verbatim}' in stripped or ('```' in stripped and '```lean' not in stripped and in_lean_block):
+                        in_lean_block = False
+
+                if in_lean_block:
+                    if lean_sorry_pattern.search(line):
+                        todos.append(f"{filepath}:{line_num}: {line.strip()}")
+        except Exception as e:
+            pass
+
+    return todos
 
 if __name__ == '__main__':
-    main()
+    todos = get_todos()
+    for todo in todos:
+        print(todo)

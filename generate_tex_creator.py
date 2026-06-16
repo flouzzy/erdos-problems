@@ -55,7 +55,7 @@ Le problème d'Erd\H{o}s-Straus s'inscrit dans la longue tradition des fractions
 
 \section{Architecture d'Autoformalisation (Lean 4)}
 
-Le code suivant définit les types et les lemmes de base, utilisant exclusivement le jeu de caractères ASCII.
+Le code suivant définit les types et les lemmes de base, utilisant exclusivement le jeu de caractères ASCII. Il constitue une esquisse de preuve incomplète ("incomplete proof sketch") destinée à une autoformalisation ultérieure, comme le signalent les balises "sorry".
 
 \begin{verbatim}
 import Mathlib.Data.Nat.Basic
@@ -80,9 +80,11 @@ lemma erdos_straus_asymptotic_bound (N : Nat) :
   (exists S : Finset Nat, (forall n in S, ¬ ErdosStrausPredicate n) /\ S.card < N) := by
   sorry
 
-lemma erdos_straus_constructive (n x y z : Nat) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
+lemma erdos_straus_constructive (n x y z : Nat) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
   ErdosStrausPredicate n := by
-  sorry
+  unfold ErdosStrausPredicate
+  use x, y, z
+  exact ⟨hx, hy, hz, h1⟩
 \end{verbatim}
 
 \section{Lemmes Stratégiques}

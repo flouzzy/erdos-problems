@@ -2,12 +2,7 @@ import os
 import re
 
 def get_git_info():
-    try:
-        account = 'flouzzy'
-        project = 'erdos-problems'
-        return account, project, 'HEAD'
-    except:
-        return 'flouzzy', 'erdos-problems', 'HEAD'
+    return 'flouzzy', 'erdos-problems', 'HEAD'
 
 def main():
     account, project, hash_val = get_git_info()
@@ -27,19 +22,21 @@ def main():
         if '.git' in root or 'node_modules' in root:
             continue
         for file in files:
-            if file.endswith('.tex') or file.endswith('.py') or file.endswith('.md'):
-                target_files.append(os.path.join(root, file))
+            if file.endswith('.md') or file.endswith('.tex') or file.endswith('.py'):
+                if file == 'get_todos.py':
+                    continue
+                file_path = os.path.join(root, file)
 
-    for filepath in target_files:
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-            for i, line in enumerate(lines):
-                if lean_sorry_pattern.search(line):
-                    # We print them directly
-                    print(f"{filepath}:{i+1}: {line.strip()}")
-        except Exception as e:
-            pass
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    for i, line in enumerate(f):
+                        if lean_sorry_pattern.search(line):
+                            path = os.path.relpath(file_path, '.')
+                            # GitHub URL format: https://github.com/account/project/blob/hash_val/path#Lline
+                            url = f"https://github.com/{account}/{project}/blob/{hash_val}/{path}#L{i+1}"
+                            todos.append(f"{path}:{i+1} - {line.strip()} - {url}")
+
+    for todo in todos:
+        print(todo)
 
 if __name__ == '__main__':
     main()

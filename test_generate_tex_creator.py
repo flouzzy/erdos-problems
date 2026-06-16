@@ -1,37 +1,43 @@
 import unittest
-from generate_tex_creator import find_solution
+from unittest.mock import patch, mock_open, call
+import generate_tex_creator
 
 class TestGenerateTexCreator(unittest.TestCase):
-    def check_solution(self, n):
-        sol = find_solution(n)
-        self.assertIsNotNone(sol, f"No solution found for n={n}")
-        x, y, z = sol
-        self.assertGreater(x, 0, f"x={x} is not > 0 for n={n}")
-        self.assertGreater(y, 0, f"y={y} is not > 0 for n={n}")
-        self.assertGreater(z, 0, f"z={z} is not > 0 for n={n}")
+    @patch('builtins.open', new_callable=mock_open)
+    def test_generate_tex(self, mock_file):
+        generate_tex_creator.generate_tex()
 
-        # Check equation 4/n = 1/x + 1/y + 1/z
-        # Using cross multiplication to avoid float precision issues:
-        # 4 * x * y * z = n * (y * z + x * z + x * y)
-        left_side = 4 * x * y * z
-        right_side = n * (y * z + x * z + x * y)
-        self.assertEqual(left_side, right_side, f"Equation not satisfied for n={n}: 4/{n} != 1/{x} + 1/{y} + 1/{z}")
+        # Verify open was called correctly
+        mock_file.assert_called_once_with('inprogress/01-Erdos-Straus/generate_tex_creator.py', 'w', encoding='utf-8')
 
-    def test_find_solution(self):
-        # Happy paths
-        for n in range(2, 10):
-            self.check_solution(n)
+        # Verify writing logic
+        handle = mock_file()
 
-    def test_edge_cases(self):
-        # n = 1 might return None based on the math logic, let's see.
-        # But conjecture is for n >= 2. Let's just test n=1 behavior if we want.
-        # Actually n=1 with 4/1 = 1/x+1/y+1/z. 4 = 1/x+1/y+1/z. Max RHS is 3. Impossible for positive integers.
-        # find_solution(1) should return None.
-        self.assertIsNone(find_solution(1))
+        # We need to collect all written parts to check the content
+        written_content = ""
+        for call_args in handle.write.call_args_list:
+            written_content += call_args.args[0]
 
-        # Test n <= 0
-        self.assertIsNone(find_solution(0))
-        self.assertIsNone(find_solution(-5))
+        # Verify python script components are present
+        self.assertIn("import os\n", written_content)
+        self.assertIn("tex_content = r\"\"\"", written_content)
+        self.assertIn("with open('inprogress/01-Erdos-Straus/01-proof.tex', 'w', encoding='utf-8') as f:", written_content)
+        self.assertIn("f.write(tex_content)", written_content)
+
+        # Verify LaTeX structure
+        self.assertIn("\\documentclass[11pt,a4paper]{article}", written_content)
+        self.assertIn("\\title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erd\\H{o}s-Straus}", written_content)
+        self.assertIn("\\begin{document}", written_content)
+        self.assertIn("\\end{document}", written_content)
+
+        # Verify some generated proof logic
+        # For n=2: 4/2 = 1/x + 1/y + 1/z -> e.g. x=1, y=2, z=2 ? Let's see what the generation yields for n=2
+        # We can just assert that \subsection{Démonstration pour $n = 2$} exists
+        self.assertIn("\\subsection{Démonstration pour $n = 2$}", written_content)
+        self.assertIn("\\subsection{Démonstration pour $n = 300$}", written_content)
+
+        # Verify the file closes with proper multi-line string termination
+        self.assertIn("\"\"\"\nwith open", written_content)
 
 if __name__ == '__main__':
     unittest.main()

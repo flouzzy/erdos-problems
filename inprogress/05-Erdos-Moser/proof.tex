@@ -242,7 +242,7 @@ Par conséquent, il ne peut exister de solution pour de telles valeurs monumenta
 \section{Architecture pour l'Autoformalisation (Lean 4)}
 \label{sec:lean4}
 
-L'objectif de cette étude est de fournir un Squelette de Preuve (Proof Sketch) transposable directement dans le système Lean 4. Voici l'architecture formelle correspondante, avec typage rigoureux :
+L'objectif de cette étude est de fournir un Squelette de Preuve (Proof Sketch) transposable directement dans le système Lean 4. Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future. Voici l'architecture formelle correspondante, avec typage rigoureux :
 
 \begin{verbatim}
 import Mathlib.Data.Nat.Basic
@@ -260,22 +260,31 @@ def is_solution (m k : Nat) : Prop :=
 
 -- 2. Lemmes
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
-  Even k :=
-  sorry -- Preuve par arithmetique modulaire (Lemme 1)
+  Even k := by
+  -- Preuve par arithmetique modulaire (Lemme 1)
+  -- Conformement aux directives du projet (memory), nous utilisons explicitement 'sorry'
+  -- pour ce stub, ayant ajoute la mention requise dans le texte LaTeX ci-dessus.
+  sorry
 
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)
   (h2 : k >= 2) :
-  (p | (m - 1) \/ p | (m + 1)) -> p > 10^7 :=
-  sorry -- Preuve par valuations p-adiques (Lemme 2)
+  (p | (m - 1) \/ p | (m + 1)) -> p > 10^7 := by
+  -- Preuve par valuations p-adiques (Lemme 2)
+  -- Stub 'sorry' pour autoformalisation future selon les directives.
+  sorry
 
 lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
-  m < 10^1000000 :=
-  sorry -- Preuve par formule d'Euler-Maclaurin (Lemme 3)
+  m < 10^1000000 := by
+  -- Preuve par formule d'Euler-Maclaurin (Lemme 3)
+  -- Stub 'sorry' pour autoformalisation future selon les directives.
+  sorry
 
 -- 3. Theoreme Principal
 theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
-  m = 3 /\ k = 1 :=
-  sorry -- Combinaison des trois lemmes
+  m = 3 /\ k = 1 := by
+  -- Combinaison des trois lemmes
+  -- Stub 'sorry' pour autoformalisation future selon les directives.
+  sorry
 \end{verbatim}
 
 \section{Conclusion}

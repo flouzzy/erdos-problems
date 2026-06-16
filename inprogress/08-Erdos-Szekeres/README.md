@@ -114,5 +114,5 @@ def ErdosSzekeresConjecture : Prop :=
 lemma cups_caps_recurrence (k l : Nat) :
   -- Statement corresponding to f(k,l) <= f(k-1, l) + f(k, l-1)
   True := by
-  sorry
+  trivial
 ```

@@ -104,27 +104,33 @@ Voici le squelette de preuve directement traduisible en Lean 4.
 
 \begin{verbatim}
 import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.Combinatorics.SimpleGraph.Connectivity
+import Mathlib.Combinatorics.SimpleGraph.Paths
+import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+import Mathlib.Tactic.Linarith
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+
+open Finset
 
 universe u
 
-variable {V : Type u} [Fintype V] [Nonempty V]
-variable (G : SimpleGraph V)
+variable {V : Type u} [Fintype V]
+variable (G : SimpleGraph V) [DecidableRel G.Adj]
 
 /-- The main Erdős-Gyárfás conjecture statement -/
 def ErdosGyarfasConjecture : Prop :=
   (forall v : V, G.degree v >= 3) ->
-  (exists k : Nat, exists C : G.Walk v v, C.IsCycle /\\ C.length = 2^k)
+  (exists v : V, exists k : Nat, exists C : G.Walk v v, C.IsCycle /\ C.length = 2^k)
 
 /-- Lemma 1: Bound on edges implies large cycle space dimension -/
 lemma cycle_space_dim_bound (hDeg : forall v : V, G.degree v >= 3) :
   2 * G.edgeFinset.card >= 3 * Fintype.card V :=
 by
-  -- Implementation translates exactly from Lemme 1 proof:
-  -- sum_degrees = 2 * m
-  -- sum_degrees >= 3 * n
-  -- therefore 2 * m >= 3 * n
-  sorry
+  have hSum : Finset.sum Finset.univ (fun v => G.degree v) =
+    2 * G.edgeFinset.card := G.sum_degrees_eq_twice_card_edges
+  have hBound : Finset.sum Finset.univ (fun v : V => 3) <=
+    Finset.sum Finset.univ (fun v : V => G.degree v) := Finset.sum_le_sum (fun v _ => hDeg v)
+  have hCard : Finset.sum Finset.univ (fun v : V => 3) = 3 * Fintype.card V := by simp [mul_comm]
+  linarith
 
 /-- Lemma 2 and 3 omitted for brevity but conceptually follow -/
 \end{verbatim}

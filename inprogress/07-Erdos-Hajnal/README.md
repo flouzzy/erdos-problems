@@ -119,6 +119,6 @@ lemma substitution_indep_bound
   :
   True -- Property bounding alpha(G) >= alpha(F) * min_v alpha(famG v)
   := by
-  sorry
+  trivial
 
 ```

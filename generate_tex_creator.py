@@ -214,4 +214,5 @@ Cette documentation présente le cadre formel général, les réductions algébr
         f.write("with open('inprogress/01-Erdos-Straus/01-proof.tex', 'w', encoding='utf-8') as f:\n")
         f.write("    f.write(tex_content)\n")
 
-generate_tex()
+if __name__ == "__main__":
+    generate_tex()

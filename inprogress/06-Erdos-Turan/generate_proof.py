@@ -1,5 +1,3 @@
-import sys
-
 def generate_proof_tex(filepath):
     # Base LaTeX setup
     tex_content = r"""\documentclass[12pt,a4paper]{article}

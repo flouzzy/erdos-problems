@@ -121,7 +121,12 @@ by
   use m * x_p, m * y_p, m * z_p
   -- Proof of strict positivity via `pos_iff_ne_zero` and `mul_pos`
   -- Proof of the algebraic equation by associativity and commutativity (`ring`)
-  sorry
+  refine ⟨Nat.mul_pos hm hx, Nat.mul_pos hm hy, Nat.mul_pos hm hz, ?_⟩
+  unfold ErdosStrausEq at heq ⊢
+  calc
+    4 * (m * x_p) * (m * y_p) * (m * z_p) = m^3 * (4 * x_p * y_p * z_p) := by ring
+    _ = m^3 * (p * (x_p * y_p + y_p * z_p + z_p * x_p)) := by rw [heq]
+    _ = (p * m) * (m * x_p * (m * y_p) + m * y_p * (m * z_p) + m * z_p * (m * x_p)) := by ring
 
 /--
 Lemma 2: Resolution for the congruence class n ≡ 3 (mod 4).
@@ -140,7 +145,9 @@ by
 
   -- The positivity proof is trivial via `omega` since k ∈ ℕ
   -- The algebraic equality `ErdosStrausEq` resolves trivially via the `ring` tactic
-  sorry
+  refine ⟨by omega, by omega, by omega, ?_⟩
+  unfold ErdosStrausEq
+  ring
 ```
 
 ## 5. Conclusion

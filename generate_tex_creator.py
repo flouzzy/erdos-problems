@@ -112,7 +112,9 @@ lemma erdos_straus_asymptotic_bound (N : Nat) :
 
 lemma erdos_straus_constructive (n x y z : Nat) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
   ErdosStrausPredicate n := by
-  exact ⟨x, y, z, hx, hy, hz, h1⟩
+  unfold ErdosStrausPredicate
+  use x, y, z
+  exact ⟨hx, hy, hz, h1⟩
 \end{verbatim}
 
 \section{Lemmes Stratégiques}

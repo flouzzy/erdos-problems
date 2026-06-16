@@ -119,6 +119,8 @@ lemma substitution_indep_bound
   :
   True -- Property bounding alpha(G) >= alpha(F) * min_v alpha(famG v)
   := by
-  sorry
+  trivial
 
 ```
+
+*Note: The above Lean 4 formalization uses a 'trivial' proof for a 'True' stub; this is an incomplete proof sketch intended for future autoformalization.*

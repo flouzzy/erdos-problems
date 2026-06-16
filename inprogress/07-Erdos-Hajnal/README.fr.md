@@ -84,7 +84,7 @@ Nous décomposons la preuve en trois lemmes structuraux.
 
 ## 5. Architecture d'Autoformalisation (Lean 4)
 
-Voici le *Proof Sketch* traduisible dans le formalisme strict de Lean 4, n'utilisant que de l'ASCII.
+Voici le *Proof Sketch* traduisible dans le formalisme strict de Lean 4, n'utilisant que de l'ASCII. Notez que ce bloc de code contient une ébauche de preuve incomplète destinée à une autoformalisation future.
 
 ```lean
 import Mathlib.Combinatorics.SimpleGraph.Basic
@@ -122,3 +122,5 @@ lemma substitution_indep_bound
   trivial
 
 ```
+
+*Note: The above Lean 4 formalization uses a 'trivial' proof for a 'True' stub; this is an incomplete proof sketch intended for future autoformalization.*

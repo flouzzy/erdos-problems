@@ -1,9 +1,34 @@
-import os
 import math
+
+def find_solution(n):
+    for x in range(math.ceil(n/4), n*2 + 1):
+        if x == 0: continue
+        # 4/n - 1/x = (4x - n) / nx
+        num1 = 4*x - n
+        den1 = n*x
+        if num1 <= 0: continue
+
+        # We want to express num1/den1 = 1/y + 1/z
+        # 1/y < num1/den1 => y > den1/num1
+        start_y = math.ceil(den1 / num1)
+        if start_y == den1 / num1:
+            start_y += 1
+
+        for y in range(start_y, start_y + 3000):
+            # 1/z = num1/den1 - 1/y = (num1*y - den1) / (den1*y)
+            num2 = num1*y - den1
+            den2 = den1*y
+            if num2 > 0 and den2 % num2 == 0:
+                z = den2 // num2
+                if z > 0:
+                    return x, y, z
+    return None
+
 
 def generate_tex():
     import math # Ensure math is available inside function
-    tex_content = r"""\documentclass[11pt,a4paper]{article}
+    tex_parts = []
+    tex_parts.append(r"""\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
@@ -13,6 +38,7 @@ def generate_tex():
 \usepackage{hyperref}
 \usepackage{fancyvrb}
 \usepackage{longtable}
+\usepackage{listings}
 
 \newtheorem{theorem}{Théorème}[section]
 \newtheorem{lemma}[theorem]{Lemme}
@@ -55,9 +81,9 @@ Le problème d'Erd\H{o}s-Straus s'inscrit dans la longue tradition des fractions
 
 \section{Architecture d'Autoformalisation (Lean 4)}
 
-Le code suivant définit les types et les lemmes de base, utilisant exclusivement le jeu de caractères ASCII.
+Le code suivant définit les types et les lemmes de base, utilisant exclusivement le jeu de caractères ASCII. Ce bloc de code constitue une esquisse de preuve incomplète destinée à une autoformalisation future, ce qui justifie l'utilisation de marqueurs 'sorry' pour les théorèmes non entièrement mécanisés.
 
-\begin{verbatim}
+\begin{lstlisting}[language=Caml]
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Parity
 import Mathlib.Tactic.Ring
@@ -67,17 +93,21 @@ def ErdosStrausPredicate (n : Nat) : Prop :=
   exists x y z : Nat, x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (x * y + y * z + z * x)
 
 theorem erdos_straus_conjecture : forall n : Nat, n >= 2 -> ErdosStrausPredicate n := by
+  -- Proof sketch for future autoformalization
+  -- The strategy consists of reducing the problem to congruence classes modulo 4.
+  -- By lemma erdos_straus_mod4_0, the case n = 4k is resolved.
+  -- Similar algebraic lemmas can be constructed for n = 4k+1, 4k+2, 4k+3,
+  -- combined with computational bounds for small n.
   intro n hn
   sorry
 
 lemma erdos_straus_mod4_0 (k : Nat) (hk : k >= 1) : ErdosStrausPredicate (4 * k) := by
   unfold ErdosStrausPredicate
   use 2 * k, 3 * k, 6 * k
-  refine ⟨by linarith, by linarith, by linarith, ?_⟩
-  ring_nf
+  exact And.intro (by linarith) (And.intro (by linarith) (And.intro (by linarith) (by ring_nf)))
 
 lemma erdos_straus_asymptotic_bound (N : Nat) :
-  (exists S : Finset Nat, (forall n in S, ¬ ErdosStrausPredicate n) /\ S.card < N) := by
+  (exists S : Finset Nat, (forall n in S, Not (ErdosStrausPredicate n)) /\ S.card < N) := by
   sorry
 
 lemma erdos_straus_constructive (n x y z : Nat) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
@@ -135,41 +165,17 @@ L'équation résiduelle $\frac{4}{n} - \frac{1}{x} = \frac{4x-n}{nx}$ impose des
 \section{Démonstrations Constructives Explicites pour les Entiers Initiaux}
 
 Afin d'étayer l'analyse, nous construisons et vérifions algébriquement les solutions pour une large plage de valeurs de $n$.
-"""
-
-    def find_solution(n):
-        for x in range(math.ceil(n/4), n*2 + 1):
-            if x == 0: continue
-            # 4/n - 1/x = (4x - n) / nx
-            num1 = 4*x - n
-            den1 = n*x
-            if num1 <= 0: continue
-
-            # We want to express num1/den1 = 1/y + 1/z
-            # 1/y < num1/den1 => y > den1/num1
-            start_y = math.ceil(den1 / num1)
-            if start_y == den1 / num1:
-                start_y += 1
-
-            for y in range(start_y, start_y + 3000):
-                # 1/z = num1/den1 - 1/y = (num1*y - den1) / (den1*y)
-                num2 = num1*y - den1
-                den2 = den1*y
-                if num2 > 0 and den2 % num2 == 0:
-                    z = den2 // num2
-                    if z > 0:
-                        return x, y, z
-        return None
+""")
 
     # Generate constructive proofs for n from 2 to 300
     for n in range(2, 301):
         sol = find_solution(n)
         if sol:
             x, y, z = sol
-            tex_content += f"\n\\subsection{{Démonstration pour $n = {n}$}}\n"
-            tex_content += f"Soit $n = {n}$. Nous cherchons $x, y, z \\in \\mathbb{{Z}}^{{+}}$ tels que $\\frac{{4}}{{{n}}} = \\frac{{1}}{{x}} + \\frac{{1}}{{y}} + \\frac{{1}}{{z}}$.\n"
-            tex_content += f"Posons $x = {x}$, $y = {y}$, $z = {z}$.\n"
-            tex_content += f"Les conditions $x > 0$, $y > 0$ et $z > 0$ sont satisfaites.\n"
+            tex_parts.append(f"\n\\subsection{{Démonstration pour $n = {n}$}}\n")
+            tex_parts.append(f"Soit $n = {n}$. Nous cherchons $x, y, z \\in \\mathbb{{Z}}^{{+}}$ tels que $\\frac{{4}}{{{n}}} = \\frac{{1}}{{x}} + \\frac{{1}}{{y}} + \\frac{{1}}{{z}}$.\n")
+            tex_parts.append(f"Posons $x = {x}$, $y = {y}$, $z = {z}$.\n")
+            tex_parts.append(f"Les conditions $x > 0$, $y > 0$ et $z > 0$ sont satisfaites.\n")
 
             # Find common denominator
             lcm_xy = (x * y) // math.gcd(x, y)
@@ -180,34 +186,37 @@ Afin d'étayer l'analyse, nous construisons et vérifions algébriquement les so
             num_z = lcm_xyz // z
             sum_num = num_x + num_y + num_z
 
-            tex_content += f"Le PPCM des dénominateurs est $\\text{{PPCM}}({x}, {y}, {z}) = {lcm_xyz}$.\n"
-            tex_content += "En réduisant au même dénominateur :\n"
-            tex_content += "\\begin{itemize}\n"
-            tex_content += f"    \\item $\\frac{{1}}{{{x}}} = \\frac{{{num_x}}}{{{lcm_xyz}}}$\n"
-            tex_content += f"    \\item $\\frac{{1}}{{{y}}} = \\frac{{{num_y}}}{{{lcm_xyz}}}$\n"
-            tex_content += f"    \\item $\\frac{{1}}{{{z}}} = \\frac{{{num_z}}}{{{lcm_xyz}}}$\n"
-            tex_content += "\\end{itemize}\n"
-            tex_content += "La somme des numérateurs est :\n"
-            tex_content += f"$$ \\frac{{1}}{{{x}}} + \\frac{{1}}{{{y}}} + \\frac{{1}}{{{z}}} = \\frac{{{num_x} + {num_y} + {num_z}}}{{{lcm_xyz}}} = \\frac{{{sum_num}}}{{{lcm_xyz}}} $$\n"
+            tex_parts.append(f"Le PPCM des dénominateurs est $\\text{{PPCM}}({x}, {y}, {z}) = {lcm_xyz}$.\n")
+            tex_parts.append("En réduisant au même dénominateur :\n")
+            tex_parts.append("\\begin{itemize}\n")
+            tex_parts.append(f"    \\item $\\frac{{1}}{{{x}}} = \\frac{{{num_x}}}{{{lcm_xyz}}}$\n")
+            tex_parts.append(f"    \\item $\\frac{{1}}{{{y}}} = \\frac{{{num_y}}}{{{lcm_xyz}}}$\n")
+            tex_parts.append(f"    \\item $\\frac{{1}}{{{z}}} = \\frac{{{num_z}}}{{{lcm_xyz}}}$\n")
+            tex_parts.append("\\end{itemize}\n")
+            tex_parts.append("La somme des numérateurs est :\n")
+            tex_parts.append(f"$$ \\frac{{1}}{{{x}}} + \\frac{{1}}{{{y}}} + \\frac{{1}}{{{z}}} = \\frac{{{num_x} + {num_y} + {num_z}}}{{{lcm_xyz}}} = \\frac{{{sum_num}}}{{{lcm_xyz}}} $$\n")
 
             # Simplify fraction
             gcd_val = math.gcd(sum_num, lcm_xyz)
             simp_num = sum_num // gcd_val
             simp_den = lcm_xyz // gcd_val
 
-            tex_content += f"Le PGCD du numérateur et du dénominateur est $\\text{{PGCD}}({sum_num}, {lcm_xyz}) = {gcd_val}$.\n"
-            tex_content += "La fraction irréductible est :\n"
-            tex_content += f"$$ \\frac{{{sum_num}}}{{{lcm_xyz}}} = \\frac{{{sum_num} \\div {gcd_val}}}{{{lcm_xyz} \\div {gcd_val}}} = \\frac{{{simp_num}}}{{{simp_den}}} $$\n"
+            tex_parts.append(f"Le PGCD du numérateur et du dénominateur est $\\text{{PGCD}}({sum_num}, {lcm_xyz}) = {gcd_val}$.\n")
+            tex_parts.append("La fraction irréductible est :\n")
+            tex_parts.append(f"$$ \\frac{{{sum_num}}}{{{lcm_xyz}}} = \\frac{{{sum_num} \\div {gcd_val}}}{{{lcm_xyz} \\div {gcd_val}}} = \\frac{{{simp_num}}}{{{simp_den}}} $$\n")
 
-            tex_content += f"Cette fraction est égale à $\\frac{{4}}{{{n}}}$.\n"
+            tex_parts.append(f"Cette fraction est égale à $\\frac{{4}}{{{n}}}$.\n")
 
-    tex_content += r"""
+    tex_parts.append(r"""
 \section{Conclusion}
 
 Cette documentation présente le cadre formel général, les réductions algébriques fondamentales pour les classes de congruence modulo 4, et une vérification arithmétique rigoureuse pour de nombreux cas.
 
 \end{document}
-"""
+""")
+
+    tex_content = "".join(tex_parts)
+
     with open('inprogress/01-Erdos-Straus/generate_tex_creator.py', 'w', encoding='utf-8') as f:
         f.write("import os\n")
         f.write("tex_content = r\"\"\"")
@@ -216,4 +225,5 @@ Cette documentation présente le cadre formel général, les réductions algébr
         f.write("with open('inprogress/01-Erdos-Straus/01-proof.tex', 'w', encoding='utf-8') as f:\n")
         f.write("    f.write(tex_content)\n")
 
-generate_tex()
+if __name__ == "__main__":
+    generate_tex()

@@ -139,9 +139,9 @@ Soit $B$ une base asymptotique d'ordre 2 telle que $B(x) \ge c \sqrt{x}$ pour to
     # We will add multiple sections detailing modular arithmetic approaches, probabilistic methods (Erdos-Renyi),
     # and exhaustive boundary checks.
 
-    expansion_content = ""
+    expansion_parts = []
     for i in range(1, 15):
-        expansion_content += r"""
+        expansion_parts.append(r"""
 \section{Extension Analytique et Méthode Probabiliste (Partie """ + str(i) + r""")}
 Dans cette section, nous explorons une ramification supplémentaire de la conjecture en appliquant la méthode probabiliste initiée par Erdős. Nous allons détailler chaque pas de la construction d'un espace de probabilité associé aux sous-ensembles des entiers naturels.
 
@@ -171,8 +171,9 @@ Dans cette section, nous explorons une ramification supplémentaire de la conjec
     \item Ce niveau de détail, qui ne laisse aucune place à l'intuition non justifiée, est la marque d'une démonstration "zéro ellipse".
 \end{enumerate}
 \newpage
-"""
+""")
 
+    expansion_content = "".join(expansion_parts)
     tex_content += expansion_content
 
     tex_content += r"""

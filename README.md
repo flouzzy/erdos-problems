@@ -23,6 +23,7 @@ Contributions are highly encouraged! Whether you are providing a new solution, u
 
 When adding a new problem or updating an existing one, please ensure you provide both an English (`README.md`) and a French (`README.fr.md`) version.
 
-## 📜 License
+- **[2026-06-18]**: Resolution of Lemma 13 - Representation Function Estimation for Erdős-Turán. Probabilistic proof of the unboundedness of r_B(n). Status: In progress.
+- **[2024-06-17]**: Initial research on Erdős-Turán.
 
 This project is open-source. Please check the `LICENSE` file for more details.

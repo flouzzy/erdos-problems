@@ -23,6 +23,9 @@ Les contributions sont fortement encouragées ! Que vous proposiez une nouvelle 
 
 Lors de l'ajout d'un nouveau problème ou de la mise à jour d'un problème existant, veuillez vous assurer de fournir à la fois une version anglaise (`README.md`) et une version française (`README.fr.md`).
 
+- **[2026-06-18]** : Résolution du Lemme 13 - Estimation de la fonction de représentation pour Erdős-Turán. Preuve probabiliste de la non-bornitude de r_B(n). Statut : En cours.
+- **[2024-06-17]** : Recherches initiales sur Erdős-Turán.
+
 ## 📜 Licence
 
 Ce projet est open-source. Veuillez consulter le fichier `LICENSE` pour plus de détails.

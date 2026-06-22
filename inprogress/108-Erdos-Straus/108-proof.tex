@@ -34,7 +34,7 @@
 \maketitle
 
 \begin{abstract}
-Cet article presente une resolution theorique rigoureuse et complete de la conjecture d'Erdos-Straus, stipulant que pour tout entier $n \ge 2$, l'equation diophantienne $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ admet des solutions dans les entiers strictement positifs. Nous etablissons des definitions axiomatiques strictes et integrons la preuve complete basee sur l'approche par treillis des diviseurs recemment proposee par Emmanuel Salomon Audige. Cette methode deterministe et constructive transcende les limitations des congruences modulaires par le biais de la quantite harmonique et de la theorie des nombres pratiques (practical numbers). L'ensemble de la demarche est architecture pour une autoformalisation directe au sein de l'assistant de preuve formelle Lean 4.
+Cet article presente une analyse et une esquisse de resolution theorique de la conjecture d'Erdos-Straus, stipulant que pour tout entier $n \ge 2$, l'equation diophantienne $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ admet des solutions dans les entiers strictement positifs. Nous etablissons des definitions axiomatiques strictes et integrons une approche basee sur le treillis des diviseurs recemment proposee par Emmanuel Salomon Audige. Bien que cette methode deterministe et constructive transcende certaines limitations des congruences modulaires par le biais de la theorie des nombres pratiques, les bornes de densite spectrale utilisees reposent encore sur des heuristiques analytiques. Par consequent, la demonstration demeure mathematiquement incomplete. L'ensemble de la demarche est architecture pour une autoformalisation directe au sein de l'assistant de preuve formelle Lean 4, marquant clairement les lemmes ouverts.
 \end{abstract}
 
 \tableofcontents
@@ -193,8 +193,8 @@ Ce reste $R_1$ doit maintenant etre decompose en $e + f$.
 Pour tout reste $R_1 \le \frac{T_n}{n}$, il existe $e, f \in D_n$ tels que $e + f = R_1$.
 \end{lemma}
 \begin{proof}
-L'ensemble $D_n$ est dense en petits diviseurs, car il contient tous les entiers jusqu'a $n$, ainsi que leurs multiples par des premiers. La quantite $R_1$ etant tres faible par rapport a $L_n$, l'approche par nombre pratique garantit que $R_1$ est exactement representable en une somme de $2$ diviseurs. La preuve complete s'appuie sur le crible analytique montre que le nombre de representations $N(R_1) = \sum_{e \le R_1, e \in D_n} \mathbf{1}_{D_n}(R_1 - e)$ est superieur ou egal a 1.
-L'analyse de Fourier sur l'ensemble arithmetique $D_n$ permet d'etablir une borne inferieure stricte : $N(R_1) \gg \frac{R_1}{\ln \ln (L_n)}$, ce qui est strictement positif pour $n \ge 2$.
+L'ensemble $D_n$ est dense en petits diviseurs, car il contient tous les entiers jusqu'a $n$, ainsi que leurs multiples par des premiers. La quantite $R_1$ etant tres faible par rapport a $L_n$, l'approche par nombre pratique garantit que $R_1$ est exactement representable en une somme de $2$ diviseurs. La preuve s'appuie sur une heuristique de crible analytique qui suggere que le nombre de representations $N(R_1) = \sum_{e \le R_1, e \in D_n} \mathbf{1}_{D_n}(R_1 - e)$ est superieur ou egal a 1.
+Cependant, l'analyse de Fourier sur l'ensemble arithmetique $D_n$ necessite de surmonter le probleme des grands ecarts (gaps) dans les diviseurs de $L_n$. L'estimation $N(R_1) \gg \frac{R_1}{\ln \ln (L_n)}$ demeure a ce jour une borne heuristique. La preuve est donc actuellement incomplete et conditionnee a la resolution rigoureuse de cette densite spectrale.
 \end{proof}
 
 Par consequent, le triplet $(d, e, f)$ est assure d'exister, avec $d, e, f$ appartenant a $D_n$.
@@ -2891,6 +2891,6 @@ Cette fraction demontre l'egalite parfaite avec $\frac{4}{149}$, validant ainsi 
 
 \section{Conclusion}
 
-Cette documentation deploie le cadre formel general d'Emmanuel Salomon Audige, presentant les reductions algebriques fondamentales sur le treillis des diviseurs, et une verification arithmetique rigoureuse, inconditionnelle, et exhaustive pour de nombreux cas. L'obstacle historique de Mordell est contourne, l'unification avec les nombres pratiques est effectuee, ancrant la conjecture d'Erdos-Straus au sein d'un referentiel complet et independant des echecs de classes de congruence.
+Cette documentation deploie le cadre formel general d'Emmanuel Salomon Audige, presentant les reductions algebriques fondamentales sur le treillis des diviseurs, et une verification arithmetique rigoureuse pour de nombreux cas. Bien que l'obstacle historique de Mordell soit conceptuellement contourne et l'unification avec les nombres pratiques developpee, la preuve repose in fine sur des proprietes de densite spectrale qui demeurent heuristiques. La conjecture d'Erdos-Straus reste donc mathematiquement ouverte, et ce document offre une solide esquisse preparatoire a une autoformalisation future.
 
 \end{document}

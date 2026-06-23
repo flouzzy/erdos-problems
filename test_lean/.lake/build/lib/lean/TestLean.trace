@@ -1,9 +1,9 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["2ad536688d0c592f.olean"],
+ {"o": ["95bc4db111cf2270.olean"],
   "m": false,
-  "i": "3b804645d6a1b0e8.ilean",
+  "i": "7203dc6ad4a5d493.ilean",
   "c": "90a7490731bc1214.c"},
  "log":
  [{"message":
@@ -37,7 +37,7 @@
       ["module plugins", "00000000000006bb"]]]]],
   ["Lean 4.31.0, commit 68218e876d2a38b1985b8590fff244a83c321783",
    "fc45ac412f28501c"],
-  ["/app/test_lean/TestLean.lean", "428f4032be8d9cca"],
+  ["/app/test_lean/TestLean.lean", "ac5dc8bd04bc173c"],
   ["options",
    [["-DmaxSynthPendingDepth=3", "c78e353d34de85d4"],
     ["-Dweak.linter.mathlibStandardSet=true", "8a155799906f2b42"],
@@ -47,4 +47,4 @@
   ["Module.name: TestLean", "5efa054bf2c54484"],
   ["Package.id?: (some test_lean)", "45b6c37ba97b5f29"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "9569bf39ac2f3607"}
+ "depHash": "8e7849352798d84d"}

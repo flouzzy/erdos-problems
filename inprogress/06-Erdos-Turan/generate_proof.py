@@ -18,7 +18,7 @@ def generate_proof_tex(filepath):
 \newtheorem{conjecture}[theorem]{Conjecture}
 
 \title{Fondations structurelles et autoformalisation de la Conjecture d'Erdős-Turán sur les bases additives}
-\author{Charles EDOU NZE\thanks{ingénieur informatique augmenté par l'IA - Mathématicien amateur}}
+\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}
 \date{\today}
 
 \begin{document}

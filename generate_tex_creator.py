@@ -46,7 +46,7 @@ def generate_tex():
 \newtheorem{corollary}[theorem]{Corollaire}
 
 \title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erd\H{o}s-Straus}
-\author{Charles EDOU NZE\thanks{ingénieur informatique augmenté par l'IA - Mathématicien amateur}}
+\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}
 \date{}
 
 \begin{document}

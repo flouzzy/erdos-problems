@@ -2,9 +2,8 @@ import os
 
 def main():
     target_files = []
-    for root, _, files in os.walk('.'):
-        if '.git' in root or '.lake' in root:
-            continue
+    for root, dirs, files in os.walk('.'):
+        dirs[:] = [d for d in dirs if d not in ('.git', '.lake')]
         for file in files:
             if file.endswith('.md') or file.endswith('.tex') or file.endswith('.py'):
                 target_files.append(os.path.join(root, file))

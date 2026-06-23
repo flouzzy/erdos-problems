@@ -25,7 +25,16 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   have h_densite : m > 2 * k ∨ m < 10^1000000 := sorry
   -- Contradiction entre la densite et l'asymptotique
-  sorry
+  cases h_densite with
+  | inl h_gt =>
+    have h_contra : ¬(m > 2 * k) := by
+      intro h
+      have h1 : 2 * k < m := h
+      have h2 : m < m := Nat.lt_trans h_asymp h1
+      exact Nat.lt_irrefl m h2
+    contradiction
+  | inr h_lt =>
+    exact h_lt
 
 -- 3. Theoreme Principal
 theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :

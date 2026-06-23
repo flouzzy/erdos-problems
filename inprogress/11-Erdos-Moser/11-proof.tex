@@ -90,7 +90,19 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
   m > k := by
   -- Proof sketch using asymptotic growth of sum_{i=0}^{m-1} i^k approx m^{k+1}/(k+1)
   -- For m^k = sum i^k, m cannot be too small compared to k.
-  sorry
+  have h1 : (sum (range m) (fun i => i^k)) < (m^(k+1)) / (k + 1) := by
+    -- Bounding sum by the continuous integral
+    sorry
+  have h2 : m^k < (m^(k+1)) / (k + 1) := by
+    -- Applying the hypothesis h_eq
+    sorry
+  have h3 : (k + 1) * m^k < m^(k+1) := by
+    -- Algebraic rearrangement
+    sorry
+  have h4 : k + 1 < m := by
+    -- Dividing by m^k
+    sorry
+  omega
 
 lemma erdos_moser_p_adic_contradiction (k m p : Nat) (hp : Nat.Prime p) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
   False := by

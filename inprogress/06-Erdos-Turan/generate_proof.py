@@ -1,4 +1,10 @@
+import os
+
 def generate_proof_tex(filepath):
+    # Ensure directory exists
+    if os.path.dirname(filepath):
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
     # Base LaTeX setup
     tex_content = r"""\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}

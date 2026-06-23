@@ -22,14 +22,37 @@ lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m
   (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 :=
   sorry -- Preuve par valuations p-adiques (Lemme 2)
 
+set_option linter.unusedVariables false
+
+-- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
 lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   m < 10^1000000 := by
   -- L'approximation analytique lie asymptotiquement m et k
-  have h_asymp : m < 2 * k := sorry
+  have h_asymp : m < 2 * k := by
+    -- Extraction des hypotheses de base
+    have ⟨hm_pos, hk_pos, heq⟩ := h1
+    -- Comparaison de la somme de puissances avec une integrale
+    have h_integral_comp : (k + 1) * erdos_moser_sum m k > m^(k + 1) := sorry
+    -- Substitution en utilisant l'equation de la solution
+    have h_subst : (k + 1) * m^k > m^(k + 1) := sorry
+    -- Simplification de l'inegalite en divisant par m^k (m > 0)
+    have h_simpl : k + 1 > m := sorry
+    -- Deduction finale pour obtenir m < 2 * k sachant que k >= 2
+    have h_final : m < 2 * k := sorry
+    exact h_final
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
-  have h_densite : m > 2 * k ∨ m < 10^1000000 := sorry
+  have h_densite : m > 2 * k ∨ m < 10^1000000 := by
+    by_cases hm : m < 10^1000000
+    · exact Or.inr hm
+    · apply Or.inl
+      have h_primes : ∃ p, Nat.Prime p ∧ (p ∣ (m - 1) ∨ p ∣ (m + 1)) := sorry
+      have h_p_bound : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := fun p hp hd => lemma2_prime_divisors m k p hp h1 h2 hd
+      have h_m_gt_2k : m > 2 * k := sorry
+      exact h_m_gt_2k
   -- Contradiction entre la densite et l'asymptotique
-  sorry
+  cases h_densite with
+  | inl h_gt => omega
+  | inr h_lt => exact h_lt
 
 -- 3. Theoreme Principal
 theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
@@ -40,6 +63,8 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
     -- La combinaison des trois lemmes mene a une contradiction
     sorry
   · -- Pour k < 2, comme k > 0, k = 1
-    have hk1 : k = 1 := sorry
+    have hk1 : k = 1 := by
+      have _hk0 : k > 0 := h.2.1
+      omega
     have hm3 : m = 3 := sorry
     exact ⟨hm3, hk1⟩

@@ -1,6 +1,8 @@
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
+set_option linter.unusedVariables false
+
 open Finset
 
 def erdos_moser_sum (m k : Nat) : Nat :=
@@ -21,7 +23,13 @@ lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m
 lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   m < 10^1000000 := by
   -- L'approximation analytique lie asymptotiquement m et k
-  have h_asymp : m < 2 * k := sorry
+  have h_asymp : m < 2 * k := by
+    -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
+    by_contra h_ge
+    have h_ge_2k : m ≥ 2 * k := Nat.le_of_not_lt h_ge
+    have h_sum_eq : erdos_moser_sum m k = m^k := h1.2.2
+    have h_sum_gt : erdos_moser_sum m k > m^k := sorry
+    sorry
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   have h_densite : m > 2 * k ∨ m < 10^1000000 := sorry
   -- Contradiction entre la densite et l'asymptotique

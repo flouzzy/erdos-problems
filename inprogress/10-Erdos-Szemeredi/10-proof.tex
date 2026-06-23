@@ -116,6 +116,17 @@ def is_arithmetic_progression (A : Finset Real) (a d : Real) (n : Nat) : Prop :=
 /-- Lemme 1 : Cardinalite de l'ensemble somme d'une PA -/
 lemma sumset_ap (A : Finset Real) (a d : Real) (n : Nat) (hd : d > 0) (hn : n > 0) :
   is_arithmetic_progression A a d n -> (sumset A).card = 2 * n - 1 := by
+  intro h_ap
+  -- Etape 1 : Substituer la definition de A
+  have h_A_def : A = (Finset.range n).image (fun i => a + (i : Real) * d) := by
+    sorry
+  -- Etape 2 : Analyser l'ensemble des sommes
+  have h_sumset_struct : sumset A = (Finset.range (2 * n - 1)).image (fun i => 2 * a + (i : Real) * d) := by
+    sorry
+  -- Etape 3 : Montrer que les elements sont distincts car d > 0
+  have h_inj : Set.InjOn (fun i => 2 * a + (i : Real) * d) (Finset.range (2 * n - 1)) := by
+    sorry
+  -- Conclusion : Le cardinal est 2n - 1
   sorry
 
 /-- Lemme 3 : Borne d'Elekes (schema conceptuel) -/

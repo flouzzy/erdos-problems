@@ -9,9 +9,14 @@ def erdos_moser_sum (m k : Nat) : Nat :=
 def is_solution (m k : Nat) : Prop :=
   m > 0 /\ k > 0 /\ erdos_moser_sum m k = m^k
 
+set_option linter.unusedVariables false in
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
-  Even k :=
-  sorry -- Preuve par arithmetique modulaire (Lemme 1)
+  Even k := by
+  -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
+  by_contra hk_odd
+  have h_pairings : erdos_moser_sum m k % 2 = 0 := sorry
+  have h_sum_eq : erdos_moser_sum m k = m^k := h3.2.2
+  sorry
 
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)
   (h2 : k >= 2) :

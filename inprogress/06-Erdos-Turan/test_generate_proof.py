@@ -32,3 +32,12 @@ def test_generate_proof_tex(tmp_path):
     # Ensure no unexpected python syntax errors from f-string missing escapes
     # by just ensuring it compiled. Since it executed and wrote the file,
     # the function works. We just double check its contents.
+
+from unittest.mock import patch
+
+def test_generate_proof_tex_permission_error(tmp_path):
+    output_file = tmp_path / "proof.tex"
+
+    with patch("generate_proof.os.makedirs", side_effect=PermissionError("Permission denied")):
+        with pytest.raises(PermissionError):
+            generate_proof_tex(str(output_file))

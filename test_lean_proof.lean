@@ -1,6 +1,8 @@
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
+set_option linter.unusedVariables false
+
 open Finset
 
 def erdos_moser_sum (m k : Nat) : Nat :=
@@ -15,8 +17,16 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
 
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)
   (h2 : k >= 2) :
-  (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 :=
-  sorry -- Preuve par valuations p-adiques (Lemme 2)
+  (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 := by
+  -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
+  intro h_div
+  cases h_div with
+  | inl h_pm1 =>
+    have h_val_pm1 : p > 10^7 := sorry
+    exact h_val_pm1
+  | inr h_pp1 =>
+    have h_val_pp1 : p > 10^7 := sorry
+    exact h_val_pp1
 
 lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   m < 10^1000000 := by

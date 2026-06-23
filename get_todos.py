@@ -37,7 +37,7 @@ def main():
                                 description = line.split('--')[-1].strip()
                             print(f"{filepath}:{i+1}: {description}")
         except Exception as e:
-            pass
+            print(f"Error processing {filepath}: {e}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

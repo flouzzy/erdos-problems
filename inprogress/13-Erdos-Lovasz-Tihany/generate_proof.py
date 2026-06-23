@@ -39,7 +39,7 @@ def generate_tex():
 \newtheorem{definition}{Définition}
 
 \title{Analyse et Preuves de la Conjecture d'Erdos-Lovasz Tihany}
-\author{Charles EDOU NZE\thanks{ingénieur informatique augmenté par l'IA - Mathématicien amateur}}
+\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}
 \date{\today}
 
 \begin{document}

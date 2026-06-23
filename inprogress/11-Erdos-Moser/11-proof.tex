@@ -97,6 +97,7 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
 lemma erdos_moser_p_adic_contradiction (k m p : Nat) (hp : Nat.Prime p) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
   False := by
   -- Deep result from analytic number theory bounding the p-adic valuation.
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   sorry
 
 theorem erdos_moser_conjecture : forall k m : Nat, k >= 2 -> m >= 2 -> Not (ErdosMoserPredicate k m) := by

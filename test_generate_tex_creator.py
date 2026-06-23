@@ -2,7 +2,29 @@ import unittest
 from unittest.mock import patch, mock_open, call
 import generate_tex_creator
 
+from fractions import Fraction
+
 class TestGenerateTexCreator(unittest.TestCase):
+    def test_find_solution(self):
+        # Valid cases
+        cases = [
+            (2, (1, 2, 2)),
+            (3, (1, 4, 12)),
+            (4, (2, 3, 6))
+        ]
+        for n, expected in cases:
+            with self.subTest(n=n):
+                sol = generate_tex_creator.find_solution(n)
+                self.assertEqual(sol, expected)
+                if sol:
+                    x, y, z = sol
+                    self.assertEqual(Fraction(4, n), Fraction(1, x) + Fraction(1, y) + Fraction(1, z))
+
+        # Invalid cases (no solution or invalid input)
+        for n in [1, 0, -1]:
+            with self.subTest(n=n):
+                self.assertIsNone(generate_tex_creator.find_solution(n))
+
     @patch('builtins.open', new_callable=mock_open)
     def test_generate_tex(self, mock_file):
         generate_tex_creator.generate_tex()

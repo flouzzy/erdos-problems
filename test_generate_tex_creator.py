@@ -14,9 +14,7 @@ class TestGenerateTexCreator(unittest.TestCase):
         handle = mock_file()
 
         # We need to collect all written parts to check the content
-        written_content = ""
-        for call_args in handle.write.call_args_list:
-            written_content += call_args.args[0]
+        written_content = "".join(call_args.args[0] for call_args in handle.write.call_args_list)
 
         # Verify python script components are present
         self.assertIn("import os\n", written_content)

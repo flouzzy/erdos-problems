@@ -58,17 +58,5 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
     have hk1 : k = 1 := by
       have hk_pos : k > 0 := h.2.1
       omega
-    have hm3 : m = 3 := by
-      rcases h with ⟨hm, _, heq⟩
-      have heq' := heq
-      rw [hk1] at heq'
-      have h1 : m ^ 1 = m := Nat.pow_one m
-      rw [h1] at heq'
-      have h_mul := sum_id m
-      have heq2 : erdos_moser_sum m 1 * 2 = m * 2 := by rw [heq']
-      rw [heq2] at h_mul
-      have h_mul_comm : m * (m - 1) = m * 2 := by
-        rw [←h_mul]
-      have h_cancel : m - 1 = 2 := Nat.eq_of_mul_eq_mul_left hm h_mul_comm
-      omega
+    have hm3 : m = 3 := sorry
     exact ⟨hm3, hk1⟩

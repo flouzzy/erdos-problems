@@ -23,7 +23,14 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   -- L'approximation analytique lie asymptotiquement m et k
   have h_asymp : m < 2 * k := sorry
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
-  have h_densite : m > 2 * k ∨ m < 10^1000000 := sorry
+  have h_densite : m > 2 * k ∨ m < 10^1000000 := by
+    by_cases hm : m < 10^1000000
+    · exact Or.inr hm
+    · apply Or.inl
+      have h_primes : ∃ p, Nat.Prime p ∧ (p ∣ (m - 1) ∨ p ∣ (m + 1)) := sorry
+      have h_p_bound : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := fun p hp hd => lemma2_prime_divisors m k p hp h1 h2 hd
+      have h_m_gt_2k : m > 2 * k := sorry
+      exact h_m_gt_2k
   -- Contradiction entre la densite et l'asymptotique
   sorry
 

@@ -1,21 +1,21 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["18de6b640ed837ee.olean"],
+ {"o": ["95bc4db111cf2270.olean"],
   "m": false,
-  "i": "fa68aaf672826a51.ilean",
+  "i": "7203dc6ad4a5d493.ilean",
   "c": "90a7490731bc1214.c"},
  "log":
  [{"message":
    ".> LEAN_PATH=/app/test_lean/.lake/packages/Cli/.lake/build/lib/lean:/app/test_lean/.lake/packages/batteries/.lake/build/lib/lean:/app/test_lean/.lake/packages/Qq/.lake/build/lib/lean:/app/test_lean/.lake/packages/aesop/.lake/build/lib/lean:/app/test_lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/app/test_lean/.lake/packages/importGraph/.lake/build/lib/lean:/app/test_lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/app/test_lean/.lake/packages/plausible/.lake/build/lib/lean:/app/test_lean/.lake/packages/mathlib/.lake/build/lib/lean:/app/test_lean/.lake/build/lib/lean /home/jules/.elan/toolchains/leanprover--lean4---v4.31.0/bin/lean /app/test_lean/TestLean.lean -o /app/test_lean/.lake/build/lib/lean/TestLean.olean -i /app/test_lean/.lake/build/lib/lean/TestLean.ilean -c /app/test_lean/.lake/build/ir/TestLean.c --setup /app/test_lean/.lake/build/ir/TestLean.setup.json --json",
    "level": "trace"},
-  {"message": "TestLean.lean:12:6: declaration uses `sorry`",
+  {"message": "TestLean.lean:14:6: declaration uses `sorry`",
    "level": "warning"},
-  {"message": "TestLean.lean:16:6: declaration uses `sorry`",
+  {"message": "TestLean.lean:18:6: declaration uses `sorry`",
    "level": "warning"},
-  {"message": "TestLean.lean:21:6: declaration uses `sorry`",
+  {"message": "TestLean.lean:23:6: declaration uses `sorry`",
    "level": "warning"},
-  {"message": "TestLean.lean:31:8: declaration uses `sorry`",
+  {"message": "TestLean.lean:39:8: declaration uses `sorry`",
    "level": "warning"}],
  "inputs":
  [["TestLean:deps",
@@ -37,7 +37,7 @@
       ["module plugins", "00000000000006bb"]]]]],
   ["Lean 4.31.0, commit 68218e876d2a38b1985b8590fff244a83c321783",
    "fc45ac412f28501c"],
-  ["/app/test_lean/TestLean.lean", "c149be6a384e0c79"],
+  ["/app/test_lean/TestLean.lean", "ac5dc8bd04bc173c"],
   ["options",
    [["-DmaxSynthPendingDepth=3", "c78e353d34de85d4"],
     ["-Dweak.linter.mathlibStandardSet=true", "8a155799906f2b42"],
@@ -47,4 +47,4 @@
   ["Module.name: TestLean", "5efa054bf2c54484"],
   ["Package.id?: (some test_lean)", "45b6c37ba97b5f29"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "9e68ae3b4db21506"}
+ "depHash": "8e7849352798d84d"}

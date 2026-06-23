@@ -41,6 +41,7 @@ For large $k$, the difference $| \sum_{i=1}^{m-1} i^k - m^k |$ grows strictly po
 Please refer to the detailed PDF document generated in this directory for the exhaustive, step-by-step informal proofs of these lemmas.
 
 ## Architecture for Autoformalization (Lean 4 Proof Sketch)
+Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
 ```lean
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Prime
@@ -56,7 +57,11 @@ def is_solution (m k : ℕ) : Prop :=
   m > 0 ∧ k > 0 ∧ erdos_moser_sum m k = m^k
 
 -- Lemmas
-lemma lemma1_k_is_even (m k : ℕ) (h1 : m ≥ 2) (h2 : k ≥ 2) (h3 : is_solution m k) : Even k :=
+set_option linter.unusedVariables false in
+lemma lemma1_k_is_even (m k : ℕ) (h1 : m ≥ 2) (h2 : k ≥ 2) (h3 : is_solution m k) : Even k := by
+  have h_eq : erdos_moser_sum m k = m^k := h3.2.2
+  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := sorry
+  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := sorry
   sorry
 
 lemma lemma2_prime_divisors (m k p : ℕ) (hp : Nat.Prime p) (h1 : is_solution m k) (h2 : k ≥ 2) :

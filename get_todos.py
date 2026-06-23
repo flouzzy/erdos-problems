@@ -1,11 +1,9 @@
 import os
-import sys
 
 def main():
     target_files = []
-    for root, _, files in os.walk('.'):
-        if '.git' in root or '.lake' in root:
-            continue
+    for root, dirs, files in os.walk('.'):
+        dirs[:] = [d for d in dirs if d not in ('.git', '.lake')]
         for file in files:
             if file.endswith('.md') or file.endswith('.tex') or file.endswith('.py'):
                 target_files.append(os.path.join(root, file))
@@ -22,10 +20,6 @@ def main():
                         if filepath.endswith('.py') and "sorry" in line and not "print" in line:
                             if "line" in line or "#" in line or "description" in line:
                                 continue
-                            # Context
-                            start = max(0, i - 10)
-                            end = min(len(lines), i + 11)
-                            context = "".join(lines[start:end])
 
                             description = "Not inferrable"
                             if '--' in line:
@@ -37,7 +31,7 @@ def main():
                                 description = line.split('--')[-1].strip()
                             print(f"{filepath}:{i+1}: {description}")
         except Exception as e:
-            pass
+            print(f"Error processing {filepath}: {e}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

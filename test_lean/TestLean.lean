@@ -9,49 +9,13 @@ def erdos_moser_sum (m k : Nat) : Nat :=
 def is_solution (m k : Nat) : Prop :=
   m > 0 /\ k > 0 /\ erdos_moser_sum m k = m^k
 
-lemma sum_id (m : Nat) : erdos_moser_sum m 1 * 2 = m * (m - 1) := by
-  dsimp [erdos_moser_sum]
-  have h : (fun (i : Nat) => i^1) = (fun i => i) := by
-    funext x
-    exact Nat.pow_one x
-  rw [h]
-  induction m with
-  | zero => simp
-  | succ n ih =>
-    rw [Finset.sum_range_succ]
-    rw [Nat.add_mul]
-    rw [ih]
-    rcases Nat.eq_zero_or_pos n with rfl | hn
-    · simp
-    · have h_n : n * (n - 1) + n * 2 = n * n - n + n * 2 := by
-        have h_mul : n * (n - 1) = n * n - n := by
-          calc n * (n - 1) = n * n - n * 1 := Nat.mul_sub_left_distrib n n 1
-            _ = n * n - n := by rw [Nat.mul_one]
-        rw [h_mul]
-      rw [h_n]
-      have : n * n - n + n * 2 = n * n + n := by
-        have h_sub : n * n - n + n = n * n := by
-          have h_le : n <= n * n := by
-            calc n = n * 1 := (Nat.mul_one n).symm
-              _ <= n * n := Nat.mul_le_mul_left n hn
-          exact Nat.sub_add_cancel h_le
-        calc n * n - n + n * 2 = n * n - n + (n + n) := by rw [Nat.mul_two]
-          _ = n * n - n + n + n := by rw [←Nat.add_assoc]
-          _ = n * n + n := by rw [h_sub]
-      rw [this]
-      have : (n + 1) * (n + 1 - 1) = n * n + n := by
-        calc (n + 1) * (n + 1 - 1) = (n + 1) * n := rfl
-          _ = n * n + 1 * n := Nat.add_mul n 1 n
-          _ = n * n + n := by rw [Nat.one_mul]
-      rw [this]
-
+set_option linter.unusedVariables false in
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
   Even k := by
-  -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
-  by_contra hk_odd
-  have h_pairings : erdos_moser_sum m k % 2 = 0 := sorry
-  have h_sum_eq : erdos_moser_sum m k = m^k := h3.2.2
-  sorry
+  have h_eq : erdos_moser_sum m k = m^k := h3.2.2
+  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := sorry
+  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := sorry
+  sorry -- Preuve par arithmetique modulaire (Lemme 1)
 
 set_option linter.unusedVariables false in
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)

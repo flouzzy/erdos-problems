@@ -9,6 +9,42 @@ def erdos_moser_sum (m k : Nat) : Nat :=
 def is_solution (m k : Nat) : Prop :=
   m > 0 /\ k > 0 /\ erdos_moser_sum m k = m^k
 
+lemma sum_id (m : Nat) : erdos_moser_sum m 1 * 2 = m * (m - 1) := by
+  dsimp [erdos_moser_sum]
+  have h : (fun (i : Nat) => i^1) = (fun i => i) := by
+    funext x
+    exact Nat.pow_one x
+  rw [h]
+  induction m with
+  | zero => simp
+  | succ n ih =>
+    rw [Finset.sum_range_succ]
+    rw [Nat.add_mul]
+    rw [ih]
+    rcases Nat.eq_zero_or_pos n with rfl | hn
+    · simp
+    · have h_n : n * (n - 1) + n * 2 = n * n - n + n * 2 := by
+        have h_mul : n * (n - 1) = n * n - n := by
+          calc n * (n - 1) = n * n - n * 1 := Nat.mul_sub_left_distrib n n 1
+            _ = n * n - n := by rw [Nat.mul_one]
+        rw [h_mul]
+      rw [h_n]
+      have : n * n - n + n * 2 = n * n + n := by
+        have h_sub : n * n - n + n = n * n := by
+          have h_le : n <= n * n := by
+            calc n = n * 1 := (Nat.mul_one n).symm
+              _ <= n * n := Nat.mul_le_mul_left n hn
+          exact Nat.sub_add_cancel h_le
+        calc n * n - n + n * 2 = n * n - n + (n + n) := by rw [Nat.mul_two]
+          _ = n * n - n + n + n := by rw [←Nat.add_assoc]
+          _ = n * n + n := by rw [h_sub]
+      rw [this]
+      have : (n + 1) * (n + 1 - 1) = n * n + n := by
+        calc (n + 1) * (n + 1 - 1) = (n + 1) * n := rfl
+          _ = n * n + 1 * n := Nat.add_mul n 1 n
+          _ = n * n + n := by rw [Nat.one_mul]
+      rw [this]
+
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
   Even k :=
   sorry -- Preuve par arithmetique modulaire (Lemme 1)
@@ -36,6 +72,20 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
     -- La combinaison des trois lemmes mene a une contradiction
     sorry
   · -- Pour k < 2, comme k > 0, k = 1
-    have hk1 : k = 1 := sorry
-    have hm3 : m = 3 := sorry
+    have hk1 : k = 1 := by
+      have hk_pos : k > 0 := h.2.1
+      omega
+    have hm3 : m = 3 := by
+      rcases h with ⟨hm, _, heq⟩
+      have heq' := heq
+      rw [hk1] at heq'
+      have h1 : m ^ 1 = m := Nat.pow_one m
+      rw [h1] at heq'
+      have h_mul := sum_id m
+      have heq2 : erdos_moser_sum m 1 * 2 = m * 2 := by rw [heq']
+      rw [heq2] at h_mul
+      have h_mul_comm : m * (m - 1) = m * 2 := by
+        rw [←h_mul]
+      have h_cancel : m - 1 = 2 := Nat.eq_of_mul_eq_mul_left hm h_mul_comm
+      omega
     exact ⟨hm3, hk1⟩

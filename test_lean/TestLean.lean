@@ -36,6 +36,8 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
     -- La combinaison des trois lemmes mene a une contradiction
     sorry
   · -- Pour k < 2, comme k > 0, k = 1
-    have hk1 : k = 1 := sorry
+    have hk1 : k = 1 := by
+      have hk_pos : k > 0 := h.2.1
+      omega
     have hm3 : m = 3 := sorry
     exact ⟨hm3, hk1⟩

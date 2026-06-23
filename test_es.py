@@ -5,15 +5,16 @@ def solve_es(n):
         A = 4 * x - n
         if A <= 0: continue
         B = n * x
+        B2 = B * B
         # We want A/B = 1/y + 1/z
         # (Ay - B)(Az - B) = B^2
         # D is a divisor of B^2. D = Ay - B => Ay = B + D => y = (B+D)/A
         # We only need to check D up to B.
         for D in range(1, B + 1):
-            if (B * B) % D == 0:
+            if B2 % D == 0:
                 if (B + D) % A == 0:
                     y = (B + D) // A
-                    D2 = (B * B) // D
+                    D2 = B2 // D
                     if (B + D2) % A == 0:
                         z = (B + D2) // A
                         if x != y and y != z and x != z:
@@ -24,11 +25,12 @@ def solve_es(n):
         A = 4 * x - n
         if A <= 0: continue
         B = n * x
+        B2 = B * B
         for D in range(1, B + 1):
-            if (B * B) % D == 0:
+            if B2 % D == 0:
                 if (B + D) % A == 0:
                     y = (B + D) // A
-                    D2 = (B * B) // D
+                    D2 = B2 // D
                     if (B + D2) % A == 0:
                         z = (B + D2) // A
                         return x, y, z

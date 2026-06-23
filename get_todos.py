@@ -22,10 +22,6 @@ def main():
                         if filepath.endswith('.py') and "sorry" in line and not "print" in line:
                             if "line" in line or "#" in line or "description" in line:
                                 continue
-                            # Context
-                            start = max(0, i - 10)
-                            end = min(len(lines), i + 11)
-                            context = "".join(lines[start:end])
 
                             description = "Not inferrable"
                             if '--' in line:

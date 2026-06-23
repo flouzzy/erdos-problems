@@ -1,4 +1,4 @@
-import time
+import pytest
 
 def solve_es(n):
     for x in range(n // 4 + 1, n + 1):
@@ -36,8 +36,16 @@ def solve_es(n):
                         return x, y, z
     return None
 
-t0 = time.time()
-for n in range(2, 500):
-    if solve_es(n) is None:
-        print(f"Failed for {n}")
-print(f"Time: {time.time() - t0}")
+@pytest.mark.parametrize("n", range(2, 500))
+def test_solve_es(n):
+    result = solve_es(n)
+    assert result is not None, f"solve_es failed for n={n}"
+    x, y, z = result
+
+    # 4/n = 1/x + 1/y + 1/z  =>  4 * x * y * z = n * (y * z + x * z + x * y)
+    lhs = 4 * x * y * z
+    rhs = n * (y * z + x * z + x * y)
+    assert lhs == rhs, f"Mathematical property not met for n={n}, x={x}, y={y}, z={z}"
+
+if __name__ == '__main__':
+    pytest.main(["-v", __file__])

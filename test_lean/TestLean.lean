@@ -30,6 +30,8 @@ lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m
   have h_bound : p > 10^7 := sorry
   exact h_bound
 
+set_option linter.unusedVariables false
+
 lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   m < 10^1000000 := by
   -- L'approximation analytique lie asymptotiquement m et k
@@ -41,7 +43,17 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     have h_sum_gt : erdos_moser_sum m k > m^k := sorry
     sorry
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
-  have h_densite : m > 2 * k ∨ m < 10^1000000 := sorry
+  -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
+  have h_densite : m > 2 * k ∨ m < 10^1000000 := by
+    by_cases h_m : m < 10^1000000
+    · exact Or.inr h_m
+    · apply Or.inl
+      -- L'analyse asymptotique de la densite montre que m doit etre superieur a 2k
+      have h_primes : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := by
+        intro p hp hdiv
+        exact lemma2_prime_divisors m k p hp h1 h2 hdiv
+      have h_growth : m > 2 * k := sorry
+      exact h_growth
   -- Contradiction entre la densite et l'asymptotique
   cases h_densite with
   | inl h_gt =>

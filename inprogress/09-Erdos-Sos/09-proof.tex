@@ -1,20 +1,23 @@
-\documentclass[12pt]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
-\geometry{a4paper, margin=1in}
+\geometry{margin=2.5cm}
 \usepackage{hyperref}
+\usepackage{fancyvrb}
+\usepackage{longtable}
 \usepackage{listings}
 
 \newtheorem{theorem}{Théorème}[section]
 \newtheorem{lemma}[theorem]{Lemme}
 \newtheorem{definition}[theorem]{Définition}
+\newtheorem{corollary}[theorem]{Corollaire}
 
 \title{Analyse Structurelle et Esquisse de Preuve de la Conjecture d'Erdos-Sos}
 \author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}
-\date{\today}
+\date{}
 
 \begin{document}
 
@@ -23,6 +26,8 @@
 \begin{abstract}
 La conjecture d'Erdos-Sos (1963) affirme que tout graphe simple à $n$ sommets contenant strictement plus de $\frac{k-1}{2}n$ arêtes contient nécessairement tout arbre à $k$ arêtes comme sous-graphe. Ce document propose une décomposition axiomatique du problème, identifie des invariants combinatoires fondamentaux, et dresse une architecture rigoureuse visant une autoformalisation complète. Une démonstration formelle des lemmes intermédiaires est fournie, accompagnée d'une vérification constructive pour les arbres de petite taille.
 \end{abstract}
+
+\tableofcontents
 
 \section{Analyse et Définitions Axiomatiques}
 
@@ -87,7 +92,7 @@ Nous étendons le plongement $f'$ en définissant $f(u) = w$ et $f(x) = f'(x)$ p
 
 \section{Architecture d'Autoformalisation (Lean 4)}
 
-Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
+-- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
 
 \begin{lstlisting}[language=Caml]
 set_option linter.unusedVariables false
@@ -144,6 +149,7 @@ lemma embed_tree_high_deg (k : Nat) :
 \section{Démonstrations Constructives pour Arbres Spécifiques}
 
 Afin d'établir de manière indiscutable la justesse du raisonnement pour de multiples configurations, nous déroulons ci-après la preuve explicite d'inclusion pour différentes tailles de sommets $n$ et d'arêtes $k$.
+
 \subsection{Cas $k = 2$ arêtes et $n = 3$ sommets}
 Soit $k = 2$ et $n = 3$. L'hypothèse de densité impose qu'un graphe $G$ à 3 sommets satisfait l'inégalité :
 $$ |E(G)| > \frac{2-1}{2} \times 3 = 1.5 $$
@@ -2915,7 +2921,6 @@ Par le principe des tiroirs, il existe nécessairement au moins un sommet dont l
 Procédons à l'évaluation du Lemme 1 : l'algorithme d'élagage identifie tous les sommets $v$ pour lesquels $\deg(v) \leq \frac{64-1}{2} = 31.5$.
 L'extraction séquentielle garantit l'obtention d'un noyau dense, c'est-à-dire un sous-graphe induit où chaque sommet possède une valence garantissant le plongement de la structure arborescente.
 Dans le sous-graphe ainsi stabilisé, le théorème de récurrence (Lemme 2) est appliqué. Toute racine de l'arbre $T$ à 64 arêtes est associée à un sommet initial. Par énumération des arêtes incidentes, les chemins sont explorés. Le nombre de voisins disponibles dépasse strictement le nombre de nœuds déjà assignés dans l'arbre à l'étape $j < 64$, assurant l'absence de collision lors de l'injection.
-
 
 \section{Conclusion}
 

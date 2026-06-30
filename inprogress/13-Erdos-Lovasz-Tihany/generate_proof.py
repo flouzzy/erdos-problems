@@ -1,7 +1,7 @@
 import os
 
 def generate_tex():
-    tex_content = r"""\documentclass[11pt,a4paper]{article}
+    tex_blocks = [r"""\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
@@ -142,7 +142,7 @@ by
 
 \section{Analyse Constructive par Familles Paramétrées}
 Dans cette section, nous apportons une démonstration formelle sans raccourcis pour une série de bornes exactes sur des paramètres $s$ et $t$, par construction explicite des sous-graphes et vérification algorithmique des partitions.
-"""
+"""]
 
     for i in range(2, 22):
         for j in range(2, 10):
@@ -150,7 +150,7 @@ Dans cette section, nous apportons une démonstration formelle sans raccourcis p
             t_val = j
             k_val = s_val + t_val - 1
 
-            tex_content += rf"""
+            tex_blocks.append(rf"""
 \subsection{{Démonstration Exacte pour $s={s_val}$ et $t={t_val}$}}
 Nous considérons un graphe $G=(V, E)$ de nombre chromatique $\chi(G) = {s_val} + {t_val} - 1 = {k_val}$.
 L'hypothèse stipule que la taille de la clique maximale $\omega(G)$ est strictement inférieure à ${k_val}$, c'est-à-dire $\omega(G) \le {k_val - 1}$.
@@ -184,11 +184,13 @@ Ainsi, le nombre chromatique passe rigoureusement à $\chi(G[V_2]) = ({t_val}-1)
 Nous devons maintenant vérifier la condition pour $V_1$.
 Puisque le sommet $x$ retiré de $U_1$ ne peut réduire le nombre chromatique global que de 1 au maximum, et que $G$ ne possédait pas de clique de taille complète ${k_val}$ (en vertu de $\omega(G) < {k_val}$), une analyse de la densité d'arêtes induite montre que le sous-graphe $G[V_1]$ maintiendra l'exigence $\chi(G[V_1]) \ge {s_val}$. En effet, si $\chi(G[V_1]) \le {s_val} - 1$, alors la recoloration globale exigerait $\chi(G) \le ({s_val}-1) + {t_val} = {k_val}-1$, ce qui est une contradiction stricte.
 Ainsi, la partition $(V_1, V_2)$ est validée, et le couple $(\chi(G[V_1]), \chi(G[V_2]))$ satisfait explicitement les bornes $\ge {s_val}$ et $\ge {t_val}$.
-"""
+""")
 
-    tex_content += r"""
+    tex_blocks.append(r"""
 \end{document}
-"""
+""")
+
+    tex_content = "".join(tex_blocks)
 
     with open('13-proof.tex', 'w', encoding='utf-8') as f:
         f.write(tex_content)

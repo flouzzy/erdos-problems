@@ -1,3 +1,4 @@
+import math
 import pytest
 
 def _find_solution(n, require_distinct):
@@ -9,16 +10,22 @@ def _find_solution(n, require_distinct):
         # We want A/B = 1/y + 1/z
         # (Ay - B)(Az - B) = B^2
         # D is a divisor of B^2. D = Ay - B => Ay = B + D => y = (B+D)/A
-        # We only need to check D up to B.
-        for D in range(1, B + 1):
+        # We only need to check D up to math.isqrt(B2).
+        # We also know (B + D) % A == 0, which means D % A == (-B) % A.
+        start_D = (-B) % A
+        if start_D == 0:
+            start_D = A
+
+        limit = math.isqrt(B2)
+
+        for D in range(start_D, limit + 1, A):
             if B2 % D == 0:
-                if (B + D) % A == 0:
-                    y = (B + D) // A
-                    D2 = B2 // D
-                    if (B + D2) % A == 0:
-                        z = (B + D2) // A
-                        if not require_distinct or (x != y and y != z and x != z):
-                            return x, y, z
+                y = (B + D) // A
+                D2 = B2 // D
+                if (B + D2) % A == 0:
+                    z = (B + D2) // A
+                    if not require_distinct or (x != y and y != z and x != z):
+                        return x, y, z
     return None
 
 def solve_es(n):

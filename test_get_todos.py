@@ -78,5 +78,17 @@ class TestGetTodos(unittest.TestCase):
         self.assertNotIn(".lake", output)
         self.assertIn("normal_dir/test.md:1: Found this", output)
 
+    @patch('sys.stderr', new_callable=StringIO)
+    def test_file_read_error(self, mock_stderr):
+        # Create a file so it gets picked up
+        self.create_file("test.md", "sorry")
+
+        with patch('builtins.open', side_effect=PermissionError("Permission denied")):
+            get_todos.main()
+
+        error_output = mock_stderr.getvalue()
+        self.assertIn("Error processing", error_output)
+        self.assertIn("Permission denied", error_output)
+
 if __name__ == '__main__':
     unittest.main()

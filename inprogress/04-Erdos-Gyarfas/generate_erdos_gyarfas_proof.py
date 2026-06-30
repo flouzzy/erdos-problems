@@ -1,5 +1,3 @@
-import os
-
 def generate_tex():
     tex_parts = []
 

@@ -145,7 +145,7 @@ Soit $B$ une base asymptotique d'ordre 2 telle que $B(x) \ge c \sqrt{x}$ pour to
     # We will add multiple sections detailing modular arithmetic approaches, probabilistic methods (Erdos-Renyi),
     # and exhaustive boundary checks.
 
-    expansion_parts = []
+    expansion_parts = [tex_content]
     for i in range(1, 15):
         expansion_parts.append(r"""
 \section{Extension Analytique et Méthode Probabiliste (Partie """ + str(i) + r""")}
@@ -179,10 +179,7 @@ Dans cette section, nous explorons une ramification supplémentaire de la conjec
 \newpage
 """)
 
-    expansion_content = "".join(expansion_parts)
-    tex_content += expansion_content
-
-    tex_content += r"""
+    expansion_parts.append(r"""
 \section{Architecture pour l'Autoformalisation (Lean 4)}
 
 Afin de garantir la validité absolue des démonstrations partielles énoncées ci-dessus, et d'offrir un squelette de preuve pour un système de vérification formelle, nous présentons le "Proof Sketch" suivant, syntaxiquement compatible avec l'assistant de preuve Lean 4. Ce code n'utilise que des caractères ASCII standard pour éviter tout problème de compilation dans les environnements typographiques restreints.
@@ -244,7 +241,10 @@ La rigueur imposée par l'absence d'ellipses logiques démontre la profondeur ax
 \end{thebibliography}
 
 \end{document}
-"""
+""")
+
+    tex_content = "".join(expansion_parts)
+
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(tex_content)
 

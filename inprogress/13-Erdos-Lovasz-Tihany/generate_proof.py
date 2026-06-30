@@ -1,5 +1,3 @@
-import os
-
 def generate_tex():
     tex_content = r"""\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}

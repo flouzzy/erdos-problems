@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, mock_open, call
+from unittest.mock import patch, mock_open
 import generate_tex_creator
 
 from fractions import Fraction

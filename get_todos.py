@@ -11,9 +11,7 @@ def main():
     for filepath in target_files:
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-
-                for i, line in enumerate(lines):
+                for i, line in enumerate(f):
                     # Check for lean sorry. Only consider lines that look like code or comments
                     if 'sorry' in line:
                         # Make sure it's not a python string or just a plain word

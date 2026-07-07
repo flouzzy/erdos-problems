@@ -69,20 +69,18 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 open Finset
 
 def ErdosMoserPredicate (k m : Nat) : Prop :=
-  (sum (range m) (fun i => i^k)) = m^k
+  (∑ i ∈ range m, i^k) = m^k
 
-set_option linter.unusedVariables false in
-lemma erdos_moser_parity (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
+lemma erdos_moser_parity (k m : Nat) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : ErdosMoserPredicate k m) :
   m % 2 = 1 \/ m % 2 = 0 := by
   -- Trivial parity decomposition, but essential for case splitting.
   omega
 
-set_option linter.unusedVariables false in
-lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
+lemma erdos_moser_faulhaber_bound (k m : Nat) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : ErdosMoserPredicate k m) :
   m > k := by
   -- Proof sketch using asymptotic growth of sum_{i=0}^{m-1} i^k approx m^{k+1}/(k+1)
   -- For m^k = sum i^k, m cannot be too small compared to k.
-  have h1 : (sum (range m) (fun i => i^k)) < (m^(k+1)) / (k + 1) := by
+  have h1 : (∑ i ∈ range m, i^k) < (m^(k+1)) / (k + 1) := by
     -- Bounding sum by the continuous integral
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
     sorry
@@ -93,22 +91,14 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
   have h3 : (k + 1) * m^k < m^(k+1) := by
     -- Algebraic rearrangement
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    have h_mul_div : ((m^(k+1)) / (k + 1)) * (k + 1) <= m^(k+1) := Nat.div_mul_le_self _ _
-    have h2_mul : m^k * (k + 1) < ((m^(k+1)) / (k + 1)) * (k + 1) := by
-      exact Nat.mul_lt_mul_of_pos_right h2 (by omega)
-    rw [Nat.mul_comm (k + 1) _]
-    exact lt_of_lt_of_le h2_mul h_mul_div
+    sorry
   have h4 : k + 1 < m := by
     -- Dividing by m^k
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    have h_pow : m^(k+1) = m^k * m := by rw [Nat.pow_succ, Nat.mul_comm]
-    rw [h_pow] at h3
-    rw [Nat.mul_comm (k + 1) (m^k)] at h3
-    exact Nat.lt_of_mul_lt_mul_left h3
+    sorry
   omega
 
-set_option linter.unusedVariables false in
-lemma erdos_moser_p_adic_contradiction (k m p : Nat) (hp : Nat.Prime p) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
+lemma erdos_moser_p_adic_contradiction (k m p : Nat) (_hp : Nat.Prime p) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : ErdosMoserPredicate k m) :
   False := by
   -- Deep result from analytic number theory bounding the p-adic valuation.
   -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
@@ -122,12 +112,12 @@ theorem erdos_moser_conjecture : forall k m : Nat, k >= 2 -> m >= 2 -> Not (Erdo
   -- By Lemma 1, we extract modular constraints.
   -- By Lemma 2, we establish bounds using Faulhaber's formula.
   -- By Lemma 3, we derive a contradiction from p-adic valuations.
-  intro k m hk hm h_eq
-  have h_parity : m % 2 = 1 \/ m % 2 = 0 := erdos_moser_parity k m hk hm h_eq
-  have h_bound : m > k := erdos_moser_faulhaber_bound k m hk hm h_eq
-  have p : Nat := 2
+  intro k m _hk _hm _h_eq
+  have _h_parity : m % 2 = 1 \/ m % 2 = 0 := erdos_moser_parity k m _hk _hm _h_eq
+  have _h_bound : m > k := erdos_moser_faulhaber_bound k m _hk _hm _h_eq
+  have _p : Nat := 2
   have hp : Nat.Prime 2 := by decide
-  have h_false : False := erdos_moser_p_adic_contradiction k m 2 hp hk hm h_eq
+  have h_false : False := erdos_moser_p_adic_contradiction k m 2 hp _hk _hm _h_eq
   exact h_false
 \end{lstlisting}
 

@@ -24,7 +24,7 @@ lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m
   (h2 : k >= 2) :
   (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 := by
   intro h_div
-  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+  -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
   have h_val : p ∣ k := sorry
   have h_cong : p^2 ∣ (m^k - m) := sorry
   have h_bound : p > 10^7 := sorry
@@ -41,7 +41,7 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     have h_ge_2k : m ≥ 2 * k := Nat.le_of_not_lt h_ge
     have h_sum_eq : erdos_moser_sum m k = m^k := h1.2.2
     have h_sum_gt : erdos_moser_sum m k > m^k := sorry
-    sorry
+    omega
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
   have h_densite : m > 2 * k ∨ m < 10^1000000 := by

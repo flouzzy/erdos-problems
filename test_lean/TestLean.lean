@@ -24,7 +24,7 @@ lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m
   (h2 : k >= 2) :
   (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 := by
   intro h_div
-  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+  -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
   have h_val : p ∣ k := sorry
   have h_cong : p^2 ∣ (m^k - m) := sorry
   have h_bound : p > 10^7 := sorry

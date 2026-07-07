@@ -119,19 +119,23 @@ lemma sumset_ap (A : Finset Real) (a d : Real) (n : Nat) (hd : d > 0) (hn : n > 
   intro h_ap
   -- Etape 1 : Substituer la definition de A
   have h_A_def : A = (Finset.range n).image (fun i => a + (i : Real) * d) := by
-    sorry
+    exact h_ap
   -- Etape 2 : Analyser l'ensemble des sommes
   have h_sumset_struct : sumset A = (Finset.range (2 * n - 1)).image (fun i => 2 * a + (i : Real) * d) := by
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
     sorry
   -- Etape 3 : Montrer que les elements sont distincts car d > 0
   have h_inj : Set.InjOn (fun i => 2 * a + (i : Real) * d) (Finset.range (2 * n - 1)) := by
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
     sorry
   -- Conclusion : Le cardinal est 2n - 1
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   sorry
 
 /-- Lemme 3 : Borne d'Elekes (schema conceptuel) -/
 lemma elekes_bound (A : Finset Real) (hA : A.card > 0) :
   exists c > 0, (sumset A).card * (productset A).card >= c * (A.card ^ (5/2 : Real)) := by
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   sorry
 
 \end{lstlisting}

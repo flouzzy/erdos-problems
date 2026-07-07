@@ -1,25 +1,69 @@
 import math
 import pytest
 
+_prime_factors_cache = {}
+
+def get_prime_factors(num):
+    if num in _prime_factors_cache:
+        return _prime_factors_cache[num]
+
+    orig_num = num
+    factors = {}
+
+    count2 = 0
+    while num % 2 == 0:
+        count2 += 1
+        num //= 2
+    if count2 > 0:
+        factors[2] = count2
+
+    d = 3
+    while d * d <= num:
+        if num % d == 0:
+            count = 0
+            while num % d == 0:
+                count += 1
+                num //= d
+            factors[d] = count
+        d += 2
+    if num > 1:
+        factors[num] = 1
+
+    _prime_factors_cache[orig_num] = factors
+    return factors
+
 def _find_solution(n, require_distinct):
+    n_factors = get_prime_factors(n)
     for x in range(n // 4 + 1, n + 1):
         A = 4 * x - n
         if A <= 0: continue
         B = n * x
+
+        b2_factors = {}
+        for p, count in n_factors.items():
+            b2_factors[p] = count * 2
+        for p, count in get_prime_factors(x).items():
+            b2_factors[p] = b2_factors.get(p, 0) + count * 2
+
+        limit = B
+
+        divisors = [1]
+        for p, exp in b2_factors.items():
+            new_divs = []
+            power = p
+            for _ in range(exp):
+                for d in divisors:
+                    val = d * power
+                    if val <= limit:
+                        new_divs.append(val)
+                power *= p
+            divisors.extend(new_divs)
+
+        divisors.sort()
         B2 = B * B
-        # We want A/B = 1/y + 1/z
-        # (Ay - B)(Az - B) = B^2
-        # D is a divisor of B^2. D = Ay - B => Ay = B + D => y = (B+D)/A
-        # We only need to check D up to math.isqrt(B2).
-        # We also know (B + D) % A == 0, which means D % A == (-B) % A.
-        start_D = (-B) % A
-        if start_D == 0:
-            start_D = A
 
-        limit = math.isqrt(B2)
-
-        for D in range(start_D, limit + 1, A):
-            if B2 % D == 0:
+        for D in divisors:
+            if (B + D) % A == 0:
                 y = (B + D) // A
                 D2 = B2 // D
                 if (B + D2) % A == 0:

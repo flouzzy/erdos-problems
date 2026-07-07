@@ -16,7 +16,7 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
   Even k := by
   have h_eq : erdos_moser_sum m k = m^k := h3.2.2
   have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := sorry
-  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := sorry
+  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := by rw [h_eq]
   sorry -- Preuve par arithmetique modulaire (Lemme 1)
 
 set_option linter.unusedVariables false in
@@ -41,7 +41,7 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     have h_ge_2k : m ≥ 2 * k := Nat.le_of_not_lt h_ge
     have h_sum_eq : erdos_moser_sum m k = m^k := h1.2.2
     have h_sum_gt : erdos_moser_sum m k > m^k := sorry
-    sorry
+    omega
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
   have h_densite : m > 2 * k ∨ m < 10^1000000 := by
@@ -52,7 +52,10 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
       have h_primes : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := by
         intro p hp hdiv
         exact lemma2_prime_divisors m k p hp h1 h2 hdiv
-      have h_growth : m > 2 * k := sorry
+      have h_growth : m > 2 * k := by
+        have _h_m_large : m ≥ 10^1000000 := Nat.le_of_not_lt h_m
+        -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+        sorry
       exact h_growth
   -- Contradiction entre la densite et l'asymptotique
   cases h_densite with

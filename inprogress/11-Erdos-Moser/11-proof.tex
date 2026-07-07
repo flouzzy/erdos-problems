@@ -104,6 +104,7 @@ lemma erdos_moser_p_adic_contradiction (k m p : Nat) (_hp : Nat.Prime p) (_hk : 
   -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   sorry
 
+set_option linter.unusedVariables false in
 theorem erdos_moser_conjecture : forall k m : Nat, k >= 2 -> m >= 2 -> Not (ErdosMoserPredicate k m) := by
   -- Proof sketch for future autoformalization
   -- The overall strategy proceeds by contradiction.

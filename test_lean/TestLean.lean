@@ -1,6 +1,9 @@
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib
 
+set_option maxRecDepth 2000000
+set_option exponentiation.threshold 2000000
 set_option linter.unusedVariables false
 
 open Finset
@@ -15,19 +18,30 @@ set_option linter.unusedVariables false in
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
   Even k := by
   have h_eq : erdos_moser_sum m k = m^k := h3.2.2
-  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := sorry
-  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := sorry
-  sorry -- Preuve par arithmetique modulaire (Lemme 1)
+  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := by rw [h_eq]
+  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := by rw [h_eq]
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+  by_contra hk
+  have hm_minus_1_gt_0 : m - 1 > 0 := by omega
+  have h_sum_mod : erdos_moser_sum m k % (m - 1) = (m - 1) / 2 % (m - 1) := sorry
+  have h_mk_mod : m^k % (m - 1) = 1 % (m - 1) := sorry
+  have h_contra : (m - 1) / 2 % (m - 1) = 1 % (m - 1) := by
+    rw [← h_sum_mod, h_mod_m_minus_1, h_mk_mod]
+  have h_m_val : m = 3 := sorry
+  have h_k_val : k = 1 := sorry
+  omega
 
 set_option linter.unusedVariables false in
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)
   (h2 : k >= 2) :
   (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 := by
   intro h_div
-  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+  -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
   have h_val : p ∣ k := sorry
   have h_cong : p^2 ∣ (m^k - m) := sorry
-  have h_bound : p > 10^7 := sorry
+  have h_bound : p > 10^7 := by
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
   exact h_bound
 
 set_option linter.unusedVariables false
@@ -41,7 +55,7 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     have h_ge_2k : m ≥ 2 * k := Nat.le_of_not_lt h_ge
     have h_sum_eq : erdos_moser_sum m k = m^k := h1.2.2
     have h_sum_gt : erdos_moser_sum m k > m^k := sorry
-    sorry
+    omega
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
   have h_densite : m > 2 * k ∨ m < 10^1000000 := by
@@ -52,7 +66,10 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
       have h_primes : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := by
         intro p hp hdiv
         exact lemma2_prime_divisors m k p hp h1 h2 hdiv
-      have h_growth : m > 2 * k := sorry
+      have h_growth : m > 2 * k := by
+        have _h_m_large : m ≥ 10^1000000 := Nat.le_of_not_lt h_m
+        -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+        sorry
       exact h_growth
   -- Contradiction entre la densite et l'asymptotique
   cases h_densite with
@@ -73,10 +90,35 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
   · -- Pour k >= 2, les bornes analytiques entrent en contradiction
     have h_bound := lemma3_analytic_bound m k h hk
     -- La combinaison des trois lemmes mene a une contradiction
-    sorry
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    have h_contra : False := sorry
+    exact False.elim h_contra
   · -- Pour k < 2, comme k > 0, k = 1
     have hk1 : k = 1 := by
-      have hk_pos : k > 0 := h.2.1
+      have _hk0 : k > 0 := h.2.1
       omega
-    have hm3 : m = 3 := sorry
+    have hm3 : m = 3 := by
+      have hm_pos : m > 0 := h.1
+      have h_eq : erdos_moser_sum m k = m^k := h.2.2
+      rw [hk1] at h_eq
+      have h_pow1 : (fun (i : Nat) => i^1) = (fun i => i) := by funext x; exact Nat.pow_one x
+      unfold erdos_moser_sum at h_eq
+      rw [h_pow1] at h_eq
+      rw [sum_range_id] at h_eq
+      rw [Nat.pow_one] at h_eq
+      have h2 : m * (m - 1) / 2 * 2 = m * 2 := congrArg (· * 2) h_eq
+      have hdvd : 2 ∣ m * (m - 1) := by
+        cases m with
+        | zero => exact Nat.dvd_zero 2
+        | succ m' =>
+          have heven : Even (m' * (m' + 1)) := Nat.even_mul_succ_self m'
+          have hdvd2 : 2 ∣ m' * (m' + 1) := even_iff_two_dvd.mp heven
+          have hrw : (m' + 1) * (m' + 1 - 1) = (m' + 1) * m' := by rfl
+          have hcomm : (m' + 1) * m' = m' * (m' + 1) := Nat.mul_comm (m' + 1) m'
+          rw [hrw, hcomm]
+          exact hdvd2
+      have hdiv : m * (m - 1) / 2 * 2 = m * (m - 1) := Nat.div_mul_cancel hdvd
+      rw [hdiv] at h2
+      have hm1 : m - 1 = 2 := Nat.eq_of_mul_eq_mul_left hm_pos h2
+      omega
     exact ⟨hm3, hk1⟩

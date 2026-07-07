@@ -15,7 +15,7 @@ set_option linter.unusedVariables false in
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
   Even k := by
   have h_eq : erdos_moser_sum m k = m^k := h3.2.2
-  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := sorry
+  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := by rw [h_eq]
   have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := sorry
   sorry -- Preuve par arithmetique modulaire (Lemme 1)
 

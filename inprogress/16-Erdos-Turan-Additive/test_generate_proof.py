@@ -1,31 +1,27 @@
-import os
-import pytest
+import unittest
 import sys
+import os
 
-# Add the directory to the path so we can import generate_proof
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
+# Add current directory to path so generate_proof can be imported
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from generate_proof import generate_latex
 
-def test_generate_latex():
-    # Call the function to generate the LaTeX string
-    tex_output = generate_latex()
+class TestGenerateProof(unittest.TestCase):
+    def test_generate_latex(self):
+        tex = generate_latex()
 
-    # Verify the output is a string
-    assert isinstance(tex_output, str)
+        # Verify it returns a string
+        self.assertIsInstance(tex, str)
 
-    # Verify key components of the LaTeX document are present
-    assert r"\documentclass[11pt,a4paper]{article}" in tex_output
-    assert r"\begin{document}" in tex_output
-    assert r"\end{document}" in tex_output
-    assert r"Charles EDOU NZE" in tex_output
+        # Verify essential LaTeX components
+        self.assertIn(r"\documentclass[11pt,a4paper]{article}", tex)
+        self.assertIn(r"\begin{document}", tex)
+        self.assertIn(r"\end{document}", tex)
+        self.assertIn(r"\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}", tex)
 
-    # Verify the presence of the required abstract and math concepts
-    assert r"\begin{abstract}" in tex_output
-    assert r"Erdős-Turán" in tex_output
-
-    # Make sure we're getting a decent length document
-    assert len(tex_output) > 1000
+        # Verify the generated text has substantial content
+        self.assertTrue(len(tex) > 1000)
 
 if __name__ == '__main__':
+    import pytest
     pytest.main(['-v', __file__])

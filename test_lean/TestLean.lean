@@ -15,9 +15,18 @@ set_option linter.unusedVariables false in
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
   Even k := by
   have h_eq : erdos_moser_sum m k = m^k := h3.2.2
-  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := sorry
+  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := by rw [h_eq]
   have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := by rw [h_eq]
-  sorry -- Preuve par arithmetique modulaire (Lemme 1)
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+  by_contra hk
+  have hm_minus_1_gt_0 : m - 1 > 0 := by omega
+  have h_sum_mod : erdos_moser_sum m k % (m - 1) = (m - 1) / 2 % (m - 1) := sorry
+  have h_mk_mod : m^k % (m - 1) = 1 % (m - 1) := sorry
+  have h_contra : (m - 1) / 2 % (m - 1) = 1 % (m - 1) := by
+    rw [← h_sum_mod, h_mod_m_minus_1, h_mk_mod]
+  have h_m_val : m = 3 := sorry
+  have h_k_val : k = 1 := sorry
+  omega
 
 set_option linter.unusedVariables false in
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)

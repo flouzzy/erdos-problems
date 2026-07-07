@@ -119,7 +119,7 @@ lemma sumset_ap (A : Finset Real) (a d : Real) (n : Nat) (hd : d > 0) (hn : n > 
   intro h_ap
   -- Etape 1 : Substituer la definition de A
   have h_A_def : A = (Finset.range n).image (fun i => a + (i : Real) * d) := by
-    sorry
+    exact h_ap
   -- Etape 2 : Analyser l'ensemble des sommes
   have h_sumset_struct : sumset A = (Finset.range (2 * n - 1)).image (fun i => 2 * a + (i : Real) * d) := by
     sorry

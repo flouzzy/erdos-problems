@@ -107,10 +107,13 @@ def IsPowerOfTwo (n : Nat) : Prop :=
 def ErdosGyarfasPredicate (G : SimpleGraph V) : Prop :=
   DegAtLeast3 G -> exists (v : V) (c : G.Walk v v), c.IsCycle /\ IsPowerOfTwo c.length
 
+set_option linter.unusedVariables false in
 lemma erdos_gyarfas_lemma1 (G : SimpleGraph V) (h : DegAtLeast3 G) :
   exists v : V, G.degree v >= 3 := by
   -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-  sorry
+  have h_nonempty : Nonempty V := sorry
+  let v := Classical.choice h_nonempty
+  exact ⟨v, h v⟩
 
 theorem erdos_gyarfas_conjecture (G : SimpleGraph V) : ErdosGyarfasPredicate G := by
   -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.

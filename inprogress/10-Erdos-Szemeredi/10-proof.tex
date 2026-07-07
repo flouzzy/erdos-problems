@@ -103,38 +103,84 @@ set_option linter.unusedVariables false
 open Finset
 
 /-- Definition des ensembles somme et produit -/
-def sumset (A : Finset Real) : Finset Real :=
-  (A.product A).image (fun p => p.1 + p.2)
+noncomputable def sumset (A : Finset Real) : Finset Real :=
+  (A ×ˢ A).image (fun p => p.1 + p.2)
 
-def productset (A : Finset Real) : Finset Real :=
-  (A.product A).image (fun p => p.1 * p.2)
+noncomputable def productset (A : Finset Real) : Finset Real :=
+  (A ×ˢ A).image (fun p => p.1 * p.2)
 
 /-- Definition d'une progression arithmetique -/
-def is_arithmetic_progression (A : Finset Real) (a d : Real) (n : Nat) : Prop :=
-  A = (Finset.range n).image (fun i => a + (i : Real) * d)
+noncomputable def is_arithmetic_progression (A : Finset Real) (a d : Real) (n : Nat) : Prop :=
+  A = (Finset.range n).image (fun (i : Nat) => a + (i : Real) * d)
 
 /-- Lemme 1 : Cardinalite de l'ensemble somme d'une PA -/
 lemma sumset_ap (A : Finset Real) (a d : Real) (n : Nat) (hd : d > 0) (hn : n > 0) :
   is_arithmetic_progression A a d n -> (sumset A).card = 2 * n - 1 := by
   intro h_ap
   -- Etape 1 : Substituer la definition de A
-  have h_A_def : A = (Finset.range n).image (fun i => a + (i : Real) * d) := by
+  have h_A_def : A = (Finset.range n).image (fun (i : Nat) => a + (i : Real) * d) := by
     exact h_ap
   -- Etape 2 : Analyser l'ensemble des sommes
-  have h_sumset_struct : sumset A = (Finset.range (2 * n - 1)).image (fun i => 2 * a + (i : Real) * d) := by
-    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    sorry
+  have h_sumset_struct : sumset A = (Finset.range (2 * n - 1)).image (fun (i : Nat) => 2 * a + (i : Real) * d) := by
+    rw [h_A_def]
+    unfold sumset
+    ext x
+    simp only [mem_image, mem_product, mem_range, Prod.exists]
+    constructor
+    · rintro ⟨x1, x2, ⟨⟨i, hi, hx1⟩, ⟨j, hj, hx2⟩⟩, rfl⟩
+      use i + j
+      refine ⟨by omega, ?_⟩
+      rw [←hx1, ←hx2]
+      push_cast
+      ring
+    · rintro ⟨k, hk, rfl⟩
+      by_cases h : k < n
+      · use a + k * d, a + 0 * d
+        refine ⟨⟨⟨k, h, rfl⟩, ⟨0, hn, by simp⟩⟩, ?_⟩
+        ring
+      · have h1 : k - (n - 1) < n := by omega
+        have h2 : n - 1 < n := by omega
+        use a + (n - 1 : Nat) * d, a + (k - (n - 1) : Nat) * d
+        refine ⟨⟨⟨n - 1, h2, rfl⟩, ⟨k - (n - 1), h1, rfl⟩⟩, ?_⟩
+        have h_k_ge : n - 1 ≤ k := by omega
+        have h3 : (k : Real) = ((n - 1 : Nat) : Real) + ((k - (n - 1) : Nat) : Real) := by
+          rw [Nat.cast_sub h_k_ge]
+          ring
+        calc
+          a + ((n - 1 : Nat) : Real) * d + (a + ((k - (n - 1) : Nat) : Real) * d) = 2 * a + (((n - 1 : Nat) : Real) + ((k - (n - 1) : Nat) : Real)) * d := by ring
+          _ = 2 * a + (k : Real) * d := by rw [←h3]
   -- Etape 3 : Montrer que les elements sont distincts car d > 0
-  have h_inj : Set.InjOn (fun i => 2 * a + (i : Real) * d) (Finset.range (2 * n - 1)) := by
-    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    sorry
+  have h_inj : Set.InjOn (fun (i : Nat) => 2 * a + (i : Real) * d) (Finset.range (2 * n - 1) : Set Nat) := by
+    intro i _ j _ hij
+    dsimp only at hij
+    have h1 : (i : Real) * d = (j : Real) * d := by
+      calc
+        (i : Real) * d = 2 * a + (i : Real) * d - 2 * a := by ring
+        _ = 2 * a + (j : Real) * d - 2 * a := by rw [hij]
+        _ = (j : Real) * d := by ring
+    have h2 : (i : Real) = (j : Real) := by
+      cases mul_eq_mul_right_iff.mp h1 with
+      | inl h => exact h
+      | inr h => exfalso; linarith
+    exact_mod_cast h2
   -- Conclusion : Le cardinal est 2n - 1
-  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-  sorry
+  rw [h_sumset_struct]
+  rw [card_image_of_injOn h_inj]
+  rw [card_range]
 
 /-- Lemme 3 : Borne d'Elekes (schema conceptuel) -/
 lemma elekes_bound (A : Finset Real) (hA : A.card > 0) :
-  exists c > 0, (sumset A).card * (productset A).card >= c * (A.card ^ (5/2 : Real)) := by
+  ∃ c > (0 : Real), (sumset A).card * (productset A).card ≥ c * ((A.card : Real) ^ (5/2 : Real)) := by
+  -- La preuve complete de la borne d'Elekes depasse le cadre de ce lemme car elle
+  -- necessite l'application du theoreme de Szemeredi-Trotter sur les incidences
+  -- points-lignes, qui n'est pas encore formalise dans ce projet.
+  -- Nous montrons l'existence triviale de la constante.
+  use 1 / A.card
+  have h1 : (1 : Real) / A.card > 0 := by
+    apply one_div_pos.mpr
+    norm_cast
+    exact hA
+  refine ⟨h1, ?_⟩
   -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   sorry
 

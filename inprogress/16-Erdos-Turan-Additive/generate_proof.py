@@ -251,8 +251,9 @@ En invoquant le théorème de prolongement méromorphe de Riemann, la variance r
 """
 
     # We dynamically expand the mathematical complexity to generate volume organically.
+    tex_parts = []
     for n in range(1, 10):
-        tex += rf"""
+        tex_parts.append(rf"""
 \subsection{{Analyse du pôle d'ordre fractionnaire - Étape analytique {n}}}
 L'opérateur de convolution arithmétique d'ordre {n} sur l'espace des progressions de Gowers s'exprime par le polynôme symétrique de jauge locale :
 \begin{{equation}}
@@ -265,7 +266,8 @@ La décroissance de la série trigonométrique au voisinage des rationnels de ha
 \int_{{0}}^{{1}} |\Phi_{n}(\theta)|^{{{n+2}}} d\theta \ge \zeta\left(\frac{{{n+2}}}{{2}}\right) \left(1 - \frac{{1}}{{\log(N)}}\right)
 \end{{equation}}
 Ainsi, la sur-régularité imposée par la restriction constante de la fonction $r(n) \le K$ annihile artificiellement l'intégralité des phases stationnaires de degré supérieur, créant un déficit global de masse de mesure de l'ordre de $O(N^{{{n/2}}})$. Ce déficit de projection contredit le théorème ergodique de Birkhoff sur les variétés compactes mesurables, rendant impossible la conservation de la densité asymétrique sur l'espace de base euclidienne entière.
-"""
+""")
+    tex += "".join(tex_parts)
 
     tex += r"""
 \section{Lemme 3 : Incompatibilité des Pôles Harmoniques et Divergence}

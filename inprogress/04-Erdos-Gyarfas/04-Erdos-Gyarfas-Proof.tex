@@ -95,26 +95,35 @@ import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Paths
 
 universe u
-variable {V : Type u} [Fintype V]
-variable (G : SimpleGraph V)
+variable {V : Type u} [Fintype V] [DecidableEq V]
+variable (G : SimpleGraph V) [DecidableRel G.Adj]
 
-def DegAtLeast3 (G : SimpleGraph V) : Prop :=
+def DegAtLeast3 (G : SimpleGraph V) [DecidableRel G.Adj] : Prop :=
   forall v : V, G.degree v >= 3
 
 def IsPowerOfTwo (n : Nat) : Prop :=
   exists k : Nat, n = 2^k
 
-def ErdosGyarfasPredicate (G : SimpleGraph V) : Prop :=
+def ErdosGyarfasPredicate (G : SimpleGraph V) [DecidableRel G.Adj] : Prop :=
   DegAtLeast3 G -> exists (v : V) (c : G.Walk v v), c.IsCycle /\ IsPowerOfTwo c.length
 
-lemma erdos_gyarfas_lemma1 (G : SimpleGraph V) (h : DegAtLeast3 G) :
+set_option linter.unusedVariables false in
+lemma erdos_gyarfas_lemma1 (G : SimpleGraph V) [DecidableRel G.Adj] (h : DegAtLeast3 G) :
   exists v : V, G.degree v >= 3 := by
-  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-  sorry
+  have h_nonempty : Nonempty V := by
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
+  have v : V := Classical.choice h_nonempty
+  have h_deg : G.degree v >= 3 := h v
+  exact Exists.intro v h_deg
 
-theorem erdos_gyarfas_conjecture (G : SimpleGraph V) : ErdosGyarfasPredicate G := by
-  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-  sorry
+set_option linter.unusedVariables false in
+theorem erdos_gyarfas_conjecture (G : SimpleGraph V) [DecidableRel G.Adj] : ErdosGyarfasPredicate G := by
+  intro hDeg
+  have h_c : exists (v : V) (c : G.Walk v v), c.IsCycle /\ IsPowerOfTwo c.length := by
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
+  exact h_c
 \end{lstlisting}
 
 \section{Démonstrations Constructives Explicites et Etendues}

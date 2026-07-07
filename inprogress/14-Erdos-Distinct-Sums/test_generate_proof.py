@@ -1,24 +1,27 @@
 import unittest
-import os
 import sys
+import os
+import pytest
 
-# Add the directory containing the module to the python path
+# Add the directory to the path so we can import the script
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from generate_proof import generate_latex
+from generate_proof import generate_readme_fr, generate_readme_en
 
 class TestGenerateProof(unittest.TestCase):
-    def test_generate_latex(self):
-        latex_content = generate_latex()
+    def test_generate_readme_fr(self):
+        content = generate_readme_fr()
+        self.assertIsInstance(content, str)
+        self.assertIn("# 14 - Conjecture d'Erdős", content)
+        self.assertIn("## 1. Analyse et Décomposition", content)
+        self.assertIn("### Définitions Axiomatiques", content)
+        self.assertIn("Architecture pour l'Autoformalisation (Lean 4)", content)
 
-        # Verify it returns a string
-        self.assertIsInstance(latex_content, str)
-
-        # Verify it contains essential LaTeX keywords
-        self.assertIn(r"\documentclass", latex_content)
-        self.assertIn(r"\begin{document}", latex_content)
-        self.assertIn(r"\end{document}", latex_content)
-        self.assertIn(r"\usepackage", latex_content)
+    def test_generate_readme_en(self):
+        content = generate_readme_en()
+        self.assertIsInstance(content, str)
+        self.assertIn("# 14 - Erdős Conjecture", content)
+        self.assertIn("## Problem Statement", content)
+        self.assertIn("## Current Status", content)
 
 if __name__ == '__main__':
-    unittest.main()
+    pytest.main(['-v', __file__])

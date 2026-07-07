@@ -1,6 +1,8 @@
 import os
 import sys
+import io
 import unittest
+import subprocess
 import PyPDF2
 from unittest.mock import patch, mock_open
 
@@ -36,6 +38,17 @@ class TestGenerateProof(unittest.TestCase):
 
                 # Verify pdflatex was called
                 mock_run.assert_called_once()
+
+    @patch('subprocess.run')
+    def test_generate_tex_subprocess_error(self, mock_run):
+        # Simulate pdflatex failing
+        mock_run.side_effect = subprocess.CalledProcessError(1, 'pdflatex')
+
+        with patch('builtins.open', new_callable=mock_open):
+            with patch('os.makedirs'):
+                with patch('sys.stderr', new_callable=io.StringIO) as mock_stderr:
+                    generate_tex()
+                    self.assertIn("Error compiling LaTeX", mock_stderr.getvalue())
 
     def test_pdf_output_exists_and_valid(self):
         # Assert the PDF was created

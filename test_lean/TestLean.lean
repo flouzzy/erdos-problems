@@ -52,7 +52,10 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
       have h_primes : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := by
         intro p hp hdiv
         exact lemma2_prime_divisors m k p hp h1 h2 hdiv
-      have h_growth : m > 2 * k := sorry
+      have h_growth : m > 2 * k := by
+        have _h_m_large : m ≥ 10^1000000 := Nat.le_of_not_lt h_m
+        -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+        sorry
       exact h_growth
   -- Contradiction entre la densite et l'asymptotique
   cases h_densite with

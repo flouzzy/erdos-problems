@@ -1,9 +1,9 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["a02a3f7cc579e44e.olean"],
+ {"o": ["5873f072500ee50d.olean"],
   "m": false,
-  "i": "e715498b43f39eec.ilean",
+  "i": "a4456b2f25788478.ilean",
   "c": "90a7490731bc1214.c"},
  "log":
  [{"message":
@@ -13,9 +13,9 @@
    "level": "warning"},
   {"message": "TestLean.lean:23:6: declaration uses `sorry`",
    "level": "warning"},
-  {"message": "TestLean.lean:37:6: declaration uses `sorry`",
+  {"message": "TestLean.lean:35:6: declaration uses `sorry`",
    "level": "warning"},
-  {"message": "TestLean.lean:72:8: declaration uses `sorry`",
+  {"message": "TestLean.lean:70:8: declaration uses `sorry`",
    "level": "warning"}],
  "inputs":
  [["TestLean:deps",
@@ -37,7 +37,7 @@
       ["module plugins", "00000000000006bb"]]]]],
   ["Lean 4.31.0, commit 68218e876d2a38b1985b8590fff244a83c321783",
    "fc45ac412f28501c"],
-  ["/app/test_lean/TestLean.lean", "4c43de88f7c52723"],
+  ["/app/test_lean/TestLean.lean", "9db0fcab1a7e582b"],
   ["options",
    [["-DmaxSynthPendingDepth=3", "c78e353d34de85d4"],
     ["-Dweak.linter.mathlibStandardSet=true", "8a155799906f2b42"],
@@ -47,4 +47,4 @@
   ["Module.name: TestLean", "5efa054bf2c54484"],
   ["Package.id?: (some test_lean)", "45b6c37ba97b5f29"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "f65dd073eeb2254b"}
+ "depHash": "d7e1b09b7eaf3b96"}

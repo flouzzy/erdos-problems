@@ -1,6 +1,9 @@
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib
 
+set_option maxRecDepth 2000000
+set_option exponentiation.threshold 2000000
 set_option linter.unusedVariables false
 
 open Finset
@@ -73,10 +76,35 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
   · -- Pour k >= 2, les bornes analytiques entrent en contradiction
     have h_bound := lemma3_analytic_bound m k h hk
     -- La combinaison des trois lemmes mene a une contradiction
-    sorry
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    have h_contra : False := sorry
+    exact False.elim h_contra
   · -- Pour k < 2, comme k > 0, k = 1
     have hk1 : k = 1 := by
-      have hk_pos : k > 0 := h.2.1
+      have _hk0 : k > 0 := h.2.1
       omega
-    have hm3 : m = 3 := sorry
+    have hm3 : m = 3 := by
+      have hm_pos : m > 0 := h.1
+      have h_eq : erdos_moser_sum m k = m^k := h.2.2
+      rw [hk1] at h_eq
+      have h_pow1 : (fun (i : Nat) => i^1) = (fun i => i) := by funext x; exact Nat.pow_one x
+      unfold erdos_moser_sum at h_eq
+      rw [h_pow1] at h_eq
+      rw [sum_range_id] at h_eq
+      rw [Nat.pow_one] at h_eq
+      have h2 : m * (m - 1) / 2 * 2 = m * 2 := congrArg (· * 2) h_eq
+      have hdvd : 2 ∣ m * (m - 1) := by
+        cases m with
+        | zero => exact Nat.dvd_zero 2
+        | succ m' =>
+          have heven : Even (m' * (m' + 1)) := Nat.even_mul_succ_self m'
+          have hdvd2 : 2 ∣ m' * (m' + 1) := even_iff_two_dvd.mp heven
+          have hrw : (m' + 1) * (m' + 1 - 1) = (m' + 1) * m' := by rfl
+          have hcomm : (m' + 1) * m' = m' * (m' + 1) := Nat.mul_comm (m' + 1) m'
+          rw [hrw, hcomm]
+          exact hdvd2
+      have hdiv : m * (m - 1) / 2 * 2 = m * (m - 1) := Nat.div_mul_cancel hdvd
+      rw [hdiv] at h2
+      have hm1 : m - 1 = 2 := Nat.eq_of_mul_eq_mul_left hm_pos h2
+      omega
     exact ⟨hm3, hk1⟩

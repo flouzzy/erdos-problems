@@ -76,26 +76,37 @@ lemma erdos_moser_parity (k m : Nat) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : Erdo
   -- Trivial parity decomposition, but essential for case splitting.
   omega
 
-lemma erdos_moser_faulhaber_bound (k m : Nat) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : ErdosMoserPredicate k m) :
+set_option linter.unusedVariables false in
+lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
   m > k := by
   -- Proof sketch using asymptotic growth of sum_{i=0}^{m-1} i^k approx m^{k+1}/(k+1)
   -- For m^k = sum i^k, m cannot be too small compared to k.
-  have h1 : (∑ i ∈ range m, i^k) < (m^(k+1)) / (k + 1) := by
+  have _hk0 : k > 0 := by omega
+  have h1 : (sum (range m) (fun i => i^k)) < (m^(k+1)) / (k + 1) := by
     -- Bounding sum by the continuous integral
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
     sorry
   have h2 : m^k < (m^(k+1)) / (k + 1) := by
     -- Applying the hypothesis h_eq
-    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    sorry
+    rw [<- h_eq]
+    exact h1
   have h3 : (k + 1) * m^k < m^(k+1) := by
     -- Algebraic rearrangement
-    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    sorry
+    have h_pos : k + 1 > 0 := by omega
+    have h2_mul := Nat.mul_lt_mul_of_pos_right h2 h_pos
+    have h_comm : m^k * (k + 1) = (k + 1) * m^k := Nat.mul_comm _ _
+    rw [h_comm] at h2_mul
+    apply lt_of_lt_of_le h2_mul
+    exact Nat.div_mul_le_self (m ^ (k + 1)) (k + 1)
   have h4 : k + 1 < m := by
     -- Dividing by m^k
-    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    sorry
+    have h_pow : m^(k+1) = m^k * m := by
+      rw [Nat.pow_add, Nat.pow_one]
+    rw [h_pow] at h3
+    have h3_comm : m^k * (k + 1) < m^k * m := by
+      have h_comm2 : (k + 1) * m^k = m^k * (k + 1) := Nat.mul_comm _ _
+      rwa [h_comm2] at h3
+    exact Nat.lt_of_mul_lt_mul_left h3_comm
   omega
 
 lemma erdos_moser_p_adic_contradiction (k m p : Nat) (_hp : Nat.Prime p) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : ErdosMoserPredicate k m) :

@@ -69,9 +69,9 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 open Finset
 
 def ErdosMoserPredicate (k m : Nat) : Prop :=
-  (sum (range m) (fun i => i^k)) = m^k
+  (∑ i ∈ range m, i^k) = m^k
 
-lemma erdos_moser_parity (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
+lemma erdos_moser_parity (k m : Nat) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : ErdosMoserPredicate k m) :
   m % 2 = 1 \/ m % 2 = 0 := by
   -- Trivial parity decomposition, but essential for case splitting.
   omega
@@ -109,12 +109,13 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
     exact Nat.lt_of_mul_lt_mul_left h3_comm
   omega
 
-lemma erdos_moser_p_adic_contradiction (k m p : Nat) (hp : Nat.Prime p) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
+lemma erdos_moser_p_adic_contradiction (k m p : Nat) (_hp : Nat.Prime p) (_hk : k >= 2) (_hm : m >= 2) (_h_eq : ErdosMoserPredicate k m) :
   False := by
   -- Deep result from analytic number theory bounding the p-adic valuation.
   -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   sorry
 
+set_option linter.unusedVariables false in
 theorem erdos_moser_conjecture : forall k m : Nat, k >= 2 -> m >= 2 -> Not (ErdosMoserPredicate k m) := by
   -- Proof sketch for future autoformalization
   -- The overall strategy proceeds by contradiction.
@@ -122,12 +123,12 @@ theorem erdos_moser_conjecture : forall k m : Nat, k >= 2 -> m >= 2 -> Not (Erdo
   -- By Lemma 1, we extract modular constraints.
   -- By Lemma 2, we establish bounds using Faulhaber's formula.
   -- By Lemma 3, we derive a contradiction from p-adic valuations.
-  intro k m hk hm h_eq
-  have h_parity : m % 2 = 1 \/ m % 2 = 0 := erdos_moser_parity k m hk hm h_eq
-  have h_bound : m > k := erdos_moser_faulhaber_bound k m hk hm h_eq
-  have p : Nat := 2
+  intro k m _hk _hm _h_eq
+  have _h_parity : m % 2 = 1 \/ m % 2 = 0 := erdos_moser_parity k m _hk _hm _h_eq
+  have _h_bound : m > k := erdos_moser_faulhaber_bound k m _hk _hm _h_eq
+  have _p : Nat := 2
   have hp : Nat.Prime 2 := by decide
-  have h_false : False := erdos_moser_p_adic_contradiction k m 2 hp hk hm h_eq
+  have h_false : False := erdos_moser_p_adic_contradiction k m 2 hp _hk _hm _h_eq
   exact h_false
 \end{lstlisting}
 

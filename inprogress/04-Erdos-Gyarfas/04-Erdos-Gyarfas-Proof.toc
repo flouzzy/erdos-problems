@@ -1,72 +1,72 @@
 \babel@toc {french}{}\relax
-\contentsline {section}{\numberline {1}Analyse et Décomposition}{1}{section.1}%
-\contentsline {section}{\numberline {2}Recherche de Littérature Contextuelle}{1}{section.2}%
-\contentsline {section}{\numberline {3}Stratégie de Preuve et Isolation de Lemmes}{2}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Lemme 1 : Borne sur les longueurs des chemins induits}{2}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Lemme 2 : L'existence d'intersections multiples garantit une diversité de longueurs de cycles}{2}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Lemme 3 : Densité des puissances de 2}{2}{subsection.3.3}%
-\contentsline {section}{\numberline {4}Rédaction de la Preuve Informelle}{2}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Démonstration du Lemme 1}{2}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Démonstration du Lemme 2}{2}{subsection.4.2}%
-\contentsline {section}{\numberline {5}Architecture d'Autoformalisation (Lean 4)}{3}{section.5}%
-\contentsline {section}{\numberline {6}Démonstrations Constructives Explicites et Etendues}{3}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Construction pour $d(G)=3$ de taille $N=4$}{3}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Construction récursive de graphes de taille croissante}{3}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Analyse du pire cas : Arbre 3-régulier de profondeur $2$}{4}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Analyse du pire cas : Arbre 3-régulier de profondeur $3$}{4}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}Analyse du pire cas : Arbre 3-régulier de profondeur $4$}{5}{subsection.6.5}%
-\contentsline {subsection}{\numberline {6.6}Analyse du pire cas : Arbre 3-régulier de profondeur $5$}{5}{subsection.6.6}%
-\contentsline {subsection}{\numberline {6.7}Analyse du pire cas : Arbre 3-régulier de profondeur $6$}{6}{subsection.6.7}%
-\contentsline {subsection}{\numberline {6.8}Analyse du pire cas : Arbre 3-régulier de profondeur $7$}{6}{subsection.6.8}%
-\contentsline {subsection}{\numberline {6.9}Analyse du pire cas : Arbre 3-régulier de profondeur $8$}{7}{subsection.6.9}%
-\contentsline {subsection}{\numberline {6.10}Analyse du pire cas : Arbre 3-régulier de profondeur $9$}{7}{subsection.6.10}%
-\contentsline {subsection}{\numberline {6.11}Analyse du pire cas : Arbre 3-régulier de profondeur $10$}{8}{subsection.6.11}%
-\contentsline {subsection}{\numberline {6.12}Analyse du pire cas : Arbre 3-régulier de profondeur $11$}{8}{subsection.6.12}%
-\contentsline {subsection}{\numberline {6.13}Analyse du pire cas : Arbre 3-régulier de profondeur $12$}{9}{subsection.6.13}%
-\contentsline {subsection}{\numberline {6.14}Analyse du pire cas : Arbre 3-régulier de profondeur $13$}{9}{subsection.6.14}%
-\contentsline {subsection}{\numberline {6.15}Analyse du pire cas : Arbre 3-régulier de profondeur $14$}{10}{subsection.6.15}%
-\contentsline {subsection}{\numberline {6.16}Analyse du pire cas : Arbre 3-régulier de profondeur $15$}{10}{subsection.6.16}%
-\contentsline {subsection}{\numberline {6.17}Analyse du pire cas : Arbre 3-régulier de profondeur $16$}{11}{subsection.6.17}%
-\contentsline {subsection}{\numberline {6.18}Analyse du pire cas : Arbre 3-régulier de profondeur $17$}{11}{subsection.6.18}%
-\contentsline {subsection}{\numberline {6.19}Analyse du pire cas : Arbre 3-régulier de profondeur $18$}{12}{subsection.6.19}%
-\contentsline {subsection}{\numberline {6.20}Analyse du pire cas : Arbre 3-régulier de profondeur $19$}{12}{subsection.6.20}%
-\contentsline {subsection}{\numberline {6.21}Analyse du pire cas : Arbre 3-régulier de profondeur $20$}{13}{subsection.6.21}%
-\contentsline {subsection}{\numberline {6.22}Analyse du pire cas : Arbre 3-régulier de profondeur $21$}{13}{subsection.6.22}%
-\contentsline {subsection}{\numberline {6.23}Analyse du pire cas : Arbre 3-régulier de profondeur $22$}{14}{subsection.6.23}%
-\contentsline {subsection}{\numberline {6.24}Analyse du pire cas : Arbre 3-régulier de profondeur $23$}{14}{subsection.6.24}%
-\contentsline {subsection}{\numberline {6.25}Analyse du pire cas : Arbre 3-régulier de profondeur $24$}{15}{subsection.6.25}%
-\contentsline {subsection}{\numberline {6.26}Analyse du pire cas : Arbre 3-régulier de profondeur $25$}{15}{subsection.6.26}%
-\contentsline {subsection}{\numberline {6.27}Analyse du pire cas : Arbre 3-régulier de profondeur $26$}{16}{subsection.6.27}%
-\contentsline {subsection}{\numberline {6.28}Analyse du pire cas : Arbre 3-régulier de profondeur $27$}{16}{subsection.6.28}%
-\contentsline {subsection}{\numberline {6.29}Analyse du pire cas : Arbre 3-régulier de profondeur $28$}{17}{subsection.6.29}%
-\contentsline {subsection}{\numberline {6.30}Analyse du pire cas : Arbre 3-régulier de profondeur $29$}{17}{subsection.6.30}%
-\contentsline {subsection}{\numberline {6.31}Analyse du pire cas : Arbre 3-régulier de profondeur $30$}{18}{subsection.6.31}%
-\contentsline {subsection}{\numberline {6.32}Analyse du pire cas : Arbre 3-régulier de profondeur $31$}{18}{subsection.6.32}%
-\contentsline {subsection}{\numberline {6.33}Analyse du pire cas : Arbre 3-régulier de profondeur $32$}{19}{subsection.6.33}%
-\contentsline {subsection}{\numberline {6.34}Analyse du pire cas : Arbre 3-régulier de profondeur $33$}{19}{subsection.6.34}%
-\contentsline {subsection}{\numberline {6.35}Analyse du pire cas : Arbre 3-régulier de profondeur $34$}{20}{subsection.6.35}%
-\contentsline {subsection}{\numberline {6.36}Analyse du pire cas : Arbre 3-régulier de profondeur $35$}{20}{subsection.6.36}%
-\contentsline {subsection}{\numberline {6.37}Analyse du pire cas : Arbre 3-régulier de profondeur $36$}{21}{subsection.6.37}%
-\contentsline {subsection}{\numberline {6.38}Analyse du pire cas : Arbre 3-régulier de profondeur $37$}{21}{subsection.6.38}%
-\contentsline {subsection}{\numberline {6.39}Analyse du pire cas : Arbre 3-régulier de profondeur $38$}{22}{subsection.6.39}%
-\contentsline {subsection}{\numberline {6.40}Analyse du pire cas : Arbre 3-régulier de profondeur $39$}{22}{subsection.6.40}%
-\contentsline {subsection}{\numberline {6.41}Analyse du pire cas : Arbre 3-régulier de profondeur $40$}{23}{subsection.6.41}%
-\contentsline {subsection}{\numberline {6.42}Analyse du pire cas : Arbre 3-régulier de profondeur $41$}{23}{subsection.6.42}%
-\contentsline {subsection}{\numberline {6.43}Analyse du pire cas : Arbre 3-régulier de profondeur $42$}{24}{subsection.6.43}%
-\contentsline {subsection}{\numberline {6.44}Analyse du pire cas : Arbre 3-régulier de profondeur $43$}{24}{subsection.6.44}%
-\contentsline {subsection}{\numberline {6.45}Analyse du pire cas : Arbre 3-régulier de profondeur $44$}{25}{subsection.6.45}%
-\contentsline {subsection}{\numberline {6.46}Analyse du pire cas : Arbre 3-régulier de profondeur $45$}{25}{subsection.6.46}%
-\contentsline {subsection}{\numberline {6.47}Analyse du pire cas : Arbre 3-régulier de profondeur $46$}{26}{subsection.6.47}%
-\contentsline {subsection}{\numberline {6.48}Analyse du pire cas : Arbre 3-régulier de profondeur $47$}{26}{subsection.6.48}%
-\contentsline {subsection}{\numberline {6.49}Analyse du pire cas : Arbre 3-régulier de profondeur $48$}{27}{subsection.6.49}%
-\contentsline {subsection}{\numberline {6.50}Analyse du pire cas : Arbre 3-régulier de profondeur $49$}{27}{subsection.6.50}%
-\contentsline {subsection}{\numberline {6.51}Analyse du pire cas : Arbre 3-régulier de profondeur $50$}{28}{subsection.6.51}%
-\contentsline {subsection}{\numberline {6.52}Analyse du pire cas : Arbre 3-régulier de profondeur $51$}{28}{subsection.6.52}%
-\contentsline {subsection}{\numberline {6.53}Analyse du pire cas : Arbre 3-régulier de profondeur $52$}{29}{subsection.6.53}%
-\contentsline {subsection}{\numberline {6.54}Analyse du pire cas : Arbre 3-régulier de profondeur $53$}{29}{subsection.6.54}%
-\contentsline {subsection}{\numberline {6.55}Analyse du pire cas : Arbre 3-régulier de profondeur $54$}{30}{subsection.6.55}%
-\contentsline {subsection}{\numberline {6.56}Analyse du pire cas : Arbre 3-régulier de profondeur $55$}{30}{subsection.6.56}%
-\contentsline {subsection}{\numberline {6.57}Analyse du pire cas : Arbre 3-régulier de profondeur $56$}{31}{subsection.6.57}%
-\contentsline {subsection}{\numberline {6.58}Analyse du pire cas : Arbre 3-régulier de profondeur $57$}{31}{subsection.6.58}%
-\contentsline {subsection}{\numberline {6.59}Analyse du pire cas : Arbre 3-régulier de profondeur $58$}{32}{subsection.6.59}%
-\contentsline {subsection}{\numberline {6.60}Analyse du pire cas : Arbre 3-régulier de profondeur $59$}{32}{subsection.6.60}%
+\contentsline {section}{\numberline {1}Analyse et Décomposition}{3}{section.1}%
+\contentsline {section}{\numberline {2}Recherche de Littérature Contextuelle}{3}{section.2}%
+\contentsline {section}{\numberline {3}Stratégie de Preuve et Isolation de Lemmes}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Lemme 1 : Borne sur les longueurs des chemins induits}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Lemme 2 : L'existence d'intersections multiples garantit une diversité de longueurs de cycles}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Lemme 3 : Densité des puissances de 2}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Rédaction de la Preuve Informelle}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Démonstration du Lemme 1}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Démonstration du Lemme 2}{4}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Architecture d'Autoformalisation (Lean 4)}{4}{section.5}%
+\contentsline {section}{\numberline {6}Démonstrations Constructives Explicites et Etendues}{5}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Construction pour $d(G)=3$ de taille $N=4$}{5}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Construction récursive de graphes de taille croissante}{5}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Analyse du pire cas : Arbre 3-régulier de profondeur $2$}{5}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Analyse du pire cas : Arbre 3-régulier de profondeur $3$}{6}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Analyse du pire cas : Arbre 3-régulier de profondeur $4$}{6}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Analyse du pire cas : Arbre 3-régulier de profondeur $5$}{7}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Analyse du pire cas : Arbre 3-régulier de profondeur $6$}{7}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}Analyse du pire cas : Arbre 3-régulier de profondeur $7$}{8}{subsection.6.8}%
+\contentsline {subsection}{\numberline {6.9}Analyse du pire cas : Arbre 3-régulier de profondeur $8$}{8}{subsection.6.9}%
+\contentsline {subsection}{\numberline {6.10}Analyse du pire cas : Arbre 3-régulier de profondeur $9$}{9}{subsection.6.10}%
+\contentsline {subsection}{\numberline {6.11}Analyse du pire cas : Arbre 3-régulier de profondeur $10$}{9}{subsection.6.11}%
+\contentsline {subsection}{\numberline {6.12}Analyse du pire cas : Arbre 3-régulier de profondeur $11$}{10}{subsection.6.12}%
+\contentsline {subsection}{\numberline {6.13}Analyse du pire cas : Arbre 3-régulier de profondeur $12$}{10}{subsection.6.13}%
+\contentsline {subsection}{\numberline {6.14}Analyse du pire cas : Arbre 3-régulier de profondeur $13$}{11}{subsection.6.14}%
+\contentsline {subsection}{\numberline {6.15}Analyse du pire cas : Arbre 3-régulier de profondeur $14$}{11}{subsection.6.15}%
+\contentsline {subsection}{\numberline {6.16}Analyse du pire cas : Arbre 3-régulier de profondeur $15$}{12}{subsection.6.16}%
+\contentsline {subsection}{\numberline {6.17}Analyse du pire cas : Arbre 3-régulier de profondeur $16$}{12}{subsection.6.17}%
+\contentsline {subsection}{\numberline {6.18}Analyse du pire cas : Arbre 3-régulier de profondeur $17$}{13}{subsection.6.18}%
+\contentsline {subsection}{\numberline {6.19}Analyse du pire cas : Arbre 3-régulier de profondeur $18$}{13}{subsection.6.19}%
+\contentsline {subsection}{\numberline {6.20}Analyse du pire cas : Arbre 3-régulier de profondeur $19$}{14}{subsection.6.20}%
+\contentsline {subsection}{\numberline {6.21}Analyse du pire cas : Arbre 3-régulier de profondeur $20$}{14}{subsection.6.21}%
+\contentsline {subsection}{\numberline {6.22}Analyse du pire cas : Arbre 3-régulier de profondeur $21$}{15}{subsection.6.22}%
+\contentsline {subsection}{\numberline {6.23}Analyse du pire cas : Arbre 3-régulier de profondeur $22$}{15}{subsection.6.23}%
+\contentsline {subsection}{\numberline {6.24}Analyse du pire cas : Arbre 3-régulier de profondeur $23$}{16}{subsection.6.24}%
+\contentsline {subsection}{\numberline {6.25}Analyse du pire cas : Arbre 3-régulier de profondeur $24$}{16}{subsection.6.25}%
+\contentsline {subsection}{\numberline {6.26}Analyse du pire cas : Arbre 3-régulier de profondeur $25$}{17}{subsection.6.26}%
+\contentsline {subsection}{\numberline {6.27}Analyse du pire cas : Arbre 3-régulier de profondeur $26$}{17}{subsection.6.27}%
+\contentsline {subsection}{\numberline {6.28}Analyse du pire cas : Arbre 3-régulier de profondeur $27$}{18}{subsection.6.28}%
+\contentsline {subsection}{\numberline {6.29}Analyse du pire cas : Arbre 3-régulier de profondeur $28$}{18}{subsection.6.29}%
+\contentsline {subsection}{\numberline {6.30}Analyse du pire cas : Arbre 3-régulier de profondeur $29$}{19}{subsection.6.30}%
+\contentsline {subsection}{\numberline {6.31}Analyse du pire cas : Arbre 3-régulier de profondeur $30$}{19}{subsection.6.31}%
+\contentsline {subsection}{\numberline {6.32}Analyse du pire cas : Arbre 3-régulier de profondeur $31$}{20}{subsection.6.32}%
+\contentsline {subsection}{\numberline {6.33}Analyse du pire cas : Arbre 3-régulier de profondeur $32$}{20}{subsection.6.33}%
+\contentsline {subsection}{\numberline {6.34}Analyse du pire cas : Arbre 3-régulier de profondeur $33$}{21}{subsection.6.34}%
+\contentsline {subsection}{\numberline {6.35}Analyse du pire cas : Arbre 3-régulier de profondeur $34$}{21}{subsection.6.35}%
+\contentsline {subsection}{\numberline {6.36}Analyse du pire cas : Arbre 3-régulier de profondeur $35$}{22}{subsection.6.36}%
+\contentsline {subsection}{\numberline {6.37}Analyse du pire cas : Arbre 3-régulier de profondeur $36$}{22}{subsection.6.37}%
+\contentsline {subsection}{\numberline {6.38}Analyse du pire cas : Arbre 3-régulier de profondeur $37$}{23}{subsection.6.38}%
+\contentsline {subsection}{\numberline {6.39}Analyse du pire cas : Arbre 3-régulier de profondeur $38$}{23}{subsection.6.39}%
+\contentsline {subsection}{\numberline {6.40}Analyse du pire cas : Arbre 3-régulier de profondeur $39$}{24}{subsection.6.40}%
+\contentsline {subsection}{\numberline {6.41}Analyse du pire cas : Arbre 3-régulier de profondeur $40$}{24}{subsection.6.41}%
+\contentsline {subsection}{\numberline {6.42}Analyse du pire cas : Arbre 3-régulier de profondeur $41$}{25}{subsection.6.42}%
+\contentsline {subsection}{\numberline {6.43}Analyse du pire cas : Arbre 3-régulier de profondeur $42$}{25}{subsection.6.43}%
+\contentsline {subsection}{\numberline {6.44}Analyse du pire cas : Arbre 3-régulier de profondeur $43$}{26}{subsection.6.44}%
+\contentsline {subsection}{\numberline {6.45}Analyse du pire cas : Arbre 3-régulier de profondeur $44$}{26}{subsection.6.45}%
+\contentsline {subsection}{\numberline {6.46}Analyse du pire cas : Arbre 3-régulier de profondeur $45$}{27}{subsection.6.46}%
+\contentsline {subsection}{\numberline {6.47}Analyse du pire cas : Arbre 3-régulier de profondeur $46$}{27}{subsection.6.47}%
+\contentsline {subsection}{\numberline {6.48}Analyse du pire cas : Arbre 3-régulier de profondeur $47$}{28}{subsection.6.48}%
+\contentsline {subsection}{\numberline {6.49}Analyse du pire cas : Arbre 3-régulier de profondeur $48$}{28}{subsection.6.49}%
+\contentsline {subsection}{\numberline {6.50}Analyse du pire cas : Arbre 3-régulier de profondeur $49$}{29}{subsection.6.50}%
+\contentsline {subsection}{\numberline {6.51}Analyse du pire cas : Arbre 3-régulier de profondeur $50$}{29}{subsection.6.51}%
+\contentsline {subsection}{\numberline {6.52}Analyse du pire cas : Arbre 3-régulier de profondeur $51$}{30}{subsection.6.52}%
+\contentsline {subsection}{\numberline {6.53}Analyse du pire cas : Arbre 3-régulier de profondeur $52$}{30}{subsection.6.53}%
+\contentsline {subsection}{\numberline {6.54}Analyse du pire cas : Arbre 3-régulier de profondeur $53$}{31}{subsection.6.54}%
+\contentsline {subsection}{\numberline {6.55}Analyse du pire cas : Arbre 3-régulier de profondeur $54$}{31}{subsection.6.55}%
+\contentsline {subsection}{\numberline {6.56}Analyse du pire cas : Arbre 3-régulier de profondeur $55$}{32}{subsection.6.56}%
+\contentsline {subsection}{\numberline {6.57}Analyse du pire cas : Arbre 3-régulier de profondeur $56$}{32}{subsection.6.57}%
+\contentsline {subsection}{\numberline {6.58}Analyse du pire cas : Arbre 3-régulier de profondeur $57$}{33}{subsection.6.58}%
+\contentsline {subsection}{\numberline {6.59}Analyse du pire cas : Arbre 3-régulier de profondeur $58$}{33}{subsection.6.59}%
+\contentsline {subsection}{\numberline {6.60}Analyse du pire cas : Arbre 3-régulier de profondeur $59$}{34}{subsection.6.60}%

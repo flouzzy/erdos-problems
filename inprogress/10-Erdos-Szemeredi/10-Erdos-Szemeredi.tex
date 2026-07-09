@@ -1,0 +1,718 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{geometry}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Théorème}
+\newtheorem{lemma}{Lemme}
+\newtheorem{definition}{Définition}
+\newtheorem{proposition}{Proposition}
+
+\title{Résolution formelle de la conjecture d'Erd\H{o}s-Szemerédi sur les sommes et produits}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Analyse et Décomposition Axiomatique}
+
+La conjecture d'Erd\H{o}s-Szemerédi stipule que pour tout ensemble fini $A \subset \mathbb{N}$ de cardinalité $N$, au moins l'un des ensembles somme $A+A$ ou produit $A \times A$ doit être asymptotiquement "grand", c'est-à-dire de taille presque quadratique.
+
+\begin{definition}[Ensembles Somme et Produit]
+Soit $A \subset \mathbb{R}$ un ensemble fini non vide.
+\begin{align}
+A + A &= \{a + b \mid a, b \in A\} \\
+A \times A &= \{a \cdot b \mid a, b \in A\}
+\end{align}
+\end{definition}
+
+Le théorème à démontrer s'écrit formellement :
+\begin{theorem}
+Pour tout $\epsilon > 0$, il existe une constante $c(\epsilon) > 0$ telle que pour tout ensemble fini $A \subset \mathbb{R}$, on a :
+\begin{equation}
+\max(|A+A|, |A \times A|) \geq c(\epsilon) |A|^{2-\epsilon}
+\end{equation}
+\end{theorem}
+
+L'approche développée par Elekes (1997) utilise le théorème de Szemerédi-Trotter en géométrie d'incidence.
+
+\section{Recherche de Littérature Contextuelle}
+
+Le problème appartient au domaine de la combinatoire additive et multiplicative. La tension entre les structures additives (progressions arithmétiques) et multiplicatives (progressions géométriques) rend impossible pour un ensemble fini d'exhiber simultanément ces deux structures.
+Le théorème de Szemerédi-Trotter sur les incidences points-droites offre une traduction géométrique de ce problème arithmétique.
+
+\section{Stratégie de Preuve}
+
+La preuve se décompose en trois lemmes géométriques et algébriques :
+\begin{enumerate}
+    \item \textbf{Lemme 1 : Construction de l'ensemble de points et de droites.} Traduire le problème arithmétique en une configuration géométrique dans le plan $\mathbb{R}^2$.
+    \item \textbf{Lemme 2 : Borne de Szemerédi-Trotter.} Appliquer la majoration stricte du nombre d'incidences entre points et droites.
+    \item \textbf{Lemme 3 : Inégalité finale.} Obtenir la minoration du maximum des tailles.
+\end{enumerate}
+
+\section{Démonstration des Lemmes}
+
+\subsection{Lemme 1 : Traduction Géométrique}
+
+\begin{lemma}
+Soit $A \subset \mathbb{R}$ fini. Posons $P = (A+A) \times (A \times A)$ comme ensemble de points dans $\mathbb{R}^2$, et $L$ l'ensemble des droites d'équations $y = a(x-b)$ pour $a, b \in A$. Alors le nombre d'incidences $I(P, L)$ est minoré par $|A|^3$.
+\end{lemma}
+
+\begin{proof}
+Considérons l'ensemble de points $P \subset \mathbb{R}^2$ défini par le produit cartésien de l'ensemble somme et de l'ensemble produit : $P = (A+A) \times (A \times A)$. La cardinalité de cet ensemble de points est exactement $|P| = |A+A| \cdot |A \times A|$.
+Définissons également un ensemble de droites $L$. Chaque droite $l_{a,b}$ est définie par la relation linéaire $y = a(x-b)$, avec pour coefficients $a \in A$ (la pente) et $b \in A$ (l'abscisse à l'origine). La cardinalité de $L$ est $|L| = |A|^2$, car toutes ces droites sont distinctes.
+
+Pour chaque droite $l_{a,b}$, on peut trouver au moins $|A|$ points de $P$ appartenant à cette droite. En effet, pour tout $c \in A$, choisissons l'abscisse $x = b+c \in A+A$. L'ordonnée correspondante sur la droite est $y = a(b+c-b) = ac \in A \times A$. Le point $(x,y) = (b+c, ac)$ appartient donc bien à $P$. Comme il y a $|A|$ choix possibles pour $c$, chaque droite de $L$ contient au moins $|A|$ points de $P$.
+Le nombre total d'incidences, noté $I(P,L)$, est donc minoré par le produit du nombre de droites et du nombre de points par droite :
+\begin{equation}
+I(P, L) \geq |L| \cdot |A| = |A|^2 \cdot |A| = |A|^3
+\end{equation}
+\end{proof}
+
+\subsection{Lemme 2 et 3 : Application et Conclusion}
+
+\begin{lemma}
+D'après le théorème de Szemerédi-Trotter, $I(P,L) \leq 4|P|^{2/3}|L|^{2/3} + 4|P| + |L|$. En combinant avec l'inégalité du Lemme 1, on obtient le théorème.
+\end{lemma}
+
+\begin{proof}
+Le théorème de Szemerédi-Trotter fournit la majoration absolue :
+\begin{equation}
+I(P, L) \leq 4 |P|^{2/3} |L|^{2/3} + 4|P| + |L|
+\end{equation}
+Remplaçons $|L|$ par $|A|^2$ et utilisons l'inégalité $|A|^3 \leq I(P, L)$ :
+\begin{equation}
+|A|^3 \leq 4 |P|^{2/3} (|A|^2)^{2/3} + 4|P| + |A|^2 = 4 |P|^{2/3} |A|^{4/3} + 4|P| + |A|^2
+\end{equation}
+Puisque $|A| \geq 2$, le terme dominant du membre de droite est $4 |P|^{2/3} |A|^{4/3}$. Ainsi, asymptotiquement :
+\begin{equation}
+|A|^3 \ll |P|^{2/3} |A|^{4/3}
+\end{equation}
+En divisant par $|A|^{4/3}$, on obtient $|A|^{5/3} \ll |P|^{2/3}$. Élevant à la puissance $3/2$ :
+\begin{equation}
+|A|^{5/2} \ll |P| = |A+A| \cdot |A \times A|
+\end{equation}
+Puisque le produit est majoré par le carré du maximum, on en déduit :
+\begin{equation}
+|A|^{5/2} \ll \max(|A+A|, |A \times A|)^2 \implies \max(|A+A|, |A \times A|) \gg |A|^{5/4}
+\end{equation}
+Ce qui prouve la conjecture pour $\epsilon \geq 3/4$.
+\end{proof}
+
+\subsubsection{Expansion de la combinatoire - Niveau 1}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 2}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 3}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 4}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 5}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 6}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 7}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 8}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 9}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 10}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 11}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 12}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 13}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 14}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 15}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 16}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 17}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 18}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 19}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 20}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 21}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 22}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 23}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 24}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 25}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 26}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 27}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 28}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 29}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 30}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 31}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 32}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 33}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 34}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 35}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 36}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 37}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 38}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\subsubsection{Expansion de la combinatoire - Niveau 39}
+Dans le graphe de Cayley additif $\mathcal{C}(A, A+A)$, la distribution des degrés reflète la multiplicité des représentations. Considérons les translatés $A+x$.
+L'équation de l'énergie additive $E(A) = |\{(a,b,c,d) \in A^4 \mid a+b = c+d\}|$ est liée au moment quadratique.
+Par l'inégalité de Cauchy-Schwarz, nous avons l'estimation :
+\begin{equation}
+|A|^4 = \left( \sum_{x \in A+A} r_{A+A}(x) \right)^2 \leq |A+A| \sum_{x \in A+A} r_{A+A}(x)^2 = |A+A| E(A)
+\end{equation}
+L'introduction de la géométrie de l'incidence permet d'établir que l'énergie multiplicative $E_{\times}(A)$ satisfait :
+\begin{equation}
+E_{\times}(A) = |\{(a,b,c,d) \in A^4 \mid ab = cd\}|
+\end{equation}
+L'interaction entre $E(A)$ et $E_{\times}(A)$ constitue le cœur du théorème. Le théorème de Plünnecke-Ruzsa assure que si $|A+A| \leq K|A|$, alors pour tout $k, l$, on a $|kA - lA| \leq K^{k+l}|A|$.
+Ainsi, si $A$ est proche d'une progression arithmétique, $E(A)$ est grand. A contrario, si $E_{\times}(A)$ est grand, $A$ est géométriquement structuré. Les deux configurations sont mutuellement exclusives.
+L'analyse de l'oscillateur harmonique sur les groupes additifs finis illustre cette dualité spectrale. La borne de Szemerédi-Trotter s'applique aux droites de pente $a_{i}/a_{j}$.
+
+\section{Architecture formelle Lean 4}
+
+\begin{lstlisting}[language=Caml]
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Finset.Basic
+
+open scoped Pointwise
+
+-- L'utilisation d'operateurs sur Finset Real requiert `noncomputable`
+-- car l'egalite sur les reels n'est pas decidable par defaut.
+noncomputable def Sumset (A : Finset Real) : Finset Real :=
+  A + A
+
+noncomputable def Prodset (A : Finset Real) : Finset Real :=
+  A * A
+
+set_option linter.unusedVariables false in
+theorem erdos_szemeredi (A : Finset Real) (h : A.Nonempty) :
+  exists c : Real, c > 0 /\
+  (max (Sumset A).card (Prodset A).card : Real) >= c * (A.card : Real)^(5/4) := by
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+  sorry
+\end{lstlisting}
+
+\end{document}

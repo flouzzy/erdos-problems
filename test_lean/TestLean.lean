@@ -27,7 +27,22 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
   have h_mk_mod : m^k % (m - 1) = 1 % (m - 1) := sorry
   have h_contra : (m - 1) / 2 % (m - 1) = 1 % (m - 1) := by
     rw [← h_sum_mod, h_mod_m_minus_1, h_mk_mod]
-  have h_m_val : m = 3 := sorry
+  have h_m_val : m = 3 := by
+    have h_cases : m - 1 = 1 ∨ m - 1 = 2 ∨ m - 1 > 2 := by omega
+    rcases h_cases with h_1 | h_2 | h_3
+    · -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+      have h_m_val_missing : m = 3 := sorry
+      exact h_m_val_missing
+    · omega
+    · have h_gt_1 : 1 < m - 1 := by omega
+      have h_mod1 : 1 % (m - 1) = 1 := Nat.mod_eq_of_lt h_gt_1
+      have h_lt : (m - 1) / 2 < m - 1 := Nat.div_lt_self hm_minus_1_gt_0 (by decide)
+      have h_mod_div : (m - 1) / 2 % (m - 1) = (m - 1) / 2 := Nat.mod_eq_of_lt h_lt
+      have h_contra_eq := h_contra
+      rw [h_mod1, h_mod_div] at h_contra_eq
+      -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+      have h_m_val_missing : m = 3 := sorry
+      exact h_m_val_missing
   have h_k_val : k = 1 := sorry
   omega
 

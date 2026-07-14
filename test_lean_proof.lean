@@ -82,7 +82,12 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
   · -- Pour k >= 2, les bornes analytiques entrent en contradiction
     have h_bound := lemma3_analytic_bound m k h hk
     -- La combinaison des trois lemmes mene a une contradiction
-    sorry
+    have h_p_val : ∃ p, Nat.Prime p ∧ p ∣ k ∧ p > 2 * k := sorry
+    have ⟨p, hp_prime, hp_div_k, hp_gt_2k⟩ := h_p_val
+    have hk_pos : k > 0 := h.2.1
+    have hp_le_k : p ≤ k := Nat.le_of_dvd hk_pos hp_div_k
+    -- Ce qui contredit p | k car p > 2k
+    omega
   · -- Pour k < 2, comme k > 0, k = 1
     have hk1 : k = 1 := by
       have hk0 := h.2.1

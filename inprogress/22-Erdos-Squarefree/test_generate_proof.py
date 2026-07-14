@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+import io
 from unittest.mock import patch
 
 # Add the directory to the path so we can import the script
@@ -45,6 +46,36 @@ class TestGenerateProof(unittest.TestCase):
             self.assertNotIn('zero ellipse', content.lower())
             self.assertNotIn('zéro ellipse', content.lower())
             self.assertNotIn('comme demandé', content.lower())
+
+        finally:
+            os.chdir(old_cwd)
+            # Clean up
+            if os.path.exists(tex_path):
+                os.remove(tex_path)
+
+    @patch('subprocess.run')
+    @patch('sys.stderr', new_callable=io.StringIO)
+    def test_generate_latex_compilation_error(self, mock_stderr, mock_subprocess):
+        # Simulate compilation error
+        mock_subprocess.side_effect = Exception("Mocked compilation error")
+
+        # Determine paths relative to this test file
+        test_dir = os.path.dirname(os.path.abspath(__file__))
+        tex_path = os.path.join(test_dir, '22-proof.tex')
+
+        # Ensure file doesn't exist to start
+        if os.path.exists(tex_path):
+            os.remove(tex_path)
+
+        # Change current working directory to test dir to match script behavior
+        old_cwd = os.getcwd()
+        os.chdir(test_dir)
+        try:
+            # Run generator
+            generate_proof.generate_latex()
+
+            # Verify stderr
+            self.assertIn("Compilation error: Mocked compilation error", mock_stderr.getvalue())
 
         finally:
             os.chdir(old_cwd)

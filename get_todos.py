@@ -31,7 +31,7 @@ def process_file(filepath):
 def main():
     target_files = []
     for root, dirs, files in os.walk('.'):
-        dirs[:] = [d for d in dirs if d not in ('.git', '.lake')]
+        dirs[:] = [d for d in dirs if d not in {'.git', '.lake'}]
         for file in files:
             if file.endswith('.md') or file.endswith('.tex') or file.endswith('.py'):
                 target_files.append(os.path.join(root, file))

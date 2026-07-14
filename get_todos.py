@@ -14,11 +14,16 @@ def process_file(filepath):
                     if filepath.endswith('.py') and ("print" in line or "line" in line or "#" in line or "description" in line):
                         continue
 
-                    description = "Not inferrable"
-                    if '--' in line:
-                        description = line.split('--')[-1].strip()
-                    results.append(f"{filepath}:{i+1}: {description}")
-    except Exception as e:
+                        description = "Not inferrable"
+                        if '--' in line:
+                            description = line.split('--')[-1].strip()
+                        results.append(f"{filepath}:{i+1}: {description}")
+                    elif not filepath.endswith('.py'):
+                        description = "Not inferrable"
+                        if '--' in line:
+                            description = line.split('--')[-1].strip()
+                        results.append(f"{filepath}:{i+1}: {description}")
+    except (OSError, UnicodeDecodeError) as e:
         errors.append(f"Error processing {filepath}: {e}")
     return results, errors
 

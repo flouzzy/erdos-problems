@@ -173,8 +173,7 @@ def generate_tex_proof_section(n, x, y, z):
     parts.append(f"Les conditions $x > 0$, $y > 0$ et $z > 0$ sont satisfaites.\n")
 
     # Find common denominator
-    lcm_xy = (x * y) // math.gcd(x, y)
-    lcm_xyz = (lcm_xy * z) // math.gcd(lcm_xy, z)
+    lcm_xyz = math.lcm(x, y, z)
 
     num_x = lcm_xyz // x
     num_y = lcm_xyz // y

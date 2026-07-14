@@ -54,6 +54,7 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     by_contra h_ge
     have h_ge_2k : m ≥ 2 * k := Nat.le_of_not_lt h_ge
     have h_sum_eq : erdos_moser_sum m k = m^k := h1.2.2
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
     have h_sum_gt : erdos_moser_sum m k > m^k := sorry
     omega
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand

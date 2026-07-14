@@ -270,13 +270,15 @@ lemma mod_density_contradiction (n : Nat) (hn : n > 4) (hs : Squarefree (choose 
             ['pdflatex', '-interaction=nonstopmode', '22-proof.tex'],
             cwd=script_dir,
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
+            stderr=subprocess.DEVNULL,
+            check=True
         )
         subprocess.run(
             ['pdflatex', '-interaction=nonstopmode', '22-proof.tex'],
             cwd=script_dir,
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
+            stderr=subprocess.DEVNULL,
+            check=True
         )
     except Exception as e:
         import sys

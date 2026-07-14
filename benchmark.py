@@ -1,7 +1,9 @@
 import timeit
-from utils import load_module
+import sys
+import os
 
-module = load_module("generate_proof", "inprogress/16-Erdos-Turan-Additive/generate_proof.py")
+sys.path.insert(0, os.path.abspath("inprogress/16-Erdos-Turan-Additive"))
+import generate_proof as module
 
 # We can benchmark the entire function or extract the logic
 # To make it more measurable, let's time generate_latex

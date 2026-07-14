@@ -83,14 +83,17 @@ Pour analyser les coïncidences de radicaux, nous développons la fonction carac
 """)
 
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113]
+    product_terms = []
+    inv_terms = []
     for i, p in enumerate(primes):
 
         # Calculate a highly specific product for genuine density
-        product_terms = [rf"\left(1 - \frac{{1}}{{{q}}}\right)" for q in primes[:i+1]]
+        product_terms.append(rf"\left(1 - \frac{{1}}{{{p}}}\right)")
         prod_str = " ".join(product_terms)
 
         # Calculate a local density formula
-        inv_sum = " + ".join([rf"\frac{{1}}{{{q}}}" for q in primes[:i+1]])
+        inv_terms.append(rf"\frac{{1}}{{{p}}}")
+        inv_sum = " + ".join(inv_terms)
 
         tex_content.append(rf"""
 Considérons le nombre premier d'indice $i = {i+1}$, soit $p = {p}$. La densité locale des entiers divisibles par des facteurs jusqu'à $p$ se développe en :
@@ -121,12 +124,11 @@ Or, la théorie des probabilités sur les entiers stipule que :
 Pour concrétiser la contradiction asymptotique, nous présentons le développement en séries de Dirichlet croisées pour les 30 premiers rangs.
 """)
 
+    sum_terms = []
     for k_val in range(1, 31):
 
         # Build genuine summation expansions
-        sum_terms = []
-        for j in range(1, k_val + 1):
-            sum_terms.append(rf"\frac{{\mu({j}) \log^2({j})}}{{{j}^{{s+1}}}}")
+        sum_terms.append(rf"\frac{{\mu({k_val}) \log^2({k_val})}}{{{k_val}^{{s+1}}}}")
 
         sum_str = " + ".join(sum_terms)
 

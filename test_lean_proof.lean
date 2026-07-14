@@ -65,7 +65,10 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     by_cases hm : m < 10^1000000
     · exact Or.inr hm
     · apply Or.inl
-      have h_primes : ∃ p, Nat.Prime p ∧ (p ∣ (m - 1) ∨ p ∣ (m + 1)) := sorry
+      have h_primes : ∃ p, Nat.Prime p ∧ (p ∣ (m - 1) ∨ p ∣ (m + 1)) := by
+        have h_m_minus_1_neq_1 : m - 1 ≠ 1 := by omega
+        obtain ⟨p, hp, hp_d⟩ := Nat.exists_prime_and_dvd h_m_minus_1_neq_1
+        exact ⟨p, hp, Or.inl hp_d⟩
       have h_p_bound : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := fun p hp hd => lemma2_prime_divisors m k p hp h1 h2 hd
       have h_m_gt_2k : m > 2 * k := sorry
       exact h_m_gt_2k

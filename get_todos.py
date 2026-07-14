@@ -10,10 +10,9 @@ def process_file(filepath):
             for i, line in enumerate(f):
                 # Check for lean sorry. Only consider lines that look like code or comments
                 if 'sorry' in line:
-                    # Make sure it's not a python string or just a plain word
-                    if filepath.endswith('.py') and "sorry" in line and not "print" in line:
-                        if "line" in line or "#" in line or "description" in line:
-                            continue
+                    # If it's a python file, filter out common python usages of the word "sorry"
+                    if filepath.endswith('.py') and ("print" in line or "line" in line or "#" in line or "description" in line):
+                        continue
 
                         description = "Not inferrable"
                         if '--' in line:
@@ -24,14 +23,14 @@ def process_file(filepath):
                         if '--' in line:
                             description = line.split('--')[-1].strip()
                         results.append(f"{filepath}:{i+1}: {description}")
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         errors.append(f"Error processing {filepath}: {e}")
     return results, errors
 
 def main():
     target_files = []
     for root, dirs, files in os.walk('.'):
-        dirs[:] = [d for d in dirs if d not in ('.git', '.lake')]
+        dirs[:] = [d for d in dirs if d not in {'.git', '.lake'}]
         for file in files:
             if file.endswith('.md') or file.endswith('.tex') or file.endswith('.py'):
                 target_files.append(os.path.join(root, file))

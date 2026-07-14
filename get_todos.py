@@ -10,20 +10,14 @@ def process_file(filepath):
             for i, line in enumerate(f):
                 # Check for lean sorry. Only consider lines that look like code or comments
                 if 'sorry' in line:
-                    # Make sure it's not a python string or just a plain word
-                    if filepath.endswith('.py') and "sorry" in line and not "print" in line:
-                        if "line" in line or "#" in line or "description" in line:
-                            continue
+                    # If it's a python file, filter out common python usages of the word "sorry"
+                    if filepath.endswith('.py') and ("print" in line or "line" in line or "#" in line or "description" in line):
+                        continue
 
-                        description = "Not inferrable"
-                        if '--' in line:
-                            description = line.split('--')[-1].strip()
-                        results.append(f"{filepath}:{i+1}: {description}")
-                    elif not filepath.endswith('.py'):
-                        description = "Not inferrable"
-                        if '--' in line:
-                            description = line.split('--')[-1].strip()
-                        results.append(f"{filepath}:{i+1}: {description}")
+                    description = "Not inferrable"
+                    if '--' in line:
+                        description = line.split('--')[-1].strip()
+                    results.append(f"{filepath}:{i+1}: {description}")
     except Exception as e:
         errors.append(f"Error processing {filepath}: {e}")
     return results, errors

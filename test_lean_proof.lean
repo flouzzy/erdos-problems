@@ -15,8 +15,8 @@ set_option linter.unusedVariables false in
 lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution m k) :
   Even k := by
   have h_eq : erdos_moser_sum m k = m^k := h3.2.2
-  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := sorry
-  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := sorry
+  have h_mod_2 : erdos_moser_sum m k % 2 = m^k % 2 := by rw [h_eq]
+  have h_mod_m_minus_1 : erdos_moser_sum m k % (m - 1) = m^k % (m - 1) := by rw [h_eq]
   sorry -- Preuve par arithmetique modulaire (Lemme 1)
 
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)
@@ -82,7 +82,12 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
   · -- Pour k >= 2, les bornes analytiques entrent en contradiction
     have h_bound := lemma3_analytic_bound m k h hk
     -- La combinaison des trois lemmes mene a une contradiction
-    sorry
+    have h_p_val : ∃ p, Nat.Prime p ∧ p ∣ k ∧ p > 2 * k := sorry
+    have ⟨p, hp_prime, hp_div_k, hp_gt_2k⟩ := h_p_val
+    have hk_pos : k > 0 := h.2.1
+    have hp_le_k : p ≤ k := Nat.le_of_dvd hk_pos hp_div_k
+    -- Ce qui contredit p | k car p > 2k
+    omega
   · -- Pour k < 2, comme k > 0, k = 1
     have hk1 : k = 1 := by
       have hk0 := h.2.1

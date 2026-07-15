@@ -436,8 +436,8 @@ def main():
     with open(tex_filepath, 'w', encoding='utf-8') as f:
         f.write(content)
 
-    subprocess.run(["pdflatex", "-interaction=nonstopmode", "-output-directory", directory, tex_filepath], capture_output=True, text=True)
-    subprocess.run(["pdflatex", "-interaction=nonstopmode", "-output-directory", directory, tex_filepath], capture_output=True, text=True)
+    subprocess.run(["pdflatex", "-interaction=nonstopmode", "-output-directory", directory, tex_filepath], capture_output=True, text=True, check=True)
+    subprocess.run(["pdflatex", "-interaction=nonstopmode", "-output-directory", directory, tex_filepath], capture_output=True, text=True, check=True)
 
 if __name__ == "__main__":
     main()

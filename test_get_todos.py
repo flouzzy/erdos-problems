@@ -90,5 +90,14 @@ class TestGetTodos(unittest.TestCase):
         self.assertIn("Error processing", error_output)
         self.assertIn("Permission denied", error_output)
 
+
+    def test_process_file_error_path(self):
+        # Test that process_file correctly returns the error string in the errors list
+        with patch('builtins.open', side_effect=Exception("Mocked process_file exception")):
+            results, errors = get_todos.process_file("dummy_file.py")
+        self.assertEqual(results, [])
+        self.assertEqual(len(errors), 1)
+        self.assertIn("Error processing dummy_file.py: Mocked process_file exception", errors[0])
+
 if __name__ == '__main__':
     unittest.main()

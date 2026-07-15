@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+import io
 from unittest.mock import patch
 
 # Add the directory to the path so we can import the script

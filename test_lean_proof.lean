@@ -58,7 +58,7 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     -- Simplification de l'inegalite en divisant par m^k (m > 0)
     have h_simpl : k + 1 > m := sorry
     -- Deduction finale pour obtenir m < 2 * k sachant que k >= 2
-    have h_final : m < 2 * k := sorry
+    have h_final : m < 2 * k := by omega
     exact h_final
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   have h_densite : m > 2 * k ∨ m < 10^1000000 := by

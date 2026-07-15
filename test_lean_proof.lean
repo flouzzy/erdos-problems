@@ -50,11 +50,13 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   -- L'approximation analytique lie asymptotiquement m et k
   have h_asymp : m < 2 * k := by
     -- Extraction des hypotheses de base
-    have ⟨hm_pos, hk_pos, heq⟩ := h1
+    have ⟨hm_pos, hk_pos, h_eq⟩ := h1
     -- Comparaison de la somme de puissances avec une integrale
     have h_integral_comp : (k + 1) * erdos_moser_sum m k > m^(k + 1) := sorry
     -- Substitution en utilisant l'equation de la solution
-    have h_subst : (k + 1) * m^k > m^(k + 1) := sorry
+    have h_subst : (k + 1) * m^k > m^(k + 1) := by
+      have h_eq_symm : m^k = erdos_moser_sum m k := h_eq.symm
+      rwa [h_eq_symm]
     -- Simplification de l'inegalite en divisant par m^k (m > 0)
     have h_simpl : k + 1 > m := sorry
     -- Deduction finale pour obtenir m < 2 * k sachant que k >= 2

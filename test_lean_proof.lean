@@ -67,7 +67,22 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     · apply Or.inl
       have h_primes : ∃ p, Nat.Prime p ∧ (p ∣ (m - 1) ∨ p ∣ (m + 1)) := sorry
       have h_p_bound : ∀ p, Nat.Prime p → (p ∣ (m - 1) ∨ p ∣ (m + 1)) → p > 10^7 := fun p hp hd => lemma2_prime_divisors m k p hp h1 h2 hd
-      have h_m_gt_2k : m > 2 * k := sorry
+      have h_m_gt_2k : m > 2 * k := by
+        have ⟨p, hp, hd⟩ := h_primes
+        have h_p_gt : p > 10^7 := h_p_bound p hp hd
+        have h_p_le : p ≤ m + 1 := by
+          cases hd with
+          | inl h_minus =>
+            have hm_gt_0 : m - 1 > 0 := by
+              have h_m_large : m ≥ 10^1000000 := by omega
+              omega
+            exact Nat.le_trans (Nat.le_of_dvd hm_gt_0 h_minus) (by omega)
+          | inr h_plus =>
+            have hm_plus_pos : m + 1 > 0 := by omega
+            exact Nat.le_of_dvd hm_plus_pos h_plus
+        -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+        have h_k_bound : 2 * k + 1 < p := sorry
+        omega
       exact h_m_gt_2k
   -- Contradiction entre la densite et l'asymptotique
   cases h_densite with

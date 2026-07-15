@@ -37,23 +37,31 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
     exact h2_pow
   have h_contra : (m - 1) / 2 % (m - 1) = 1 % (m - 1) := by
     rw [← h_sum_mod, h_mod_m_minus_1, h_mk_mod]
-  have h_m_val : m = 3 := by
-    have h_cases : m - 1 = 1 ∨ m - 1 = 2 ∨ m - 1 > 2 := by omega
-    rcases h_cases with h_1 | h_2 | h_3
-    · -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-      have h_m_val_missing : m = 3 := sorry
-      exact h_m_val_missing
-    · omega
-    · have h_gt_1 : 1 < m - 1 := by omega
-      have h_mod1 : 1 % (m - 1) = 1 := Nat.mod_eq_of_lt h_gt_1
-      have h_lt : (m - 1) / 2 < m - 1 := Nat.div_lt_self hm_minus_1_gt_0 (by decide)
-      have h_mod_div : (m - 1) / 2 % (m - 1) = (m - 1) / 2 := Nat.mod_eq_of_lt h_lt
-      have h_contra_eq := h_contra
-      rw [h_mod1, h_mod_div] at h_contra_eq
-      -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-      have h_m_val_missing : m = 3 := sorry
-      exact h_m_val_missing
-  have h_k_val : k = 1 := sorry
+  have h_m_val : m = 3 := sorry
+  have h_k_val : k = 1 := by
+    have h_eq2 : erdos_moser_sum m k = m^k := h3.2.2
+    rw [h_m_val] at h_eq2
+    unfold erdos_moser_sum at h_eq2
+    have h_sum : Finset.sum (Finset.range 3) (fun i => i^k) = 0^k + 1^k + 2^k := by
+      rw [Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_zero]
+      ring
+    rw [h_sum] at h_eq2
+    have h_0_pow : 0^k = 0 := by
+      cases k
+      · have h_pos : 0 > 0 := h3.2.1
+        contradiction
+      · rfl
+    have h_1_pow : 1^k = 1 := Nat.one_pow k
+    rw [h_0_pow, h_1_pow] at h_eq2
+    have h_eq3 : 1 + 2^k = 3^k := by
+      have hrw1 : 0 + 1 + 2^k = 1 + 2^k := by rfl
+      rw [hrw1] at h_eq2
+      exact h_eq2
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
+  have h_contra_k : 1 >= 2 := by
+    rw [←h_k_val]
+    exact h2
   omega
 
 set_option linter.unusedVariables false in

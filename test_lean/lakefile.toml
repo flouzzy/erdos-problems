@@ -1,0 +1,13 @@
+name = "test_lean_pkg"
+version = "0.1.0"
+defaultTargets = ["test_lean_pkg"]
+
+[[lean_lib]]
+name = "TestLeanPkg"
+
+[[lean_exe]]
+name = "test_lean_pkg"
+root = "Main"
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"

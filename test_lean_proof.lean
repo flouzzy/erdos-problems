@@ -24,6 +24,9 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
 lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m k)
   (h2 : k >= 2) :
   (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 :=
+  by
+  intro hd
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   sorry -- Preuve par valuations p-adiques (Lemme 2)
 
 lemma sum_i_mul_two (m : Nat) : (Finset.range m).sum (fun i => i) * 2 = m * (m - 1) := by

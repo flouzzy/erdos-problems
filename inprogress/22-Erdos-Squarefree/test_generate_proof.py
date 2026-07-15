@@ -54,34 +54,17 @@ class TestGenerateProof(unittest.TestCase):
                 os.remove(tex_path)
 
     @patch('subprocess.run')
-    @patch('sys.stderr', new_callable=io.StringIO)
-    def test_generate_latex_compilation_error(self, mock_stderr, mock_subprocess):
+    @patch('sys.stderr', new_callable=__import__('io').StringIO)
+    def test_generate_latex_error(self, mock_stderr, mock_subprocess):
+        import subprocess
         # Simulate compilation error
-        mock_subprocess.side_effect = Exception("Mocked compilation error")
+        mock_subprocess.side_effect = subprocess.CalledProcessError(1, 'pdflatex')
 
-        # Determine paths relative to this test file
-        test_dir = os.path.dirname(os.path.abspath(__file__))
-        tex_path = os.path.join(test_dir, '22-proof.tex')
+        # Run generator
+        generate_proof.generate_latex()
 
-        # Ensure file doesn't exist to start
-        if os.path.exists(tex_path):
-            os.remove(tex_path)
-
-        # Change current working directory to test dir to match script behavior
-        old_cwd = os.getcwd()
-        os.chdir(test_dir)
-        try:
-            # Run generator
-            generate_proof.generate_latex()
-
-            # Verify stderr
-            self.assertIn("Compilation error: Mocked compilation error", mock_stderr.getvalue())
-
-        finally:
-            os.chdir(old_cwd)
-            # Clean up
-            if os.path.exists(tex_path):
-                os.remove(tex_path)
+        # Verify that error is logged to stderr
+        self.assertIn("Compilation error", mock_stderr.getvalue())
 
 if __name__ == '__main__':
     unittest.main()

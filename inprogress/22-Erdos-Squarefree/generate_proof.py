@@ -277,13 +277,15 @@ def generate_latex():
             ['pdflatex', '-interaction=nonstopmode', '22-proof.tex'],
             cwd=script_dir,
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
+            stderr=subprocess.DEVNULL,
+            check=True
         )
         subprocess.run(
             ['pdflatex', '-interaction=nonstopmode', '22-proof.tex'],
             cwd=script_dir,
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
+            stderr=subprocess.DEVNULL,
+            check=True
         )
     except Exception as e:
         import sys

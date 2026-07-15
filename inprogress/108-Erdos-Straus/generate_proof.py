@@ -1,9 +1,8 @@
 import os
 import subprocess
 
-def generate_latex():
-    # Définition formelle des variables et paramètres
-    latex_content = r"""\documentclass[11pt,a4paper]{article}
+def _generate_intro_and_axiomatization():
+    return r"""\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
@@ -168,8 +167,8 @@ Cela démontre la limitation de l'approche linéaire sur cette classe et la néc
         # Let's find valid ones dynamically
     ]
 
-    # We will just write the rigorous algebraic derivation for the general class n = 8k + 7
-    latex_content += r"""
+def _generate_mod_8_7_class():
+    return r"""
 \section{Étude Détaillée de la Classe Modulaire $n \equiv 7 \pmod 8$}
 \begin{lemma}
 Pour tout entier $n = 8k + 7$ avec $k \in \mathbb{N}$, l'équation d'Erd\H{{o}}s-Straus admet une solution entière admissible, distincte de celle obtenue par la congruence modulo 4.
@@ -203,8 +202,8 @@ Les trois variables $x, y, z$ sont des polynômes à coefficients strictement po
 \end{proof}
 """
 
-    # We will generate a formal development of the cross-multiplication for arbitrary x, y, z
-    latex_content += r"""
+def _generate_tensor_development():
+    return r"""
 \section{Développement Tensoriel de l'Équation Diophantienne}
 Pour analyser la structure globale des solutions, nous développons l'équation $4xyz = n(xy + yz + zx)$.
 Soient $x, y, z$ des polynômes en la variable $k$ définis par $x = \sum_{i=0}^A a_i k^i$, $y = \sum_{j=0}^B b_j k^j$, et $z = \sum_{l=0}^C c_l k^l$.
@@ -215,55 +214,8 @@ xyz = \sum_{m=0}^{A+B+C} \left( \sum_{i+j+l=m} a_i b_j c_l \right) k^m
 """
 
     # We will expand out the sum of products for a cubic case to provide massive, genuine mathematical expansion
-    latex_content += r"""
-Soit $A=2, B=2, C=2$. Nous avons :
-\begin{align*}
-x &= a_2 k^2 + a_1 k + a_0 \\
-y &= b_2 k^2 + b_1 k + b_0 \\
-z &= c_2 k^2 + c_1 k + c_0
-\end{align*}
-Développons le produit $xy$ :
-\begin{align*}
-xy &= (a_2 k^2 + a_1 k + a_0)(b_2 k^2 + b_1 k + b_0) \\
-&= a_2 b_2 k^4 + a_2 b_1 k^3 + a_2 b_0 k^2 \\
-&\quad + a_1 b_2 k^3 + a_1 b_1 k^2 + a_1 b_0 k \\
-&\quad + a_0 b_2 k^2 + a_0 b_1 k + a_0 b_0 \\
-&= a_2 b_2 k^4 + (a_2 b_1 + a_1 b_2) k^3 + (a_2 b_0 + a_1 b_1 + a_0 b_2) k^2 + (a_1 b_0 + a_0 b_1) k + a_0 b_0
-\end{align*}
-
-De la même manière, par symétrie de permutation des indices :
-\begin{align*}
-yz &= b_2 c_2 k^4 + (b_2 c_1 + b_1 c_2) k^3 + (b_2 c_0 + b_1 c_1 + b_0 c_2) k^2 + (b_1 c_0 + b_0 c_1) k + b_0 c_0 \\
-zx &= c_2 a_2 k^4 + (c_2 a_1 + c_1 a_2) k^3 + (c_2 a_0 + c_1 a_1 + c_0 a_2) k^2 + (c_1 a_0 + c_0 a_1) k + c_0 a_0
-\end{align*}
-
-La somme $S = xy + yz + zx$ est alors :
-\begin{align*}
-S &= (a_2 b_2 + b_2 c_2 + c_2 a_2) k^4 \\
-&\quad + (a_2 b_1 + a_1 b_2 + b_2 c_1 + b_1 c_2 + c_2 a_1 + c_1 a_2) k^3 \\
-&\quad + (a_2 b_0 + a_1 b_1 + a_0 b_2 + b_2 c_0 + b_1 c_1 + b_0 c_2 + c_2 a_0 + c_1 a_1 + c_0 a_2) k^2 \\
-&\quad + (a_1 b_0 + a_0 b_1 + b_1 c_0 + b_0 c_1 + c_1 a_0 + c_0 a_1) k \\
-&\quad + (a_0 b_0 + b_0 c_0 + c_0 a_0)
-\end{align*}
-
-Calculons maintenant le terme cubique $P = xyz$. Multiplions $xy$ par $z$ :
-\begin{align*}
-P &= \left( a_2 b_2 k^4 + (a_2 b_1 + a_1 b_2) k^3 + (a_2 b_0 + a_1 b_1 + a_0 b_2) k^2 + (a_1 b_0 + a_0 b_1) k + a_0 b_0 \right) (c_2 k^2 + c_1 k + c_0) \\
-&= a_2 b_2 c_2 k^6 \\
-&\quad + (a_2 b_2 c_1 + a_2 b_1 c_2 + a_1 b_2 c_2) k^5 \\
-&\quad + (a_2 b_2 c_0 + a_2 b_1 c_1 + a_1 b_2 c_1 + a_2 b_0 c_2 + a_1 b_1 c_2 + a_0 b_2 c_2) k^4 \\
-&\quad + (a_2 b_1 c_0 + a_1 b_2 c_0 + a_2 b_0 c_1 + a_1 b_1 c_1 + a_0 b_2 c_1 + a_1 b_0 c_2 + a_0 b_1 c_2) k^3 \\
-&\quad + (a_2 b_0 c_0 + a_1 b_1 c_0 + a_0 b_2 c_0 + a_1 b_0 c_1 + a_0 b_1 c_1 + a_0 b_0 c_2) k^2 \\
-&\quad + (a_1 b_0 c_0 + a_0 b_1 c_0 + a_0 b_0 c_1) k \\
-&\quad + a_0 b_0 c_0
-\end{align*}
-
-Pour que l'équation d'Erd\H{{o}}s-Straus $4P = nS$ soit vérifiée pour $n = \alpha k + \beta$, il faut que les polynômes soient identiquement égaux.
-Cela génère un système de $7$ équations non linéaires pour les coefficients $a_i, b_j, c_l$.
-"""
-
-    # We expand out the 7 equations
-    latex_content += r"""
+def _generate_coefficient_identification():
+    return r"""
 \subsection{Identification des Coefficients}
 Considérons $n = \alpha k + \beta$. Le produit $nS$ devient :
 \begin{align*}
@@ -323,6 +275,8 @@ Degré 0 :
 Ce système diophantien détermine l'existence d'une paramétrisation pour tout $n$.
 """
 
+def _generate_parametric_solutions():
+    latex_content = ""
     # We will generate specific solutions for individual n to add depth
     for n_val in range(11, 41, 2):
         latex_content += rf"""
@@ -389,7 +343,9 @@ Les solutions sont $(x, y, z) = ({(n_val+3)//4}, {(den + num - 1)//num}, {den2})
 Le numérateur est ${num2}$, nécessitant une étape supplémentaire. L'équation d'Erd\H{{o}}s-Straus n'est pas résolue par cette simple branche gloutonne pour $n={n_val}$, impliquant une approche par facteurs de Rosser.
 """
 
-    latex_content += r"""
+    return latex_content
+def _generate_lean_architecture():
+    return r"""
 \section{Architecture de Formalisation dans Lean 4}
 
 \begin{verbatim}
@@ -422,6 +378,13 @@ Les dérivations explicites pour les classes modulaires étudiées démontrent l
 \end{document}
 """
 
+def generate_latex():
+    latex_content = _generate_intro_and_axiomatization()
+    latex_content += _generate_mod_8_7_class()
+    latex_content += _generate_tensor_development()
+    latex_content += _generate_coefficient_identification()
+    latex_content += _generate_parametric_solutions()
+    latex_content += _generate_lean_architecture()
     return latex_content
 
 def main():

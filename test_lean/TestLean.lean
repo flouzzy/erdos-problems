@@ -24,11 +24,44 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
   by_contra hk
   have hm_minus_1_gt_0 : m - 1 > 0 := by omega
   have h_sum_mod : erdos_moser_sum m k % (m - 1) = (m - 1) / 2 % (m - 1) := sorry
-  have h_mk_mod : m^k % (m - 1) = 1 % (m - 1) := sorry
+  have h_mk_mod : m^k % (m - 1) = 1 % (m - 1) := by
+    have h_mod1 : m % (m - 1) = 1 % (m - 1) := by
+      have h_m : m = (m - 1) + 1 := by omega
+      nth_rw 1 [h_m]
+      rw [Nat.add_mod]
+      have h_self : (m - 1) % (m - 1) = 0 := Nat.mod_self (m - 1)
+      rw [h_self, Nat.zero_add, Nat.mod_mod]
+    have h_modeq : m ≡ 1 [MOD (m - 1)] := h_mod1
+    have h2_pow : m^k ≡ 1^k [MOD (m - 1)] := Nat.ModEq.pow k h_modeq
+    rw [Nat.one_pow] at h2_pow
+    exact h2_pow
   have h_contra : (m - 1) / 2 % (m - 1) = 1 % (m - 1) := by
     rw [← h_sum_mod, h_mod_m_minus_1, h_mk_mod]
   have h_m_val : m = 3 := sorry
-  have h_k_val : k = 1 := sorry
+  have h_k_val : k = 1 := by
+    have h_eq2 : erdos_moser_sum m k = m^k := h3.2.2
+    rw [h_m_val] at h_eq2
+    unfold erdos_moser_sum at h_eq2
+    have h_sum : Finset.sum (Finset.range 3) (fun i => i^k) = 0^k + 1^k + 2^k := by
+      rw [Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_zero]
+      ring
+    rw [h_sum] at h_eq2
+    have h_0_pow : 0^k = 0 := by
+      cases k
+      · have h_pos : 0 > 0 := h3.2.1
+        contradiction
+      · rfl
+    have h_1_pow : 1^k = 1 := Nat.one_pow k
+    rw [h_0_pow, h_1_pow] at h_eq2
+    have h_eq3 : 1 + 2^k = 3^k := by
+      have hrw1 : 0 + 1 + 2^k = 1 + 2^k := by rfl
+      rw [hrw1] at h_eq2
+      exact h_eq2
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
+  have h_contra_k : 1 >= 2 := by
+    rw [←h_k_val]
+    exact h2
   omega
 
 set_option linter.unusedVariables false in

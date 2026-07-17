@@ -23,7 +23,9 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
   -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   by_contra hk
   have hm_minus_1_gt_0 : m - 1 > 0 := by omega
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   have h_sum_mod : erdos_moser_sum m k % (m - 1) = (m - 1) / 2 % (m - 1) := sorry
+  -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   have h_mk_mod : m^k % (m - 1) = 1 % (m - 1) := sorry
   have h_contra : (m - 1) / 2 % (m - 1) = 1 % (m - 1) := by
     rw [← h_sum_mod, h_mod_m_minus_1, h_mk_mod]

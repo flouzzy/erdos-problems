@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+import io
 from unittest.mock import patch
 
 # Add the directory to the path so we can import the script
@@ -51,6 +52,19 @@ class TestGenerateProof(unittest.TestCase):
             # Clean up
             if os.path.exists(tex_path):
                 os.remove(tex_path)
+
+    @patch('subprocess.run')
+    @patch('sys.stderr', new_callable=__import__('io').StringIO)
+    def test_generate_latex_error(self, mock_stderr, mock_subprocess):
+        import subprocess
+        # Simulate compilation error
+        mock_subprocess.side_effect = subprocess.CalledProcessError(1, 'pdflatex')
+
+        # Run generator
+        generate_proof.generate_latex()
+
+        # Verify that error is logged to stderr
+        self.assertIn("Compilation error", mock_stderr.getvalue())
 
 if __name__ == '__main__':
     unittest.main()

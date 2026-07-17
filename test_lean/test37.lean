@@ -8,7 +8,7 @@ def ErdosMoserPredicate (k m : Nat) : Prop :=
 
 lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq : ErdosMoserPredicate k m) :
   m > k := by
-  have _hk0 : k > 0 := by sorry
+  have _hk0 : k > 0 := by omega
   have h1 : (∑ i ∈ range m, i^k) < (m^(k+1)) / (k + 1) := by
     -- Bounding sum by the continuous integral
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.

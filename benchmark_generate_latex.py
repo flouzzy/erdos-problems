@@ -1,15 +1,9 @@
 import timeit
 import sys
-import importlib.util
+import os
 
-def load_module(name, path):
-    spec = importlib.util.spec_from_file_location(name, path)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
-
-module = load_module("generate_proof", "inprogress/16-Erdos-Turan-Additive/generate_proof.py")
+sys.path.insert(0, os.path.abspath("inprogress/16-Erdos-Turan-Additive"))
+import generate_proof as module
 
 if __name__ == "__main__":
     n_runs = 500

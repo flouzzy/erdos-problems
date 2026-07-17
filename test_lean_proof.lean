@@ -57,15 +57,22 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
     -- Extraction des hypotheses de base
     have ⟨hm_pos, hk_pos, h_eq⟩ := h1
     -- Comparaison de la somme de puissances avec une integrale
-    have h_integral_comp : (k + 1) * erdos_moser_sum m k > m^(k + 1) := sorry
+    have h_integral_comp : (k + 1) * erdos_moser_sum m k > m^(k + 1) := by
+      -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+      sorry
     -- Substitution en utilisant l'equation de la solution
     have h_subst : (k + 1) * m^k > m^(k + 1) := by
-      have h_eq_symm : m^k = erdos_moser_sum m k := h_eq.symm
-      rwa [h_eq_symm]
+      rw [← heq]
+      exact h_integral_comp
     -- Simplification de l'inegalite en divisant par m^k (m > 0)
-    have h_simpl : k + 1 > m := sorry
+    have h_simpl : k + 1 > m := by
+      have h_pow : m^(k + 1) = m * m^k := by
+        rw [Nat.pow_succ, Nat.mul_comm]
+      rw [h_pow] at h_subst
+      exact Nat.lt_of_mul_lt_mul_right h_subst
     -- Deduction finale pour obtenir m < 2 * k sachant que k >= 2
-    have h_final : m < 2 * k := by omega
+    have h_final : m < 2 * k := by
+      omega
     exact h_final
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   have h_densite : m > 2 * k ∨ m < 10^1000000 := by

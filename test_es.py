@@ -1,13 +1,10 @@
 import math
 import pytest
+import functools
 
-_prime_factors_cache = {}
-
+@functools.lru_cache(maxsize=None)
 def get_prime_factors(num):
-    if num in _prime_factors_cache:
-        return _prime_factors_cache[num]
 
-    orig_num = num
     factors = {}
 
     count2 = 0
@@ -29,21 +26,22 @@ def get_prime_factors(num):
     if num > 1:
         factors[num] = 1
 
-    _prime_factors_cache[orig_num] = factors
     return factors
 
 def _find_solution(n, require_distinct):
     n_factors = get_prime_factors(n)
+    n2_factors = {p: count * 2 for p, count in n_factors.items()}
     for x in range(n // 4 + 1, n + 1):
         A = 4 * x - n
         if A <= 0: continue
         B = n * x
 
-        b2_factors = {}
-        for p, count in n_factors.items():
-            b2_factors[p] = count * 2
+        b2_factors = n2_factors.copy()
         for p, count in get_prime_factors(x).items():
-            b2_factors[p] = b2_factors.get(p, 0) + count * 2
+            if p in b2_factors:
+                b2_factors[p] += count * 2
+            else:
+                b2_factors[p] = count * 2
 
         limit = B
 

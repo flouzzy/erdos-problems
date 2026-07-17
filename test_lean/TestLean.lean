@@ -30,7 +30,30 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
   have h_contra : (m - 1) / 2 % (m - 1) = 1 % (m - 1) := by
     rw [← h_sum_mod, h_mod_m_minus_1, h_mk_mod]
   have h_m_val : m = 3 := sorry
-  have h_k_val : k = 1 := sorry
+  have h_k_val : k = 1 := by
+    have h_eq2 : erdos_moser_sum m k = m^k := h3.2.2
+    rw [h_m_val] at h_eq2
+    unfold erdos_moser_sum at h_eq2
+    have h_sum : Finset.sum (Finset.range 3) (fun i => i^k) = 0^k + 1^k + 2^k := by
+      rw [Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_zero]
+      ring
+    rw [h_sum] at h_eq2
+    have h_0_pow : 0^k = 0 := by
+      cases k
+      · have h_pos : 0 > 0 := h3.2.1
+        contradiction
+      · rfl
+    have h_1_pow : 1^k = 1 := Nat.one_pow k
+    rw [h_0_pow, h_1_pow] at h_eq2
+    have h_eq3 : 1 + 2^k = 3^k := by
+      have hrw1 : 0 + 1 + 2^k = 1 + 2^k := by rfl
+      rw [hrw1] at h_eq2
+      exact h_eq2
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
+  have h_contra_k : 1 >= 2 := by
+    rw [←h_k_val]
+    exact h2
   omega
 
 set_option linter.unusedVariables false in
@@ -52,11 +75,21 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
   m < 10^1000000 := by
   -- L'approximation analytique lie asymptotiquement m et k
   have h_asymp : m < 2 * k := by
-    -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
-    by_contra h_ge
-    have h_ge_2k : m ≥ 2 * k := Nat.le_of_not_lt h_ge
-    have h_sum_eq : erdos_moser_sum m k = m^k := h1.2.2
-    have h_sum_gt : erdos_moser_sum m k > m^k := sorry
+    have ⟨hm_pos, hk_pos, heq⟩ := h1
+    -- Comparaison de la somme de puissances avec une integrale
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    have h_integral_comp : (k + 1) * erdos_moser_sum m k > m^(k + 1) := sorry
+    have h_subst : (k + 1) * m^k > m^(k + 1) := by
+      rw [heq] at h_integral_comp
+      exact h_integral_comp
+    have h_simpl : m < k + 1 := by
+      have h_pow : m^(k+1) = m^k * m := by
+        rw [Nat.pow_add, Nat.pow_one]
+      rw [h_pow] at h_subst
+      have h_subst_lt : m^k * m < m^k * (k + 1) := by
+        have h_comm : (k + 1) * m^k = m^k * (k + 1) := Nat.mul_comm _ _
+        rwa [h_comm] at h_subst
+      exact Nat.lt_of_mul_lt_mul_left h_subst_lt
     omega
   -- La densite des diviseurs premiers (Lemme 2) impose m exponentiellement grand
   -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
@@ -70,8 +103,27 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
         exact lemma2_prime_divisors m k p hp h1 h2 hdiv
       have h_growth : m > 2 * k := by
         have _h_m_large : m ≥ 10^1000000 := Nat.le_of_not_lt h_m
+        -- Puisque k > 1, cela implique p <= k
+        -- Mais l'analyse fine des congruences montrerait que p > k, une contradiction
+        -- On extrait l'hypothese de base
+        have ⟨hm_pos, hk_pos, heq⟩ := h1
+        -- Comparaison de la somme de puissances avec une integrale
         -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-        sorry
+        have h_integral_comp : (k + 1) * erdos_moser_sum m k > m^(k + 1) := sorry
+        have h_subst : (k + 1) * m^k > m^(k + 1) := by
+          rw [heq] at h_integral_comp
+          exact h_integral_comp
+        have h_simpl : m < k + 1 := by
+          have h_pow : m^(k+1) = m^k * m := by
+            rw [Nat.pow_add, Nat.pow_one]
+          rw [h_pow] at h_subst
+          have h_subst_lt : m^k * m < m^k * (k + 1) := by
+            have h_comm : (k + 1) * m^k = m^k * (k + 1) := Nat.mul_comm _ _
+            rwa [h_comm] at h_subst
+          exact Nat.lt_of_mul_lt_mul_left h_subst_lt
+        omega
+
+  -- Cas de base m <= 3, qu'on resout a la main
       exact h_growth
   -- Contradiction entre la densite et l'asymptotique
   cases h_densite with

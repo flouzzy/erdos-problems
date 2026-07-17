@@ -36,6 +36,16 @@ class TestGenerateProof(unittest.TestCase):
                 self.assertIn("Analyse du pire cas : Arbre 3-régulier de profondeur $59$", content)
                 self.assertNotIn("Analyse du pire cas : Arbre 3-régulier de profondeur $60$", content)
 
+                # Verify LaTeX structure
+                self.assertIn(r"\documentclass[11pt,a4paper]{article}", content)
+                self.assertIn(r"\title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erdös-Gyárfás}", content)
+                self.assertIn(r"\begin{document}", content)
+                self.assertIn(r"\end{document}", content)
+
+                # Verify loops and generation logic
+                self.assertIn(r"\subsection{Construction pour $d(G)=3$ de taille $N=4$}", content)
+                self.assertIn(r"\subsection{Construction récursive de graphes de taille croissante}", content)
+
                 # Verify pdflatex was called
                 mock_run.assert_called_once()
 

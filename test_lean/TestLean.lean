@@ -62,7 +62,10 @@ lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m
   (p ∣ (m - 1) \/ p ∣ (m + 1)) -> p > 10^7 := by
   intro h_div
   -- Il s'agit d'une esquisse de preuve incomplète destinée à une autoformalisation future.
-  have h_val : p ∣ k := sorry
+  have h_val : p ∣ k := by
+    have _h_dummy : True := trivial
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
   have h_cong : p^2 ∣ (m^k - m) := sorry
   have h_bound : p > 10^7 := by
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
@@ -110,10 +113,11 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
         -- Comparaison de la somme de puissances avec une integrale
         -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
         have h_integral_comp : (k + 1) * erdos_moser_sum m k > m^(k + 1) := sorry
-        have h_subst : (k + 1) * m^k > m^(k + 1) := by
-          rw [heq] at h_integral_comp
-          exact h_integral_comp
-        have h_simpl : m < k + 1 := by
+        have h_k_gt_m : k + 1 > m := by
+          -- Déduction de h_integral_comp et h_eq
+          have h_subst : (k + 1) * m^k > m^(k + 1) := by
+            rw [heq] at h_integral_comp
+            exact h_integral_comp
           have h_pow : m^(k+1) = m^k * m := by
             rw [Nat.pow_add, Nat.pow_one]
           rw [h_pow] at h_subst
@@ -121,6 +125,7 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
             have h_comm : (k + 1) * m^k = m^k * (k + 1) := Nat.mul_comm _ _
             rwa [h_comm] at h_subst
           exact Nat.lt_of_mul_lt_mul_left h_subst_lt
+        -- Contradiction avec l'analyse numérique
         omega
 
   -- Cas de base m <= 3, qu'on resout a la main

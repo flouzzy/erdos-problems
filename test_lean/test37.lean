@@ -19,7 +19,7 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
     exact h1
   have h3 : (k + 1) * m^k < m^(k+1) := by
     -- Algebraic rearrangement
-    have h_pos : k + 1 > 0 := by sorry
+    have h_pos : k + 1 > 0 := by omega
     have h2_mul := Nat.mul_lt_mul_of_pos_right h2 h_pos
     have h_comm : m^k * (k + 1) = (k + 1) * m^k := Nat.mul_comm _ _
     rw [h_comm] at h2_mul

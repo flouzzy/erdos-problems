@@ -87,8 +87,8 @@ Majorons la probabilité de non-existence en utilisant l'inégalité de Janson.
 Posons $\mu = \mathbb{E}[X_\ell]$. Nous évaluons la variance et la somme des covariances $\Delta = \sum_{A \cap B \neq \emptyset} \mathbb{P}(A \cap B)$.
 """
     # Generating rigorous expansion for Lemma 1
-    for i in range(1, 15):
-        content += rf"""
+    content += "".join([
+        rf"""
 Pour l'intersection de deux cycles $A$ et $B$ partageant $s \ge 1$ arêtes, l'union des sommets est $2\ell - v(A \cap B)$.
 L'espérance conditionnelle à l'étape $i={i}$ donne :
 \begin{{align*}}
@@ -101,6 +101,8 @@ En appliquant la borne de Chernoff modifiée pour les dépendances locales,
 \end{{equation}}
 Puisque $\Delta = o(\mu^2)$, la probabilité devient infinitésimale.
 """
+        for i in range(1, 15)
+    ])
     content += r"""
 Cela complète la démonstration probabiliste : un graphe typique dense possède une infinité de tels cycles.
 \end{proof}
@@ -119,8 +121,8 @@ Fixons un sommet arbitraire $v_0 \in V$. Définissons les ensembles de niveaux $
 Parce que $\delta(G) \ge 3$, chaque sommet $u \in L_i$ possède au moins $3$ voisins dans $L_{i-1} \cup L_i \cup L_{i+1}$.
 """
     # Generating rigorous expansion for Lemma 2
-    for i in range(1, 15):
-        content += rf"""
+    content += "".join([
+        rf"""
 Étape d'expansion {i} :
 Considérons le flot de sous-ensembles $S \subset L_i$. Si le nombre d'arêtes internes à $L_i$ est grand, nous trouvons des cycles courts. Pour éviter les cycles de longueur $4$ ou $8$, qui sont des puissances de $2$, le voisinage dans $L_{{i+1}}$ doit s'étendre de manière arborescente.
 \begin{{align*}}
@@ -130,6 +132,8 @@ Considérons le flot de sous-ensembles $S \subset L_i$. Si le nombre d'arêtes i
 Si $\epsilon_i$ dépasse un seuil critique $\tau_{i}$, une fermeture cyclique force un cycle $C_{{2^k}}$.
 L'analyse de Fourier sur les graphes réguliers confirme que le spectre laplacien $\lambda_1, \dots, \lambda_n$ restreint la multiplicité des petites composantes.
 """
+        for i in range(1, 15)
+    ])
     content += r"""
 Par récurrence, la croissance est strictement exponentielle, induisant que le diamètre global est limité par $O(\log_2 n)$.
 \end{proof}
@@ -148,8 +152,8 @@ Nous utilisons une preuve par double inclusion sur les chemins maximaux.
 Soit $P = (v_0, v_1, \dots, v_\ell)$ le plus long chemin dans $G$.
 Puisque $G$ est $k$-régulier, $v_0$ a $k$ voisins dans $V$. Comme $P$ est maximal, tous les voisins de $v_0$ sont sur $P$.
 """
-    for i in range(1, 15):
-        content += rf"""
+    content += "".join([
+        rf"""
 Phase de décomposition spectrale et combinatoire {i} :
 Notons les indices des voisins de $v_0$ sur le chemin $P$ comme $0 < i_1 < i_2 < \dots < i_k = \ell$.
 Chaque $v_{{i_j}}$ est dans la partition de graphe opposée à $v_0$, donc chaque indice $i_j$ est impair.
@@ -162,6 +166,8 @@ L'intervalle entre les voisins consécutifs $i_j$ et $i_{{j+1}}$ est restreint.
 \end{{equation}}
 L'expansion par la méthode du principe des tiroirs de Dirichlet révèle une obstruction topologique.
 """
+        for i in range(1, 15)
+    ])
     content += r"""
 Le principe des tiroirs garantit qu'il existe une configuration où la distance pondérée induit une puissance de $2$.
 Cette contradiction valide le lemme pour la sous-classe bipartite.

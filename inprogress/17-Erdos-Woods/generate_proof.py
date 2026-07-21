@@ -1,5 +1,4 @@
 import os
-import sys
 
 def generate_latex():
     tex_content = []

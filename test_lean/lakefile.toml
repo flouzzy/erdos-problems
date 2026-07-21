@@ -11,3 +11,8 @@ root = "Main"
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
+
+[[lean_lib]]
+name = "test37"
+[[lean_lib]]
+name = "solve"

@@ -1,4 +1,3 @@
-import pytest
 from generate_proof import generate_readme_fr, generate_readme_en
 
 def test_generate_readme_fr():

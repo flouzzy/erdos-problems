@@ -1,5 +1,4 @@
-import Mathlib.Data.Nat.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib
 
 open Finset
 
@@ -19,7 +18,7 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
     exact h1
   have h3 : (k + 1) * m^k < m^(k+1) := by
     -- Algebraic rearrangement
-    have h_pos : k + 1 > 0 := by sorry
+    have h_pos : k + 1 > 0 := by omega
     have h2_mul := Nat.mul_lt_mul_of_pos_right h2 h_pos
     have h_comm : m^k * (k + 1) = (k + 1) * m^k := Nat.mul_comm _ _
     rw [h_comm] at h2_mul
@@ -33,5 +32,10 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
     have h3_comm : m^k * (k + 1) < m^k * m := by
       have h_comm2 : (k + 1) * m^k = m^k * (k + 1) := Nat.mul_comm _ _
       rwa [h_comm2] at h3
-    exact Nat.lt_of_mul_lt_mul_left h3_comm
-  sorry
+    have hm_pos : m^k > 0 := by
+      have h_m_pos : m > 0 := by omega
+      cases k
+      · omega
+      · exact Nat.pow_pos h_m_pos
+    exact (Nat.mul_lt_mul_left hm_pos).mp h3_comm
+  omega

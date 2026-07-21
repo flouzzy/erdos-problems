@@ -34,5 +34,10 @@ lemma erdos_moser_faulhaber_bound (k m : Nat) (hk : k >= 2) (hm : m >= 2) (h_eq 
     have h3_comm : m^k * (k + 1) < m^k * m := by
       have h_comm2 : (k + 1) * m^k = m^k * (k + 1) := Nat.mul_comm _ _
       rwa [h_comm2] at h3
-    exact Nat.lt_of_mul_lt_mul_left h3_comm
+    have hm_pos : m^k > 0 := by
+      have h_m_pos : m > 0 := by omega
+      cases k
+      · omega
+      · exact Nat.pow_pos h_m_pos
+    exact (Nat.mul_lt_mul_left hm_pos).mp h3_comm
   omega

@@ -62,7 +62,7 @@ lemma lemma3_analytic_bound (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
       sorry
     -- Substitution en utilisant l'equation de la solution
     have h_subst : (k + 1) * m^k > m^(k + 1) := by
-      rw [← heq]
+      rw [← h_eq]
       exact h_integral_comp
     -- Simplification de l'inegalite en divisant par m^k (m > 0)
     have h_simpl : k + 1 > m := by
@@ -114,6 +114,7 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
   · -- Pour k >= 2, les bornes analytiques entrent en contradiction
     have h_bound := lemma3_analytic_bound m k h hk
     -- La combinaison des trois lemmes mene a une contradiction
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
     have h_p_val : ∃ p, Nat.Prime p ∧ p ∣ k ∧ p > 2 * k := sorry
     have ⟨p, hp_prime, hp_div_k, hp_gt_2k⟩ := h_p_val
     have hk_pos : k > 0 := h.2.1

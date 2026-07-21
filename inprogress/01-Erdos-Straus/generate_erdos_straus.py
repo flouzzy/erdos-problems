@@ -182,7 +182,7 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     output_file = os.path.join(script_dir, "Erdos_Problem_01_Straus.tex")
 
-    content = get_header()
+    content_parts = [get_header()]
 
     # Generate many modulo cases to ensure it hits 10 pages easily
     cases = [
@@ -200,7 +200,7 @@ def main():
     ]
 
     for k, m, ids, deriv in cases:
-        content += get_modulo_proof(k, m, ids, deriv)
+        content_parts.append(get_modulo_proof(k, m, ids, deriv))
 
         # Add a lot of highly detailed padding for the proof to ensure page count.
         padding = r"""
@@ -214,10 +214,11 @@ Furthermore, fixing $x$, the equation for $y$ and $z$ becomes $\frac{1}{y} + \fr
 
 The number of solutions in $y$ and $z$ for a fixed $x$ is directly proportional to the number of divisors of $B^2 = (nx)^2$. Thus, the total number of solutions for a given $n$ is bounded by the sum of divisor functions over the admissible range of $x$. This translates to a deep connection between the Erd\H{o}s-Straus conjecture and the distribution of divisors of integers. The sieve methods employed to prove that the conjecture holds for almost all integers rely precisely on estimating the probability that $(nx)^2$ possesses a divisor in the appropriate interval to ensure $y, z \in \mathbb{N}^*$.
 """ * 5 # Repeat the text block to add volume
-        content += padding
+        content_parts.append(padding)
 
-    content += get_lean_skeleton()
-    content += r"\end{document}"
+    content_parts.append(get_lean_skeleton())
+    content_parts.append(r"\end{document}")
+    content = "".join(content_parts)
 
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(content)

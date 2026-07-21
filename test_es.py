@@ -1,4 +1,3 @@
-import math
 import pytest
 import functools
 
@@ -28,6 +27,11 @@ def get_prime_factors(num):
 
     return factors
 
+
+@functools.lru_cache(maxsize=None)
+def get_x_factors_doubled_items(num):
+    return tuple((p, count * 2) for p, count in get_prime_factors(num).items())
+
 def _find_solution(n, require_distinct):
     n_factors = get_prime_factors(n)
     n2_factors = {p: count * 2 for p, count in n_factors.items()}
@@ -37,11 +41,8 @@ def _find_solution(n, require_distinct):
         B = n * x
 
         b2_factors = n2_factors.copy()
-        for p, count in get_prime_factors(x).items():
-            if p in b2_factors:
-                b2_factors[p] += count * 2
-            else:
-                b2_factors[p] = count * 2
+        for p, count2 in get_x_factors_doubled_items(x):
+            b2_factors[p] = b2_factors.get(p, 0) + count2
 
         limit = B
 

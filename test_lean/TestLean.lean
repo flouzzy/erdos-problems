@@ -49,8 +49,17 @@ lemma lemma1_k_is_even (m k : Nat) (h1 : m >= 2) (h2 : k >= 2) (h3 : is_solution
       have hrw1 : 0 + 1 + 2^k = 1 + 2^k := by rfl
       rw [hrw1] at h_eq2
       exact h_eq2
-    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    sorry
+    have h_pow : 3^k > 1 + 2^k := by
+      clear h_eq3
+      induction' k, h2 using Nat.le_induction with n hn ih
+      · decide
+      · calc
+          3^(n+1) = 3 * 3^n := by ring
+          _ > 3 * (1 + 2^n) := by rel [ih]
+          _ = 3 + 3 * 2^n := by ring
+          _ > 1 + 2 * 2^n := by generalize 2^n = X; linarith
+          _ = 1 + 2^(n+1) := by ring
+    linarith
   have h_contra_k : 1 >= 2 := by
     rw [←h_k_val]
     exact h2

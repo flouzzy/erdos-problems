@@ -66,7 +66,7 @@ lemma lemma2_prime_divisors (m k p : Nat) (hp : Nat.Prime p) (h1 : is_solution m
   have h_cong : p^2 ∣ (m^k - m) := sorry
   have h_bound : p > 10^7 := by
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    sorry
+    sorry -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
   exact h_bound
 
 set_option linter.unusedVariables false

@@ -1,16 +1,20 @@
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Nat.Basic
+import Mathlib.Algebra.BigOperators.Basic
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Nat.Parity
+import Mathlib.Tactic.Linarith
 
-def erdos_moser_sum (m k : Nat) : Nat :=
-  Finset.sum (Finset.range m) (fun i => i^k)
+def erdos_moser_sum (m k : ℕ) : ℕ :=
+  (Finset.range m).sum (λ i => i^k)
 
-def is_solution (m k : Nat) : Prop :=
-  m > 0 /\ k > 0 /\ erdos_moser_sum m k = m^k
-
-lemma test_lemma (m k : Nat) (h1 : is_solution m k) (h2 : k >= 2) :
-  m < 2 * k := by
-  by_contra h_ge
-  have h_ge_2k : m ≥ 2 * k := Nat.le_of_not_lt h_ge
-  have h_sum_eq : erdos_moser_sum m k = m^k := h1.2.2
-  have h_sum_gt : erdos_moser_sum m k > m^k := sorry
-  omega
+theorem erdos_moser (m k : ℕ) (hm : m ≥ 3) (hk : k ≥ 2) :
+  erdos_moser_sum m k ≠ m^k := by
+  intro h
+  have h_sum_gt : erdos_moser_sum m k > m^k := by
+    -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
+    sorry
+  have h_false : erdos_moser_sum m k > erdos_moser_sum m k := by
+    calc erdos_moser_sum m k > m^k := h_sum_gt
+         _ = erdos_moser_sum m k := h.symm
+  exact lt_irrefl _ h_false

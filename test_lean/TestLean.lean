@@ -158,8 +158,23 @@ theorem erdos_moser_conjecture (m k : Nat) (h : is_solution m k) :
   · -- Pour k >= 2, les bornes analytiques entrent en contradiction
     have h_bound := lemma3_analytic_bound m k h hk
     -- La combinaison des trois lemmes mene a une contradiction
+    have hm_ge_2 : m ≥ 2 := by
+      have ⟨hm_pos, hk_pos, heq⟩ := h
+      by_contra h_not
+      have hm_eq_1 : m = 1 := by omega
+      rw [hm_eq_1] at heq
+      unfold erdos_moser_sum at heq
+      have h_sum : Finset.sum (Finset.range 1) (fun i => i^k) = 0 := by
+        rw [Finset.sum_range_one, Nat.zero_pow hk_pos]
+      rw [h_sum, Nat.one_pow] at heq
+      contradiction
+    have h_even_k := lemma1_k_is_even m k hm_ge_2 hk h
     -- Il s'agit d'une esquisse de preuve incomplete destinee a une autoformalisation future.
-    have h_contra : False := sorry
+    have h_p_exists : ∃ p, Nat.Prime p ∧ (p ∣ (m - 1) ∨ p ∣ (m + 1)) ∧ p ≤ 10^7 := sorry
+    have ⟨p, hp_prime, hp_div, hp_bound⟩ := h_p_exists
+    have hp_gt_10_7 := lemma2_prime_divisors m k p hp_prime h hk hp_div
+    have h_contra : False := by
+      omega
     exact False.elim h_contra
   · -- Pour k < 2, comme k > 0, k = 1
     have hk1 : k = 1 := by

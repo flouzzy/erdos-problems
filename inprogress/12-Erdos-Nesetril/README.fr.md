@@ -14,6 +14,6 @@ Ce problème est actuellement **en cours**.
 
 Nous avons formulé une esquisse de preuve partielle robuste établissant des bornes supérieures pour les chemins, les arbres et les cycles de longueur paire. Une analyse combinatoire exhaustive a été réalisée sur des centaines de topologies de graphes distinctes pour satisfaire strictement aux exigences d'inégalité.
 
-Un document mathématique détaillé contenant des définitions axiomatiques strictes, le contexte et des preuves sans ellipse pour les lemmes clés a été préparé.
+Un document mathématique détaillé contenant des définitions axiomatiques strictes, le contexte et des preuves exhaustives pour les lemmes clés a été préparé.
 
 [Voir la Preuve et l'Analyse (PDF)](12-proof.pdf)

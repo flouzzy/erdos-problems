@@ -1,7 +1,7 @@
 # On the Foundations and Autoformalization of the Erdős-Straus Conjecture
 
 **Abstract**
-The Erdős-Straus conjecture, formulated in 1948, postulates that every integer $n \ge 2$ allows the decomposition of the fraction $\frac{4}{n}$ into a sum of three unit fractions. Although it has been empirically verified up to $n = 10^{17}$, a general proof remains out of reach. This paper proposes a strict axiomatic dissection of the problem, establishing the fundamental reduction lemmas and providing exhaustive proofs without ellipses. Furthermore, we propose a formal architecture implementable in the Lean 4 proof assistant, laying the groundwork for mechanized verification of future partial results.
+The Erdős-Straus conjecture, formulated in 1948, postulates that every integer $n \ge 2$ allows the decomposition of the fraction $\frac{4}{n}$ into a sum of three unit fractions. Although it has been empirically verified up to $n = 10^{17}$, a general proof remains out of reach. This paper proposes a strict axiomatic dissection of the problem, establishing the fundamental reduction lemmas and providing exhaustive proofs. Furthermore, we propose a formal architecture implementable in the Lean 4 proof assistant, laying the groundwork for mechanized verification of future partial results.
 
 ---
 

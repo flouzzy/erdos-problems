@@ -14,6 +14,6 @@ This problem is currently **in progress**.
 
 We have formulated a robust partial proof sketch establishing upper bounds for paths, trees, and even-length cycles. An exhaustive combinatorial analysis was performed on hundreds of distinct graph topologies to strictly meet the inequality requirements.
 
-A detailed mathematical document containing axiomatic definitions, context, and zero-ellipse proofs for key lemmas has been prepared.
+A detailed mathematical document containing axiomatic definitions, context, and exhaustive proofs for key lemmas has been prepared.
 
 [View the Proof and Analysis (PDF)](12-proof.pdf)

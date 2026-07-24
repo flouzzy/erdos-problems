@@ -32,7 +32,7 @@
 \maketitle
 
 \begin{abstract}
-Dans ce document, nous explorons la célèbre équation diophantienne d'Erdős-Moser : $\sum_{i=1}^{m-1} i^k = m^k$. Nous présentons une série de lemmes rigoureux analysant la parité de l'exposant $k$, les contraintes de divisibilité par des nombres premiers, et les comportements asymptotiques. Les démonstrations sont rédigées pas à pas, sans aucune ellipse logique, afin de fournir un cadre formel complet traduisible dans un système de preuve mécanisée tel que Lean 4.
+Dans ce document, nous explorons la célèbre équation diophantienne d'Erdős-Moser : $\sum_{i=1}^{m-1} i^k = m^k$. Nous présentons une série de lemmes rigoureux analysant la parité de l'exposant $k$, les contraintes de divisibilité par des nombres premiers, et les comportements asymptotiques. Les démonstrations sont rédigées pas à pas, explicitement, afin de fournir un cadre formel complet traduisible dans un système de preuve mécanisée tel que Lean 4.
 \end{abstract}
 
 \tableofcontents
@@ -44,7 +44,7 @@ La théorie des nombres regorge de problèmes dont l'énoncé est d'une grande s
 
 L'unique solution évidente est donnée par la paire $(m, k) = (3, 1)$, car l'on vérifie de manière triviale que $1^1 + 2^1 = 3^1$. Paul Erdős a conjecturé que c'est la seule et unique solution entière. En 1953, Leo Moser a démontré que si une autre solution existe, l'exposant $k$ doit nécessairement être pair, et la base $m$ doit être supérieure à $10^{10^6}$. Les techniques modernes et les capacités de calcul ont par la suite permis de repousser cette borne à plus de $10^{10^9}$.
 
-Dans la présente analyse mathématique, nous reconstruisons les fondations de la preuve de Moser en l'adaptant pour correspondre aux standards stricts requis par les systèmes d'autoformalisation et de vérification mécanisée tels que Lean 4 ou Coq. À cette fin, nous décomposons le problème en trois lemmes intermédiaires majeurs, chacun faisant l'objet d'une démonstration explicite, détaillée pas à pas. Nous interdisons formellement l'utilisation du terme "de manière évidente" (zéro ellipse logique) dans les développements algébriques, afin de garantir une traçabilité totale des variables.
+Dans la présente analyse mathématique, nous reconstruisons les fondations de la preuve de Moser en l'adaptant pour correspondre aux standards stricts requis par les systèmes d'autoformalisation et de vérification mécanisée tels que Lean 4 ou Coq. À cette fin, nous décomposons le problème en trois lemmes intermédiaires majeurs, chacun faisant l'objet d'une démonstration explicite, détaillée pas à pas. Nous détaillons explicitement les développements algébriques, afin de garantir une traçabilité totale des variables.
 
 \section{Définitions Axiomatiques et Cadre Formel}
 \label{sec:defs}

@@ -38,7 +38,7 @@ Soit $n \in \mathbb{N}_{\ge 2}$. Le triplet $(x, y, z) \in (\mathbb{N}^*)^3$ est
 
 L'approche développée ici isole des classes de congruence pour lesquelles une factorisation polynomiale exacte du dénominateur existe. Contrairement aux approches asymptotiques de Vaughan ou au crible de Selberg, nous construisons explicitement l'ensemble des solutions admissibles en résolvant les équations résiduelles. Les lemmes suivants détaillent la dérivation pas à pas.
 
-\section{Dérivations Algébriques (Zéro Ellipse)}
+\section{Dérivations Algébriques}
 
 \begin{lemma}
 Pour tout entier $n = 4k + 3$ avec $k \in \mathbb{N}$, l'équation d'Erd\H{{o}}s-Straus admet une solution entière admissible.

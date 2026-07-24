@@ -36,9 +36,9 @@ L'intégrale trigonométrique continue de la fonction génératrice du système 
 **Lemme 3 : Réduction par Inégalité Diophantienne**
 La concentration de la mesure autour du maximum de la somme force une violation structurelle si $k > \log_2 N + C$.
 
-## 4. Preuve Informelle (Zéro Ellipse)
+## 4. Preuve Informelle
 
-La démonstration complète, rigoureuse et étape par étape (zéro ellipse) des trois lemmes nécessitant une dérivation structurelle, se trouve dans le document `14-proof.pdf`.
+La démonstration complète, rigoureuse et étape par étape des trois lemmes nécessitant une dérivation structurelle, se trouve dans le document `14-proof.pdf`.
 
 ## 5. Architecture pour l'Autoformalisation (Lean 4)
 

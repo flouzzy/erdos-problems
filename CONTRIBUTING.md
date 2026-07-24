@@ -32,7 +32,7 @@ Inside the directory, place all relevant files, such as `README.md`, `README.fr.
 This repository adheres to strict mathematical rigor to facilitate future autoformalization into Lean 4. Please observe the following guidelines:
 
 1. **Strict Axiomatic Definitions:** Mathematical statements must be translated into strict axiomatic definitions. Every variable and set must be explicitly typed.
-2. **No Logical Shortcuts:** Never use logical shortcuts (often referred to as 'zero ellipses'). All steps, index changes, bounds, and principles applied must be written out explicitly.
+2. **No Logical Shortcuts:** Never use logical shortcuts. All steps, index changes, bounds, and principles applied must be written out explicitly.
 3. **Lean 4 Proof Sketch:** Proofs must be structured with an architecture for autoformalization. They must present a 'Proof Sketch' that is directly translatable into the Lean 4 formal proof assistant.
 4. **Explicit Elements:** Theorems, Lemmas, input variables, and hypotheses must be clearly typed and structured.
 

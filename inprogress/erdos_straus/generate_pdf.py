@@ -99,7 +99,7 @@ Le troisième lemme traite des classes de résidus singulières qui échappent a
 
 def get_sec4_part1():
     return r"""
-\section{Rédaction de la Preuve Informelle (Zéro Ellipse)}
+\section{Rédaction de la Preuve Informelle}
 
 \subsection{Démonstration du Lemme 1 : Réduction aux Nombres Premiers}
 Soit $n \in \mathbb{N}$ tel que $n \ge 2$. Par le Théorème Fondamental de l'Arithmétique, tout entier $n \ge 2$ admet une décomposition en facteurs premiers.

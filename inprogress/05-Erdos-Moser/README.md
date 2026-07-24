@@ -37,7 +37,7 @@ If $(m, k)$ is a non-trivial solution, then any prime factor $p$ of $m-1$ or $m+
 For large $k$, the difference $| \sum_{i=1}^{m-1} i^k - m^k |$ grows strictly positive, bounding $m$.
 *Proof Strategy:* Euler-Maclaurin formula and rigorous bounds on Bernoulli numbers to restrict the size of $(m, k)$.
 
-## Informal Proof (Zero Ellipse)
+## Informal Proof
 Please refer to the detailed PDF document generated in this directory for the exhaustive, step-by-step informal proofs of these lemmas.
 
 ## Architecture for Autoformalization (Lean 4 Proof Sketch)

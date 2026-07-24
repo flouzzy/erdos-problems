@@ -55,7 +55,7 @@ La preuve est décomposée en trois lemmes structuraux.
 
 ---
 
-## 4. Preuve Informelle (Zéro Ellipse)
+## 4. Preuve Informelle
 
 ### Preuve du Lemme 3.1 (Récurrence Cups-Caps)
 1. Soit $X$ un ensemble de points dans le plan en position générale, triés par leurs abscisses : $p_1, p_2, \ldots, p_m$.

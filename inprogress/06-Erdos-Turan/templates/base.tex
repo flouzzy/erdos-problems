@@ -26,7 +26,7 @@
 \begin{abstract}
 \selectlanguage{french}
 La conjecture d'Erdős-Turán stipule que pour toute base additive asymptotique $B$ d'ordre 2 de l'ensemble des entiers naturels, la fonction de représentation $r_B(n)$ qui compte le nombre de façons d'écrire $n$ comme la somme de deux éléments de $B$ ne peut pas être bornée.
-Ce document établit une décomposition stricte et axiomatique de cette conjecture. Nous isolons plusieurs lemmes intermédiaires concernant la densité analytique et l'espérance probabiliste des représentations. Nous proposons ensuite une démonstration exhaustive, étape par étape, de théorèmes partiels sur les densités de suites, garantissant l'absence totale de raccourcis logiques (« zéro ellipse »). Enfin, une architecture formelle traduisible dans l'assistant de preuve Lean 4 est présentée.
+Ce document établit une décomposition stricte et axiomatique de cette conjecture. Nous isolons plusieurs lemmes intermédiaires concernant la densité analytique et l'espérance probabiliste des représentations. Nous proposons ensuite une démonstration exhaustive, étape par étape, de théorèmes partiels sur les densités de suites, garantissant l'absence totale de raccourcis logiques. Enfin, une architecture formelle traduisible dans l'assistant de preuve Lean 4 est présentée.
 \end{abstract}
 
 \newpage
@@ -66,7 +66,7 @@ Soit $B \subseteq \mathbb{N}$ une base additive asymptotique d'ordre 2. Soit $B(
 $$B(x) \ge c \sqrt{x}$$
 \end{lemma}
 
-\textbf{Démonstration détaillée du Lemme 1 (Zéro ellipse):}
+\textbf{Démonstration détaillée du Lemme 1 :}
 \begin{enumerate}
     \item Soit $B$ une base additive asymptotique d'ordre 2. Par la Définition 2.1, il existe un entier $N \in \mathbb{N}$ tel que pour tout $n \ge N$, l'entier $n$ peut être écrit comme la somme de deux éléments de $B$.
     \item Considérons un entier arbitraire $x$ tel que $x \ge N$.
@@ -102,7 +102,7 @@ $$B(x) \ge c \sqrt{x}$$
 Soit $B$ une base asymptotique d'ordre 2 telle que $B(x) \ge c \sqrt{x}$ pour tout $x \ge X_0$. Pour tout entier grand $N$, l'espérance du nombre de représentations $r_B(n)$ pour $n \in [0, 2N]$ est d'au moins $\frac{c^2}{2}$.
 \end{lemma}
 
-\textbf{Démonstration détaillée du Lemme 2 (Zéro ellipse):}
+\textbf{Démonstration détaillée du Lemme 2 :}
 \begin{enumerate}
     \item Considérons un entier $N \ge X_0$. Nous évaluons l'ensemble tronqué $B_N = B \cap [0, N]$.
     \item Par le Lemme 1, le nombre d'éléments dans cet ensemble satisfait la borne inférieure absolue : $B(N) \ge c \sqrt{N}$.

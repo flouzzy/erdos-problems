@@ -39,9 +39,9 @@ L'intégrale trigonométrique continue de la fonction génératrice du système 
 **Lemme 3 : Réduction par Inégalité Diophantienne**
 La concentration de la mesure autour du maximum de la somme force une violation structurelle si $k > \log_2 N + C$.
 
-## 4. Preuve Informelle (Zéro Ellipse)
+## 4. Preuve Informelle
 
-La démonstration complète, rigoureuse et étape par étape (zéro ellipse) des trois lemmes nécessitant une dérivation structurelle, se trouve dans le document `14-proof.pdf`.
+La démonstration complète, rigoureuse et étape par étape des trois lemmes nécessitant une dérivation structurelle, se trouve dans le document `14-proof.pdf`.
 
 ## 5. Architecture pour l'Autoformalisation (Lean 4)
 
@@ -129,7 +129,7 @@ def generate_latex():
 \maketitle
 
 \begin{abstract}
-Cette monographie résout partiellement les bornes analytiques et combinatoires fondamentales liées à la conjecture des sommes de sous-ensembles de Paul Erdős. En utilisant une méthode d'analyse continue strictement déployée pas-à-pas sans aucune ellipse mathématique, nous exposons une théorie unifiant l'approche probabiliste de Tchebychev, la méthode harmonique par transformation de Fourier discrète, et la déformation des contours intégraux. La démonstration est fragmentée en trois lemmes cardinaux, détaillant minutieusement chaque transition algébrique.
+Cette monographie résout partiellement les bornes analytiques et combinatoires fondamentales liées à la conjecture des sommes de sous-ensembles de Paul Erdős. En utilisant une méthode d'analyse continue strictement déployée pas-à-pas exhaustive, nous exposons une théorie unifiant l'approche probabiliste de Tchebychev, la méthode harmonique par transformation de Fourier discrète, et la déformation des contours intégraux. La démonstration est fragmentée en trois lemmes cardinaux, détaillant minutieusement chaque transition algébrique.
 \end{abstract}
 
 \tableofcontents
@@ -153,7 +153,7 @@ Pour appréhender l'impossibilité de dépasser la constante logarithmique, il e
 Cependant, la répartition des sommes d'un sous-ensemble généré aléatoirement suit une loi normale. En 1955, Leo Moser utilisa le second moment pour concentrer l'espérance et développer la première avancée analytique majeure : $F(N) \le \log_2 N + \frac{1}{2} \log_2(\log_2 N) + O(1)$.
 
 \newpage
-\section{Preuve Informelle Zéro Ellipse : Lemme 1 (Borne de Variance et Second Moment)}
+\section{Preuve Informelle : Lemme 1 (Borne de Variance et Second Moment)}
 
 \begin{lemma}
 Si $S$ est un ensemble à sommes distinctes de taille $k$ borné par $N$, alors la variance de la somme d'un sous-ensemble aléatoire impose $\sigma^2 \le \frac{1}{4} k N^2$, forçant l'inégalité $2^k (1 - \frac{1}{\lambda^2}) \le \lambda \sqrt{k} N + 1$ pour tout $\lambda > 0$.
@@ -194,7 +194,7 @@ Si $S$ est un ensemble à sommes distinctes de taille $k$ borné par $N$, alors 
 \end{proof}
 
 \newpage
-\section{Preuve Informelle Zéro Ellipse : Lemme 2 (Évaluation Asymptotique par l'Identité de Parseval)}
+\section{Preuve Informelle : Lemme 2 (Évaluation Asymptotique par l'Identité de Parseval)}
 \begin{lemma}
 La fonction génératrice du nombre de solutions de l'équation $\sum_{i=1}^k \epsilon_i s_i = M$, évaluée par l'intégrale de Fourier sur le tore, impose une borne de concentration sur le nombre total de sommes de sous-ensembles, bornant $\max_{M} |\{\epsilon \in \{0, 1\}^k \mid \sum \epsilon_i s_i = M\}|$.
 \end{lemma}
@@ -233,7 +233,7 @@ Ainsi, par l'inégalité triangulaire continue, $\mathcal{N}(M) \le \int_{0}^{1}
 \end{proof}
 
 \newpage
-\section{Preuve Informelle Zéro Ellipse : Lemme 3 (Réduction par Inégalité Diophantienne)}
+\section{Preuve Informelle : Lemme 3 (Réduction par Inégalité Diophantienne)}
 \begin{lemma}
 La concentration asymptotique obtenue au Lemme 2, conjointement à l'hypothèse des sommes distinctes, force la condition combinatoire $|S| \le \log_2 N + O(1)$.
 \end{lemma}

@@ -19,7 +19,7 @@
 \maketitle
 
 \begin{abstract}
-Cet article propose une formalisation stricte et une analyse rigoureuse de la conjecture d'Erdős-Faber-Lovász. Nous décomposons le problème initial de coloration de sommets de graphes complets sécants en son équivalent dual d'hypergraphes, souvent formulé comme une coloration d'arêtes. À travers cette démarche structurée, nous démontrons des bornes chromatiques partielles explicites, détaillées pas-à-pas (zéro ellipse), culminant avec l'architecture nécessaire à une autoformalisation au sein de l'assistant de preuve Lean 4.
+Cet article propose une formalisation stricte et une analyse rigoureuse de la conjecture d'Erdős-Faber-Lovász. Nous décomposons le problème initial de coloration de sommets de graphes complets sécants en son équivalent dual d'hypergraphes, souvent formulé comme une coloration d'arêtes. À travers cette démarche structurée, nous démontrons des bornes chromatiques partielles explicites, détaillées pas-à-pas, culminant avec l'architecture nécessaire à une autoformalisation au sein de l'assistant de preuve Lean 4.
 \end{abstract}
 
 \section{Introduction}
@@ -117,7 +117,7 @@ Considérons le processus de coloration gloutonne ordonné.
 Trier les sommets $V$ de $G$ par ordre décroissant de leur degré dans $G$.
 Si nous utilisons le théorème classique sur le graphe dual, une méthode plus directe est de borner le "degré arête" dans $H$.
 Cependant, pour aboutir à $2k-1$ (ou approximativement $\approx 1.5k$ pour certains résultats), il est préférable d'utiliser le lemme local ou une majoration stricte sur un graphe partiel.
-Pour cette preuve (sans ellipse), restons sur l'objectif de borne simple :
+Pour cette preuve (exhaustive), restons sur l'objectif de borne simple :
 Si un sommet $v$ appartient à $m$ cliques, alors par comptage des sommets de ces cliques, le graphe a au moins $1 + m(k-1)$ sommets.
 Or, le nombre total de paires clique-sommet est $k \times k = k^2$.
 Soit $d(v)$ le nombre de cliques contenant $v$. La somme des $d(v)$ pour tous $v \in V$ vaut $k^2$.

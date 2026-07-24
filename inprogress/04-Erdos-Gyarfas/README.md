@@ -8,6 +8,6 @@ The Erdős–Gyárfás conjecture states that every graph with minimum degree 3 
 ## Current Status
 This problem is currently **in progress**.
 
-We have formulated a robust partial proof sketch leveraging the probabilistic method and cycle space analysis over $\mathbb{F}_2$. A detailed mathematical document containing axiomatic definitions, context, and zero-ellipse proofs for key lemmas has been prepared.
+We have formulated a robust partial proof sketch leveraging the probabilistic method and cycle space analysis over $\mathbb{F}_2$. A detailed mathematical document containing axiomatic definitions, context, and exhaustive proofs for key lemmas has been prepared.
 
 [View the Partial Proof Sketch (PDF)](proof.pdf)

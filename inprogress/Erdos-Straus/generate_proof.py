@@ -168,7 +168,7 @@ Nous avons alors immédiatement que $y = 2n(k+1)$ et $z = 2n(k+1)$ est une solut
 Prenons $y = n(k+1)+1$ n'est pas nécessaire.
 Si on choisit $y=n(k+1)+1$, etc. L'équation $\frac{{1}}{{n(k+1)}} = \frac{{1}}{{n(k+1)+1}} + \frac{{1}}{{n(k+1)(n(k+1)+1)}}$ est une identité égyptienne standard.
 Ainsi, une paramétrisation complète et valide est $x = k+1$, $y = n(k+1)+1$, $z = n(k+1)(n(k+1)+1)$.
-Ceci achève la preuve du lemme sans ellipse.
+Ceci achève la preuve exhaustive du lemme.
 \end{{proof}}
 
 {body_text}

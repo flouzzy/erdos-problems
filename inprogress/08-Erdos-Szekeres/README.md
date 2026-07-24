@@ -55,7 +55,7 @@ The proof is decomposed into three structural lemmas.
 
 ---
 
-## 4. Informal Proof (Zero-Ellipse)
+## 4. Informal Proof
 
 ### Proof of Lemma 3.1 (Cups-Caps Recurrence)
 1. Let $X$ be a set of points in the plane in general position, sorted by their x-coordinates: $p_1, p_2, \ldots, p_m$.

@@ -37,7 +37,7 @@ Si $(m, k)$ est une solution non triviale, alors tout facteur premier $p$ de $m-
 Pour un grand $k$, la différence $| \sum_{i=1}^{m-1} i^k - m^k |$ croît de manière strictement positive, bornant ainsi $m$.
 *Stratégie de preuve :* Formule d'Euler-Maclaurin et bornes rigoureuses sur les nombres de Bernoulli pour restreindre la taille de $(m, k)$.
 
-## Preuve Informelle (Zéro Ellipse)
+## Preuve Informelle
 Veuillez vous référer au document PDF détaillé généré dans ce répertoire pour les preuves informelles exhaustives et pas-à-pas de ces lemmes.
 
 ## Architecture pour l'Autoformalisation (Esquisse de preuve Lean 4)

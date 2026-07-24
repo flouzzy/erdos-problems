@@ -25,7 +25,7 @@ class TestGenerateProof(unittest.TestCase):
     def test_procedural_gowers_norms(self):
         body = generate_proof.procedural_gowers_norms()
         self.assertIn("Expansions Combinatoires des Inégalités de Gowers", body)
-        self.assertIn("Évaluation de la Norme $U^{3}$ et Nil-Variétés de Rang 2", body)
+        self.assertIn("Évaluation de la Norme $U^{3}$ et Nil-Variétés de Rang $2$", body)
 
     def test_procedural_tauberian_bounds(self):
         body = generate_proof.procedural_tauberian_bounds()

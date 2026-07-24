@@ -1,7 +1,7 @@
 # Sur les fondements et l'autoformalisation de la conjecture d'Erdős-Straus
 
 **Résumé**
-La conjecture d'Erdős-Straus, formulée en 1948, postule que tout entier $n \ge 2$ permet la décomposition de la fraction $\frac{4}{n}$ en une somme de trois fractions unitaires. Bien qu'elle ait été vérifiée empiriquement jusqu'à $n = 10^{17}$, une démonstration générale reste hors de portée. Cet article propose une dissection axiomatique stricte du problème, établissant les lemmes de réduction fondamentaux et fournissant des démonstrations exhaustives sans ellipse. En outre, nous proposons une architecture formelle implémentable dans l'assistant de preuve Lean 4, préparant le terrain pour une vérification mécanisée de résultats partiels futurs.
+La conjecture d'Erdős-Straus, formulée en 1948, postule que tout entier $n \ge 2$ permet la décomposition de la fraction $\frac{4}{n}$ en une somme de trois fractions unitaires. Bien qu'elle ait été vérifiée empiriquement jusqu'à $n = 10^{17}$, une démonstration générale reste hors de portée. Cet article propose une dissection axiomatique stricte du problème, établissant les lemmes de réduction fondamentaux et fournissant des démonstrations exhaustives. En outre, nous proposons une architecture formelle implémentable dans l'assistant de preuve Lean 4, préparant le terrain pour une vérification mécanisée de résultats partiels futurs.
 
 ---
 

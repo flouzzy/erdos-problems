@@ -31,7 +31,7 @@ Au sein de ce répertoire devront figurer l'ensemble des fichiers pertinents, te
 Ce dépôt se conforme à une rigueur mathématique stricte dans le but de faciliter une autoformalisation ultérieure vers Lean 4. Nous vous prions de respecter les directives suivantes :
 
 1. **Définitions Axiomatiques Strictes :** Les propositions mathématiques doivent être traduites en définitions axiomatiques strictes. Toute variable et tout ensemble doivent faire l'objet d'un typage explicite.
-2. **Absence de Raccourcis Logiques :** Il est proscrit d'employer des raccourcis logiques (souvent désignés sous le terme d'« ellipses nulles » ou « zéros points de suspension »). L'ensemble des étapes, changements d'indices, bornes et principes appliqués doivent être rédigés de manière explicite.
+2. **Absence de Raccourcis Logiques :** Il est proscrit d'employer des raccourcis logiques. L'ensemble des étapes, changements d'indices, bornes et principes appliqués doivent être rédigés de manière explicite.
 3. **Esquisse de Preuve (Proof Sketch) Lean 4 :** Les démonstrations doivent être structurées selon une architecture propice à l'autoformalisation. Elles doivent présenter une « Esquisse de Preuve » directement traduisible au sein de l'assistant de preuve formel Lean 4.
 4. **Éléments Explicites :** Les Théorèmes, Lemmes, variables d'entrée et hypothèses doivent être clairement typés et structurés.
 

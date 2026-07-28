@@ -5,6 +5,15 @@ import generate_tex_creator
 from fractions import Fraction
 
 class TestGenerateTexCreator(unittest.TestCase):
+    def test_generate_tex_header(self):
+        header = generate_tex_creator.generate_tex_header()
+        self.assertIn(r"\documentclass[11pt,a4paper]{article}", header)
+        self.assertIn(r"\begin{document}", header)
+        self.assertIn(r"\usepackage[utf8]{inputenc}", header)
+        self.assertIn(r"\usepackage{amsmath, amssymb, amsthm}", header)
+        self.assertIn(r"\title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erd\H{o}s-Straus}", header)
+        self.assertIn(r"\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}", header)
+
     def test_find_solution(self):
         # Valid cases
         cases = [

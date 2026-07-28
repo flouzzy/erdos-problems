@@ -25,6 +25,40 @@ class TestGenerateTexCreator(unittest.TestCase):
             with self.subTest(n=n):
                 self.assertIsNone(generate_tex_creator.find_solution(n))
 
+
+    def test_generate_tex_proof_section(self):
+        # Test for n=2, x=1, y=2, z=2
+        # LCM(1, 2) = 2, LCM(2, 2) = 2 -> lcm_xyz = 2
+        # num_x = 2, num_y = 1, num_z = 1 -> sum = 4
+        # GCD(4, 2) = 2, simp_num = 2, simp_den = 1
+        output_2 = generate_tex_creator.generate_tex_proof_section(2, 1, 2, 2)
+
+        self.assertIn("\\subsection{Démonstration pour $n = 2$}", output_2)
+        self.assertIn("Posons $x = 1$, $y = 2$, $z = 2$.", output_2)
+        self.assertIn("Le PPCM des dénominateurs est $\\text{PPCM}(1, 2, 2) = 2$.", output_2)
+        self.assertIn("\\frac{1}{1} = \\frac{2}{2}", output_2)
+        self.assertIn("\\frac{1}{2} = \\frac{1}{2}", output_2)
+        self.assertIn("\\frac{1}{2} = \\frac{1}{2}", output_2)
+        self.assertIn("\\frac{1}{1} + \\frac{1}{2} + \\frac{1}{2} = \\frac{2 + 1 + 1}{2} = \\frac{4}{2}", output_2)
+        self.assertIn("Le PGCD du numérateur et du dénominateur est $\\text{PGCD}(4, 2) = 2$.", output_2)
+        self.assertIn("\\frac{4}{2} = \\frac{4 \\div 2}{2 \\div 2} = \\frac{2}{1}", output_2)
+
+        # Test for n=3, x=1, y=4, z=12
+        # LCM(1, 4) = 4, LCM(4, 12) = 12 -> lcm_xyz = 12
+        # num_x = 12, num_y = 3, num_z = 1 -> sum = 16
+        # GCD(16, 12) = 4, simp_num = 4, simp_den = 3
+        output_3 = generate_tex_creator.generate_tex_proof_section(3, 1, 4, 12)
+
+        self.assertIn("\\subsection{Démonstration pour $n = 3$}", output_3)
+        self.assertIn("Posons $x = 1$, $y = 4$, $z = 12$.", output_3)
+        self.assertIn("Le PPCM des dénominateurs est $\\text{PPCM}(1, 4, 12) = 12$.", output_3)
+        self.assertIn("\\frac{1}{1} = \\frac{12}{12}", output_3)
+        self.assertIn("\\frac{1}{4} = \\frac{3}{12}", output_3)
+        self.assertIn("\\frac{1}{12} = \\frac{1}{12}", output_3)
+        self.assertIn("\\frac{1}{1} + \\frac{1}{4} + \\frac{1}{12} = \\frac{12 + 3 + 1}{12} = \\frac{16}{12}", output_3)
+        self.assertIn("Le PGCD du numérateur et du dénominateur est $\\text{PGCD}(16, 12) = 4$.", output_3)
+        self.assertIn("\\frac{16}{12} = \\frac{16 \\div 4}{12 \\div 4} = \\frac{4}{3}", output_3)
+
     @patch('builtins.open', new_callable=mock_open)
     def test_generate_tex(self, mock_file):
         generate_tex_creator.generate_tex()

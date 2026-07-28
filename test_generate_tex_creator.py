@@ -59,5 +59,12 @@ class TestGenerateTexCreator(unittest.TestCase):
         # Verify the file closes with proper multi-line string termination
         self.assertIn("\"\"\"\nwith open", written_content)
 
+
+    def test_generate_tex_conclusion(self):
+        result = generate_tex_creator.generate_tex_conclusion()
+        self.assertIn(r"\section{Conclusion}", result)
+        self.assertIn("Cette documentation présente", result)
+        self.assertIn(r"\end{document}", result)
+
 if __name__ == '__main__':
     unittest.main()

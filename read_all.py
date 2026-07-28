@@ -1,12 +1,16 @@
-import os
+def print_file_contents(filename):
+    try:
+        with open(filename, "r") as f:
+            print(f"--- {filename.split('/')[-1]} ---")
+            print(f.read())
+            return True
+    except FileNotFoundError:
+        print(f"File not found: {filename}")
+        return False
 
-files_to_read = [
-    "inprogress/04-Erdos-Gyarfas/test_generate_erdos_gyarfas_proof.py",
-    "inprogress/04-Erdos-Gyarfas/test_generate_proof.py"
-]
+def main():
+    print_file_contents("inprogress/04-Erdos-Gyarfas/test_generate_erdos_gyarfas_proof.py")
+    print_file_contents("inprogress/04-Erdos-Gyarfas/test_generate_proof.py")
 
-for file_path in files_to_read:
-    file_name = os.path.basename(file_path)
-    with open(file_path, "r") as f:
-        print(f"--- {file_name} ---")
-        print(f.read())
+if __name__ == "__main__":
+    main()

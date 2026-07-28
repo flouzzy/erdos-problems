@@ -74,12 +74,31 @@ def _find_solution(n, require_distinct):
         if A <= 0: continue
         B = n * x
 
-        b2_factors = _get_b2_factors(n2_factors, x)
-        divisors = _get_divisors(b2_factors, B)
+        b2_factors = n2_factors.copy()
+        for p, count2 in get_x_factors_doubled_items(x):
+            b2_factors[p] = b2_factors.get(p, 0) + count2
 
-        result = _find_y_z(A, B, divisors, x, require_distinct)
-        if result:
-            return x, result[0], result[1]
+        limit = B
+
+        divisors = [1]
+        for p, exp in b2_factors.items():
+            layer = divisors
+            for _ in range(exp):
+                layer = [val for d in layer if (val := d * p) <= limit]
+                if not layer:
+                    break
+                divisors.extend(layer)
+        divisors.sort()
+        B2 = B * B
+
+        for D in divisors:
+            if (B + D) % A == 0:
+                y = (B + D) // A
+                D2 = B2 // D
+                if (B + D2) % A == 0:
+                    z = (B + D2) // A
+                    if not require_distinct or (x != y and y != z and x != z):
+                        return x, y, z
     return None
 
 def solve_es(n):

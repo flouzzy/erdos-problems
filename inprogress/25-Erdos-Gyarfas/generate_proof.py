@@ -186,8 +186,8 @@ Soit $A$ la matrice d'adjacence du graphe $G$. Le nombre de marches fermées de 
 Pour $\ell = 2^k$, nous supposons que tous ces cycles sont dégénérés (chemins qui font des allers-retours).
 La contribution des arbres correspondants est calculable par les polynômes de Tchebychev.
 """
-    for j in range(1, 50):
-        content += rf"""
+    content += "".join([
+        rf"""
 \subsection{{Analyse du Spectre à l'ordre $k={j}$}}
 En appliquant la trace sur la puissance $2^{j}$, la relation de récurrence spectrale est :
 \begin{{align*}}
@@ -203,6 +203,8 @@ R(x) = \frac{{x^T A x}}{{x^T x}} \le \lambda_1
 \end{{equation}}
 En choisissant des vecteurs de test basés sur les indicateurs de sous-graphes denses, nous obtenons une contradiction matricielle si la densité locale ne permet pas la formation de cycles de taille $2^{j}$.
 """
+        for j in range(1, 50)
+    ])
     return content
 
 def get_lean4_architecture():

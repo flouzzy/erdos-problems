@@ -5,6 +5,15 @@ import os
 from fractions import Fraction
 
 class TestGenerateTexCreator(unittest.TestCase):
+    def test_generate_tex_header(self):
+        header = generate_tex_creator.generate_tex_header()
+        self.assertIn(r"\documentclass[11pt,a4paper]{article}", header)
+        self.assertIn(r"\begin{document}", header)
+        self.assertIn(r"\usepackage[utf8]{inputenc}", header)
+        self.assertIn(r"\usepackage{amsmath, amssymb, amsthm}", header)
+        self.assertIn(r"\title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erd\H{o}s-Straus}", header)
+        self.assertIn(r"\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}", header)
+
     def test_find_solution(self):
         # Valid cases
         cases = [
@@ -67,6 +76,13 @@ class TestGenerateTexCreator(unittest.TestCase):
 
             # Verify the file closes with proper multi-line string termination
             self.assertIn("\"\"\"\nwith open", written_content)
+
+
+    def test_generate_tex_conclusion(self):
+        result = generate_tex_creator.generate_tex_conclusion()
+        self.assertIn(r"\section{Conclusion}", result)
+        self.assertIn("Cette documentation présente", result)
+        self.assertIn(r"\end{document}", result)
 
 if __name__ == '__main__':
     unittest.main()

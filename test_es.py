@@ -48,16 +48,12 @@ def _find_solution(n, require_distinct):
 
         divisors = [1]
         for p, exp in b2_factors.items():
-            new_divs = []
-            power = p
+            layer = divisors
             for _ in range(exp):
-                for d in divisors:
-                    val = d * power
-                    if val <= limit:
-                        new_divs.append(val)
-                power *= p
-            divisors.extend(new_divs)
-
+                layer = [val for d in layer if (val := d * p) <= limit]
+                if not layer:
+                    break
+                divisors.extend(layer)
         divisors.sort()
         B2 = B * B
 

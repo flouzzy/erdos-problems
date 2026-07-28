@@ -1,5 +1,4 @@
 import sys
-import os
 import pytest
 from utils import load_module
 

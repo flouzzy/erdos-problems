@@ -31,5 +31,30 @@ class TestLoadModuleSecurity(unittest.TestCase):
             load_module("temp_invalid_module", self.invalid_module_path)
         self.assertIn("Untrusted module path", str(context.exception))
 
+
+    def test_load_module_symlink_bypass(self):
+        # Create a malicious file outside base_dir
+        tf = tempfile.NamedTemporaryFile(suffix=".py", delete=False)
+        tf.write(b"z = 'malicious'\n")
+        tf.close()
+        malicious_path = tf.name
+
+        # Create a symlink inside base_dir pointing to the malicious file
+        symlink_path = os.path.join(self.base_dir, "symlink_module.py")
+        if os.path.exists(symlink_path):
+            os.remove(symlink_path)
+        os.symlink(malicious_path, symlink_path)
+
+        try:
+            with self.assertRaises(ValueError) as context:
+                load_module("symlink_module", symlink_path)
+            self.assertIn("Untrusted module path", str(context.exception))
+        finally:
+            if os.path.exists(symlink_path):
+                os.remove(symlink_path)
+            if os.path.exists(malicious_path):
+                os.remove(malicious_path)
+
+
 if __name__ == '__main__':
     unittest.main()

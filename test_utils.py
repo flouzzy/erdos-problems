@@ -9,7 +9,8 @@ def hello():
 
 VAR = 42
 """
-    dummy_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), "dummy_success_temp.py")
+    base_dir = os.path.realpath(os.path.dirname(__file__))
+    dummy_file = os.path.join(base_dir, "dummy_test_success.py")
     with open(dummy_file, "w") as f:
         f.write(dummy_code)
 
@@ -28,14 +29,16 @@ VAR = 42
 
 def test_load_module_file_not_found():
     with pytest.raises(FileNotFoundError):
-        load_module("not_exist", os.path.join(os.path.abspath(os.path.dirname(__file__)), "path_that_does_not_exist.py"))
+        base_dir = os.path.realpath(os.path.dirname(__file__))
+        load_module("not_exist", os.path.join(base_dir, "does_not_exist.py"))
 
 def test_load_module_invalid_syntax():
     dummy_code = """
 def hello(
     return 'world'
 """
-    dummy_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), "dummy_invalid_temp.py")
+    base_dir = os.path.realpath(os.path.dirname(__file__))
+    dummy_file = os.path.join(base_dir, "invalid_test_syntax.py")
     with open(dummy_file, "w") as f:
         f.write(dummy_code)
 

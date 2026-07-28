@@ -1,3 +1,4 @@
+import os
 import math
 
 def find_solution(n):
@@ -25,145 +26,11 @@ def find_solution(n):
     return None
 
 
+
 def generate_tex_header():
-    return r"""\documentclass[11pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[french]{babel}
-\usepackage{amsmath, amssymb, amsthm}
-\usepackage{geometry}
-\geometry{margin=2.5cm}
-\usepackage{hyperref}
-\usepackage{fancyvrb}
-\usepackage{longtable}
-\usepackage{listings}
-
-\newtheorem{theorem}{Théorème}[section]
-\newtheorem{lemma}[theorem]{Lemme}
-\newtheorem{definition}[theorem]{Définition}
-\newtheorem{corollary}[theorem]{Corollaire}
-
-\title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erd\H{o}s-Straus}
-\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}
-\date{}
-
-\begin{document}
-
-\maketitle
-
-\begin{abstract}
-Cet article présente une analyse formelle de la conjecture d'Erd\H{o}s-Straus, stipulant que pour tout entier $n \geq 2$, l'équation diophantienne $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ admet des solutions dans les entiers strictement positifs. Nous y établissons des définitions axiomatiques strictes, étudions les structures sous-jacentes des congruences modulaires, et développons une vaste série de démonstrations constructives spécifiques. L'ensemble de la démarche est architecturé pour une autoformalisation directe au sein de l'assistant de preuve formelle Lean 4.
-\end{abstract}
-
-\tableofcontents
-
-\section{Introduction et Axiomatisation}
-
-L'ensemble des entiers strictement positifs est noté $\mathbb{Z}^{+}$. La conjecture d'Erd\H{o}s-Straus avance la proposition fondamentale suivante :
-
-\begin{definition}[Prédicat d'Erd\H{o}s-Straus]
-Pour tout $n \in \mathbb{Z}^{+}$ tel que $n \geq 2$, il existe un triplet $(x, y, z) \in (\mathbb{Z}^{+})^3$ satisfaisant l'équation diophantienne :
-\begin{equation}
-\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}
-\label{eq:erdos}
-\end{equation}
-Nous définissons le prédicat $P(n)$ par :
-$$ P(n) \iff \exists x, y, z \in \mathbb{Z}^{+}, \quad 4xyz = n(xy + yz + zx) $$
-\end{definition}
-
-L'approche développée dans ce document est purement constructive.
-
-\section{Littérature Contextuelle et Analogies}
-
-Le problème d'Erd\H{o}s-Straus s'inscrit dans la longue tradition des fractions égyptiennes, initiée par le papyrus Rhind. Les travaux de Vaughan (1970) ont établi des bornes asymptotiques sur le nombre d'exceptions éventuelles, utilisant le crible de grand crible et des méthodes analytiques. L'analogie la plus directe se trouve dans la conjecture de Sierpi\'{n}ski concernant l'équation $\frac{5}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$. Les outils combinatoires développés pour la conjecture de Sierpi\'{n}ski, en particulier la couverture par systèmes de congruences, sont transposables ici. La stratégie de preuve repose sur la subdivision du problème en classes de congruences, puis sur la construction de polynômes paramétriques pour chaque classe.
-
-\section{Architecture d'Autoformalisation (Lean 4)}
-
-Le code suivant définit les types et les lemmes de base, utilisant exclusivement le jeu de caractères ASCII. Ce bloc de code constitue une esquisse de preuve incomplète destinée à une autoformalisation future, ce qui justifie l'utilisation de marqueurs 'sorry' pour les théorèmes non entièrement mécanisés.
-
-\begin{lstlisting}[language=Caml]
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Nat.Parity
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-
-def ErdosStrausPredicate (n : Nat) : Prop :=
-  exists x y z : Nat, x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (x * y + y * z + z * x)
-
-theorem erdos_straus_conjecture : forall n : Nat, n >= 2 -> ErdosStrausPredicate n := by
-  -- Proof sketch for future autoformalization
-  -- The strategy consists of reducing the problem to congruence classes modulo 4.
-  -- By lemma erdos_straus_mod4_0, the case n = 4k is resolved.
-  -- Similar algebraic lemmas can be constructed for n = 4k+1, 4k+2, 4k+3,
-  -- combined with computational bounds for small n.
-  intro n hn
-  sorry
-
-lemma erdos_straus_mod4_0 (k : Nat) (hk : k >= 1) : ErdosStrausPredicate (4 * k) := by
-  unfold ErdosStrausPredicate
-  use 2 * k, 3 * k, 6 * k
-  exact And.intro (by linarith) (And.intro (by linarith) (And.intro (by linarith) (by ring_nf)))
-
-lemma erdos_straus_asymptotic_bound (N : Nat) :
-  (exists S : Finset Nat, (forall n in S, Not (ErdosStrausPredicate n)) /\ S.card < N) := by
-  sorry
-
-lemma erdos_straus_constructive (n x y z : Nat) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h1 : 4*x*y*z = n*(x*y + y*z + z*x)) :
-  ErdosStrausPredicate n := by
-  unfold ErdosStrausPredicate
-  use x, y, z
-  exact ⟨hx, hy, hz, h1⟩
-\end{verbatim}
-
-\section{Lemmes Stratégiques}
-
-\subsection{Lemme 1 : Formes de congruence fondamentales}
-
-\begin{lemma}
-Pour tout entier $k \in \mathbb{Z}^{+}$, l'équation admet une solution pour $n = 4k$, $n = 4k+2$, et $n = 4k+3$.
-\end{lemma}
-
-\begin{proof}
-\textbf{Cas $n = 4k$} : Substituons $n = 4k$ dans l'équation. Nous avons $\frac{4}{4k} = \frac{1}{k}$. En utilisant l'identité $\frac{1}{k} = \frac{1}{2k} + \frac{1}{3k} + \frac{1}{6k}$, nous obtenons immédiatement la solution $(2k, 3k, 6k)$. La vérification est directe : $\frac{3+2+1}{6k} = \frac{6}{6k} = \frac{1}{k}$. Puisque $k \geq 1$, les entiers $2k, 3k, 6k$ sont strictement positifs.
-
-\textbf{Cas $n = 4k+2$} : L'expression devient $\frac{4}{4k+2} = \frac{2}{2k+1}$. Nous appliquons la décomposition $\frac{2}{2k+1} = \frac{1}{2k+1} + \frac{1}{2k+2} + \frac{1}{(2k+1)(2k+2)}$. Vérifions :
-$$ \frac{1}{2k+1} + \frac{1}{2k+2} + \frac{1}{(2k+1)(2k+2)} = \frac{(2k+2) + (2k+1) + 1}{(2k+1)(2k+2)} = \frac{4k+4}{(2k+1)(2k+2)} = \frac{4(k+1)}{2(k+1)(2k+1)} = \frac{2}{2k+1} $$
-Les trois dénominateurs sont strictement positifs pour $k \geq 0$.
-
-\textbf{Cas $n = 4k+3$} : Nous posons l'identité $\frac{4}{4k+3} = \frac{1}{k+1} + \frac{1}{(k+1)(4k+3)} + \frac{1}{(k+1)(4k+3)((k+1)(4k+3)+1)}$.
-Démontrons cette égalité explicitement. Soit $X = (k+1)(4k+3)$. La bonne identité algébrique est $\frac{1}{X} = \frac{1}{X+1} + \frac{1}{X(X+1)}$.
-Appliquons-la au second terme d'une somme de deux termes :
-$$ \frac{4}{4k+3} - \frac{1}{k+1} = \frac{4(k+1) - (4k+3)}{(k+1)(4k+3)} = \frac{4k+4-4k-3}{(k+1)(4k+3)} = \frac{1}{(k+1)(4k+3)} $$
-Ainsi, $\frac{4}{4k+3} = \frac{1}{k+1} + \frac{1}{(k+1)(4k+3)}$. Pour obtenir un troisième terme, nous décomposons le second :
-$$ \frac{1}{(k+1)(4k+3)} = \frac{1}{(k+1)(4k+3)+1} + \frac{1}{(k+1)(4k+3)((k+1)(4k+3)+1)} $$
-La solution est donc $x = k+1$, $y = (k+1)(4k+3)+1$, et $z = (k+1)(4k+3)((k+1)(4k+3)+1)$. Ces nombres sont strictement positifs.
-\end{proof}
-
-\subsection{Lemme 2 : Densité asymptotique des solutions}
-
-\begin{lemma}
-La densité naturelle de l'ensemble des entiers $n$ pour lesquels $P(n)$ est faux est nulle. De plus, le nombre d'exceptions $E(N)$ dans l'intervalle $[1, N]$ satisfait $E(N) \ll \frac{N}{\log^c N}$ pour toute constante $c > 0$.
-\end{lemma}
-
-\begin{proof}
-L'approche de Vaughan (1970) utilise le grand crible pour majorer le nombre de non-résidus. Soit $S(N)$ l'ensemble des exceptions jusqu'à $N$. En étudiant les classes de congruence modulo les nombres premiers $p \equiv 3 \pmod 4$, on construit un système de recouvrement. La probabilité qu'un entier aléatoire échappe à toutes les identités polynomiales générées par ces classes de congruences tend asymptotiquement vers $0$. Les calculs explicites des termes de reste dans les théorèmes de crible fournissent la majoration $E(N) \ll N \exp(-c \log N / \log \log N)$, ce qui implique le résultat énoncé.
-\end{proof}
-
-\subsection{Lemme 3 : Méthodologie constructive d'identification de triplets}
-
-\begin{lemma}
-Pour tout entier $n$, s'il existe un entier $x \in [\lceil n/4 \rceil, 2n]$ tel que $\frac{4}{n} - \frac{1}{x} = \frac{a}{b}$ avec $a, b \in \mathbb{Z}^{+}$, et si $a$ s'écrit sous la forme d'une somme de diviseurs de $b$, alors le système admet une solution rationnelle entière.
-\end{lemma}
-
-\begin{proof}
-L'équation résiduelle $\frac{4}{n} - \frac{1}{x} = \frac{4x-n}{nx}$ impose des bornes strictes sur les paramètres admissibles. En posant $a = 4x-n$ et $b = nx$, la recherche d'une décomposition égyptienne $\frac{a}{b} = \frac{1}{y} + \frac{1}{z}$ revient à résoudre l'équation diophantienne linéaire $a y z = b(y + z)$. L'algorithme itératif borne $y$ dans l'intervalle $[\lceil b/a \rceil, C]$ pour une constante $C$. Cette construction explicite permet d'isoler les solutions sans hypothèse topologique préalable.
-\end{proof}
-
-
-\section{Démonstrations Constructives Explicites pour les Entiers Initiaux}
-
-Afin d'étayer l'analyse, nous construisons et vérifions algébriquement les solutions pour une large plage de valeurs de $n$.
-"""
+    template_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates', 'erdos_straus_header.tex')
+    with open(template_path, 'r', encoding='utf-8') as f:
+        return f.read()
 
 def generate_tex_proof_section(n, x, y, z):
     parts = []

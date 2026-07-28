@@ -32,6 +32,40 @@ def get_prime_factors(num):
 def get_x_factors_doubled_items(num):
     return tuple((p, count * 2) for p, count in get_prime_factors(num).items())
 
+
+def _get_b2_factors(n2_factors, x):
+    b2_factors = n2_factors.copy()
+    for p, count2 in get_x_factors_doubled_items(x):
+        b2_factors[p] = b2_factors.get(p, 0) + count2
+    return b2_factors
+
+def _get_divisors(b2_factors, limit):
+    divisors = [1]
+    for p, exp in b2_factors.items():
+        new_divs = []
+        power = p
+        for _ in range(exp):
+            for d in divisors:
+                val = d * power
+                if val <= limit:
+                    new_divs.append(val)
+            power *= p
+        divisors.extend(new_divs)
+    divisors.sort()
+    return divisors
+
+def _find_y_z(A, B, divisors, x, require_distinct):
+    B2 = B * B
+    for D in divisors:
+        if (B + D) % A == 0:
+            y = (B + D) // A
+            D2 = B2 // D
+            if (B + D2) % A == 0:
+                z = (B + D2) // A
+                if not require_distinct or (x != y and y != z and x != z):
+                    return y, z
+    return None
+
 def _find_solution(n, require_distinct):
     n_factors = get_prime_factors(n)
     n2_factors = {p: count * 2 for p, count in n_factors.items()}
@@ -40,35 +74,12 @@ def _find_solution(n, require_distinct):
         if A <= 0: continue
         B = n * x
 
-        b2_factors = n2_factors.copy()
-        for p, count2 in get_x_factors_doubled_items(x):
-            b2_factors[p] = b2_factors.get(p, 0) + count2
+        b2_factors = _get_b2_factors(n2_factors, x)
+        divisors = _get_divisors(b2_factors, B)
 
-        limit = B
-
-        divisors = [1]
-        for p, exp in b2_factors.items():
-            new_divs = []
-            power = p
-            for _ in range(exp):
-                for d in divisors:
-                    val = d * power
-                    if val <= limit:
-                        new_divs.append(val)
-                power *= p
-            divisors.extend(new_divs)
-
-        divisors.sort()
-        B2 = B * B
-
-        for D in divisors:
-            if (B + D) % A == 0:
-                y = (B + D) // A
-                D2 = B2 // D
-                if (B + D2) % A == 0:
-                    z = (B + D2) // A
-                    if not require_distinct or (x != y and y != z and x != z):
-                        return x, y, z
+        result = _find_y_z(A, B, divisors, x, require_distinct)
+        if result:
+            return x, result[0], result[1]
     return None
 
 def solve_es(n):

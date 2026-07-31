@@ -12,7 +12,7 @@ class TestGenerateTexCreator(unittest.TestCase):
         self.assertIn(r"\usepackage[utf8]{inputenc}", header)
         self.assertIn(r"\usepackage{amsmath, amssymb, amsthm}", header)
         self.assertIn(r"\title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erd\H{o}s-Straus}", header)
-        self.assertIn(r"\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}", header)
+        self.assertIn(r"\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}", header)
 
     def test_find_solution(self):
         # Valid cases

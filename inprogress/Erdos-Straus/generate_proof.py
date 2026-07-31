@@ -107,7 +107,7 @@ theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n
 \newtheorem{{definition}}[theorem]{{Définition}}
 
 \title{{Sur la Conjecture d'Erdős-Straus : Analyse Algébrique et Décomposition Modulaire}}
-\author{{Charles EDOU NZE\thanks{{Chercheur indépendant / Independent Researcher}}}}
+\author{{Charles EDOU NZE\thanks{{Charles EDOU NZE, chercheur indépendant}}}}
 \date{{\today}}
 
 \lstdefinelanguage{{lean}}{{

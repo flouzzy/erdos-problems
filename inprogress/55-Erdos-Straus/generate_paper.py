@@ -40,7 +40,7 @@ def get_header():
 \newtheorem{corollary}[theorem]{Corollaire}
 
 \title{Analyse Structurale et Preuves Constructives Explicites de la Conjecture d'Erd\H{o}s-Straus (Problème 55)}
-\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
 \date{}
 
 \begin{document}

@@ -28,7 +28,7 @@ def generate_tex_header():
 }
 
 \title{Analyse et Formalisation de la Conjecture d'Erd\H{o}s-Tur\'{a}n sur les Bases Additives}
-\author{Charles EDOU NZE\thanks{Chercheur indépendant / Independent Researcher}}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
 \date{\today}
 
 \begin{document}

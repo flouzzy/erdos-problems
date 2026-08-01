@@ -1,0 +1,89 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Structural Analysis and Constructive Proof Strategy for the Erd\H{o}s-Gy\'{a}rf\'{a}s Conjecture}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
+\date{}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document presents an axiomatic formulation, literature review, and a structured proof architecture for the Erd\H{o}s-Gy\'{a}rf\'{a}s conjecture in graph theory. The conjecture states that every graph with minimum degree at least 3 contains a cycle whose length is a power of 2. We decompose the problem into several intermediate lemmata and provide an architecture suitable for formal verification in Lean 4.
+\end{abstract}
+
+\section{Introduction and Axiomatic Definitions}
+The Erd\H{o}s-Gy\'{a}rf\'{a}s conjecture is a fundamental open problem in extremal graph theory. Let $G = (V, E)$ be a simple, finite, undirected graph. Let $\delta(G)$ denote the minimum degree of the vertices in $G$.
+
+\begin{definition}[Graph and Minimum Degree]
+Let $V$ be a finite set and $E \subseteq \binom{V}{2}$ be the edge set. The minimum degree is defined as:
+\[
+\delta(G) = \min_{v \in V} \deg(v)
+\]
+where $\deg(v) = |\{u \in V \mid \{u, v\} \in E\}|$.
+\end{definition}
+
+\begin{conjecture}[Erd\H{o}s-Gy\'{a}rf\'{a}s, 1995]
+If $G = (V, E)$ is a graph with $\delta(G) \ge 3$, then $G$ contains a cycle $C_k$ of length $k$ such that $k = 2^m$ for some integer $m \ge 1$.
+\end{conjecture}
+
+\section{Contextual Literature and Analogies}
+The problem lies at the intersection of extremal graph theory and additive combinatorics. It is structurally similar to questions concerning the existence of specific cycle lengths in dense graphs (e.g., theorems of Bondy and Simonovits on cycles of even length).
+
+We draw an analogy with the proof of the existence of even cycles in graphs of sufficient density, where one typically constructs a longest path and studies the neighborhood of its endpoints. Here, we aim to refine the path-building process by exploiting the degree condition to force cycles of specific lengths.
+
+\section{Proof Strategy and Lemmata}
+
+We decompose the conjecture into structured sub-problems.
+
+\begin{lemma}[Longest Path Neighborhood]
+\label{lem:longest_path}
+Let $P = v_1 v_2 \dots v_l$ be a longest path in a graph $G$ with $\delta(G) \ge 3$. Then all neighbors of $v_1$ must lie on $P$.
+\end{lemma}
+
+\begin{proof}
+Suppose there exists a neighbor $u$ of $v_1$ such that $u \notin V(P)$. Then the path $u v_1 v_2 \dots v_l$ has length $l+1$, contradicting the assumption that $P$ is a longest path. Thus, $N(v_1) \subseteq V(P)$.
+\end{proof}
+
+\begin{lemma}[Cycle Formation]
+\label{lem:cycle_lengths}
+Let $P = v_1 v_2 \dots v_l$ be a longest path in $G$ with $\delta(G) \ge 3$. Let $v_{i_1}, v_{i_2}, \dots, v_{i_k}$ be the neighbors of $v_1$ on $P$, ordered such that $2 = i_1 < i_2 < \dots < i_k \le l$. Since $\delta(G) \ge 3$, $k \ge 3$. The edges $\{v_1, v_{i_j}\}$ create cycles $C^{(j)}$ of length $i_j$.
+\end{lemma}
+
+\begin{proof}
+The path segment $v_1 \dots v_{i_j}$ has length $i_j - 1$. Adding the edge $\{v_1, v_{i_j}\}$ completes a cycle of length $(i_j - 1) + 1 = i_j$.
+\end{proof}
+
+\section{Lean 4 Formalization Architecture}
+To autoformalize this proof, we outline the Lean 4 structures.
+
+\begin{verbatim}
+import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Combinatorics.SimpleGraph.Connectivity
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+variable (G : SimpleGraph V)
+
+def min_degree_at_least (k : \mathbb{N}) : Prop :=
+  \forall v : V, G.degree v \ge k
+
+def has_cycle_power_of_two : Prop :=
+  \exists (c : G.Walk v v), c.IsCycle \land \exists (m : \mathbb{N}), c.length = 2^m
+
+theorem erdos_gyarfas (h : min_degree_at_least G 3) :
+  has_cycle_power_of_two G := by
+  sorry
+\end{verbatim}
+
+\section{Conclusion}
+The structural decomposition provided serves as a foundational step towards resolving the Erd\H{o}s-Gy\'{a}rf\'{a}s conjecture, preparing it for formal verification.
+
+\end{document}

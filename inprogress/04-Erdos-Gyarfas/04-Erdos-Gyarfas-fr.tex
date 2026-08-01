@@ -1,0 +1,70 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{04 - Conjecture d'Erd\H{o}s-Gy\'{a}rf\'{a}s : Esquisse de Preuve Partielle}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'{e}pendant}}
+\date{}
+
+\newtheorem{theorem}{Th\'{e}or\`{e}me}
+\newtheorem{lemma}{Lemme}
+\newtheorem{definition}{D\'{e}finition}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Ce document pr\'{e}sente une analyse structurelle et une esquisse de preuve partielle pour la conjecture d'Erd\H{o}s-Gy\'{a}rf\'{a}s, qui stipule que tout graphe dont le degr\'{e} minimal est 3 contient un cycle simple dont la longueur est une puissance de 2. Nous pr\'{e}sentons des d\'{e}finitions axiomatiques rigoureuses, une revue de litt\'{e}rature contextuelle, une d\'{e}composition en lemmes et une strat\'{e}gie de preuve informelle d\'{e}taill\'{e}e destin\'{e}e \`{a} une formalisation ult\'{e}rieure en Lean 4.
+\end{abstract}
+
+\section{D\'{e}finitions et Cadre Axiomatique}
+\begin{definition}
+Soit $G = (V, E)$ un graphe fini, simple et non orient\'{e}. Le degr\'{e} minimal de $G$, not\'{e} $\delta(G)$, est d\'{e}fini comme $\min_{v \in V} \deg(v)$.
+\end{definition}
+
+\begin{definition}
+Un cycle $C$ dans $G$ est une s\'{e}quence de sommets distincts $v_1, v_2, \ldots, v_k$ telle que $(v_i, v_{i+1}) \in E$ pour $1 \leq i < k$, et $(v_k, v_1) \in E$. La longueur de $C$, not\'{e}e $\ell(C)$, est $k$.
+\end{definition}
+
+\section{Contexte dans la Litt\'{e}rature}
+La conjecture d'Erd\H{o}s-Gy\'{a}rf\'{a}s, pos\'{e}e en 1995, reste ouverte. Elle est li\'{e}e \`{a} l'existence de cycles de longueurs sp\'{e}cifiques dans des graphes avec des conditions de degr\'{e} donn\'{e}es. Un r\'{e}sultat connexe notable est le th\'{e}or\`{e}me de Thomassen (1983), affirmant que tout graphe de degr\'{e} minimal au moins 3 contient un cycle de longueur paire. L'approche ici s'inspire des m\'{e}thodes probabilistes et de l'espace des cycles sur $\mathbb{F}_2$.
+
+\section{D\'{e}composition en Lemmes et Strat\'{e}gie de Preuve}
+
+\begin{lemma}
+Soit $G = (V, E)$ un graphe avec $\delta(G) \geq 3$. L'espace des cycles de $G$ sur $\mathbb{F}_2$ est engendr\'{e} par les cycles sans corde.
+\end{lemma}
+\begin{proof}
+Soit $\mathcal{C}$ l'espace des cycles de $G$. Par la th\'{e}orie alg\'{e}brique des graphes standard, tout cycle peut \^{e}tre exprim\'{e} comme une diff\'{e}rence sym\'{e}trique de cycles de base. Si un cycle $C$ poss\`{e}de une corde, nous pouvons d\'{e}composer $C$ en deux cycles plus petits $C_1$ et $C_2$ tels que $C = C_1 \oplus C_2$. Puisque $G$ est fini, cette d\'{e}composition doit se terminer par des cycles sans corde. Ainsi, les cycles sans corde engendrent $\mathcal{C}$.
+\end{proof}
+
+\begin{lemma}
+Si $G$ est un graphe cubique, la longueur du plus long cycle sans corde est born\'{e}e inf\'{e}rieurement.
+\end{lemma}
+\begin{proof}
+Consid\'{e}rons un chemin maximal $P = (v_0, v_1, \ldots, v_k)$ dans $G$. Puisque $\delta(G) \geq 3$, $v_0$ doit avoir au moins deux voisins dans $P$ autres que $v_1$, disons $v_i$ et $v_j$ avec $i < j$. L'ar\^{e}te $(v_0, v_j)$ forme un cycle $C$ de longueur $j+1$. Puisque $P$ est maximal et $G$ cubique, les contraintes topologiques sur le degr\'{e} imposent une longueur minimale pour de tels cycles afin d'\'{e}viter les multi-ar\^{e}tes ou les boucles.
+\end{proof}
+
+\section{Architecture pour l'Autoformalisation (Lean 4)}
+La strat\'{e}gie de formalisation dans Lean 4 d\'{e}finira la structure du graphe en utilisant \texttt{SimpleGraph} de Mathlib.
+
+\begin{verbatim}
+import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Data.Nat.Basic
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+variable (G : SimpleGraph V)
+
+def min_degree_ge_three (G : SimpleGraph V) : Prop :=
+  \forall v : V, 3 \leq G.degree v
+
+def is_power_of_two (n : \mathbb{N}) : Prop :=
+  \exists k : \mathbb{N}, n = 2^k
+\end{verbatim}
+
+\end{document}

@@ -1,0 +1,120 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Analysis and Partial Results on the Erd\H{o}s Conjecture on Arithmetic Progressions}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document provides a rigorous axiomatic decomposition, literature review, and step-by-step partial proof structure for the Erd\H{o}s Conjecture on Arithmetic Progressions. The architecture is designed to facilitate future autoformalization in systems such as Lean 4.
+\end{abstract}
+
+\section{Analysis and Decomposition}
+
+\subsection{Axiomatic Definitions}
+Let $\mathbb{N} = \{1, 2, \dots \}$ denote the set of positive integers. We define the types and variables rigorously.
+\begin{definition}[Divergent Harmonic Sum]
+Let $A \subseteq \mathbb{N}$ be a subset. We say that $A$ has a divergent harmonic sum, denoted as $\mathcal{D}(A)$, if the series of reciprocals of its elements diverges:
+\[
+\sum_{n \in A} \frac{1}{n} = \infty.
+\]
+\end{definition}
+
+\begin{definition}[Arithmetic Progression of Length $k$]
+For $k \in \mathbb{N}, k \ge 3$, a set $A \subseteq \mathbb{N}$ contains an arithmetic progression of length $k$, denoted as $\mathcal{AP}_k(A)$, if there exist $a \in \mathbb{N}$ and $d \in \mathbb{N}$ such that for all $0 \le i < k$, $a + id \in A$.
+\end{definition}
+
+\textbf{Conjecture Statement:}
+For any $A \subseteq \mathbb{N}$, if $\mathcal{D}(A)$ holds, then for all $k \ge 3$, $\mathcal{AP}_k(A)$ holds.
+
+\subsection{Underlying Algebraic and Combinatorial Structures}
+The problem fundamentally intertwines additive combinatorics and analytic number theory. The set $A$ is viewed as a dense subset in a weighted sense. The natural structure involves Fourier analysis on the cyclic groups $\mathbb{Z}/N\mathbb{Z}$ (the Hardy-Littlewood circle method) and the use of Gowers norms to detect linear structures. An alternative perspective uses ergodic theory, mapping the subset $A$ to a measure-preserving dynamical system.
+
+\section{Contextual Literature Research}
+The most prominent theorem related to this conjecture is Szemer\'edi's Theorem, which establishes that any subset of $\mathbb{N}$ with positive upper density contains arbitrarily long arithmetic progressions. The Green-Tao theorem provides a massive breakthrough by proving that the primes, a set with vanishing density but divergent harmonic sum, contain arbitrarily long arithmetic progressions.
+Recent advancements by Kelley and Meka (2023) on Roth's theorem give strong quantitative bounds on sets without 3-term arithmetic progressions.
+
+By analogy, the resolution of the Cap Set Problem by Ellenberg and Gijswijt utilizes the polynomial method. While finite field methods do not directly translate to $\mathbb{Z}$, algebraic methods analogous to Croot-Lev-Pach bounds provide insights into bounding subsets without linear structures.
+
+\section{Proof Strategy \& Isolation of Lemmas}
+To tackle a simplified version (e.g., $k=3$ over restricted subsets), we decompose the problem into several lemmas.
+
+\begin{itemize}
+    \item \textbf{Lemma 1 (Density Increment):} If a subset $A$ of $\{1, \dots, N\}$ lacks 3-term arithmetic progressions, it must correlate with a Bohr set, allowing an increment in density on a structured substructure.
+    \item \textbf{Lemma 2 (Harmonic Bound on Sparsity):} If a set $A$ contains no 3-term arithmetic progressions, its counting function $A(x) = |A \cap \{1, \dots, x\}|$ is bounded by $O(x / (\log x)^c)$ for some $c > 1$.
+\end{itemize}
+
+\section{Informal Proof of Lemma 2 (Zero Ellipsis)}
+\begin{proof}[Proof of Lemma 2]
+We present the proof step by step. Let $A \subset \mathbb{N}$ such that $A$ contains no 3-term arithmetic progressions.
+Let $N$ be a large integer, and let $A_N = A \cap \{1, 2, \dots, N\}$.
+According to the quantitative bounds by Kelley and Meka, the size of $A_N$ satisfies the inequality:
+\[
+|A_N| \le \frac{N}{\exp(c (\log N)^{\beta})}
+\]
+for some constants $c > 0$ and $\beta > 0$.
+We evaluate the harmonic sum of $A$ by partial summation.
+Let $S(N) = \sum_{n \in A, n \le N} \frac{1}{n}$.
+Using summation by parts, we express $S(N)$ in terms of $A(x) = |A \cap \{1, \dots, \lfloor x \rfloor\}|$:
+\[
+S(N) = \frac{A(N)}{N} + \int_{1}^{N} \frac{A(t)}{t^2} dt.
+\]
+We bound the first term:
+\[
+\frac{A(N)}{N} \le \frac{1}{\exp(c (\log N)^{\beta})}.
+\]
+As $N$ approaches infinity, this term approaches $0$.
+For the integral term, we substitute the bound for $A(t)$:
+\[
+\int_{1}^{N} \frac{A(t)}{t^2} dt \le \int_{1}^{N} \frac{t \exp(-c (\log t)^{\beta})}{t^2} dt = \int_{1}^{N} \frac{1}{t \exp(c (\log t)^{\beta})} dt.
+\]
+We compute this integral using the substitution $u = \log t$. Thus, $du = \frac{1}{t} dt$. The limits of integration change from $t=1$ to $u=0$, and $t=N$ to $u = \log N$:
+\[
+\int_{0}^{\log N} \frac{1}{\exp(c u^{\beta})} du.
+\]
+For any $\beta > 0$, the integral $\int_{0}^{\infty} \exp(-c u^{\beta}) du$ is convergent. Specifically, letting $v = c u^{\beta}$, $dv = c \beta u^{\beta - 1} du$, we find that the integral is proportional to the Gamma function $\Gamma(1/\beta)$.
+Since the integral is bounded by a finite constant independent of $N$, it follows that $S(N)$ is bounded as $N \to \infty$.
+Thus, $\sum_{n \in A} \frac{1}{n} < \infty$.
+By contraposition, if $\sum_{n \in A} \frac{1}{n} = \infty$, the set $A$ must contain a 3-term arithmetic progression. This completes the proof of Lemma 2.
+\end{proof}
+
+\section{Architecture for Autoformalization}
+The proof structure is directly mapped for implementation in Lean 4.
+
+\begin{verbatim}
+import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+-- Axiomatic definition of the divergent harmonic sum
+def has_divergent_harmonic_sum (A : Set Nat) : Prop :=
+  Filter.Tendsto (fun N => \sum_{n \in A \cap {x | x \le N}} (1 / (n : Real)))
+    Filter.atTop Filter.atTop
+
+-- Axiomatic definition of containing an arithmetic progression of length k
+def contains_AP (A : Set Nat) (k : Nat) : Prop :=
+  \exists a d : Nat, d > 0 \and \forall i : Nat, i < k \to a + i * d \in A
+
+-- Main Theorem Statement (Erdős Conjecture)
+theorem erdos_ap_conjecture (A : Set Nat) (h : has_divergent_harmonic_sum A) :
+  \forall k \ge 3, contains_AP A k := by
+  sorry
+
+-- Lemma 2
+lemma ap3_harmonic_bound (A : Set Nat) (h : \not contains_AP A 3) :
+  \not has_divergent_harmonic_sum A := by
+  sorry
+\end{verbatim}
+
+\end{document}

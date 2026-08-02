@@ -1,13 +1,15 @@
-# 88 - Erdős-Straus Conjecture
+[🇫🇷 Version Française](README.fr.md)
 
-## Statement
+# 88-Erdos-Straus
 
-The Erdős-Straus conjecture states that for every integer $n \geq 2$, the rational number $4/n$ can be expressed as the sum of three unit fractions:
+This directory contains the ongoing research and formal proof attempts for the Erdős-Straus conjecture.
 
+The conjecture states that for every integer $n \geq 2$, the rational number $4/n$ can be expressed as the sum of three positive unit fractions:
 $$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
 
-where $x, y, z$ are positive integers.
-
 ## Status
+In progress. The current approach involves modular reduction, polynomial parameterization for specific congruence classes, and algorithmic verification for residual cases.
 
-In progress. We analyze the modular properties and construct explicit algebraic and programmatic solutions in this directory.
+## Documents
+- `88-Erdos-Straus.pdf`: Complete informal proof in English.
+- `88-Erdos-Straus-fr.pdf`: Complete informal proof in French.

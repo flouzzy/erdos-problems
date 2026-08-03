@@ -1,0 +1,121 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{Analysis and Partial Results on the Erd\H{o}s-Straus Conjecture}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The Erd\H{o}s-Straus conjecture postulates that for every integer $n \geq 2$, there exist positive integers $x, y, z$ such that $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$. In this document, we present an in-depth analysis of the conjecture, decomposing it into modular arithmetic lemmas, accompanied by a literature review, and outlining a structured proof strategy suitable for autoformalization in systems such as Lean 4.
+\end{abstract}
+
+\section{Introduction and Formal Statement}
+
+The problem, formulated by Paul Erd\H{o}s and Ernst G. Straus in 1948, is a central question in the additive theory of numbers, specifically concerning representations by unit fractions (Egyptian fractions).
+
+\begin{conjecture}[Erd\H{o}s-Straus]
+For all integers $n \geq 2$, there exist positive integers $x, y, z$ such that
+\begin{equation}
+\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}
+\end{equation}
+\end{conjecture}
+
+Multiplying both sides by the product $nxyz$, we obtain the equivalent Diophantine equation:
+\begin{equation}
+4xyz = n(xy + yz + zx)
+\end{equation}
+
+\section{Contextual Literature Search}
+
+The asymptotic bounds on the number of solutions to the Erd\H{o}s-Straus equation have been extensively studied. A foundational result by Vaughan (1970) provides a lower bound on the number of $n \leq N$ for which the conjecture holds, demonstrating that the exceptional set is of density zero. Recent advancements have focused on bounding the exceptional set further. Elsholtz and Tao (2013) established sophisticated bounds using sieve methods, proving that the number of counterexamples up to $N$ is $O(N \exp(-c \log N / \log \log N))$.
+
+This problem bears significant structural analogies to the weak Goldbach conjecture (resolved by Helfgott in 2013), where additive decomposition over primes was handled via the Hardy-Littlewood circle method and rigorous computational bounds. The tools developed for sieving and characterizing dense subsets in Goldbach's problem share deep theoretical connections with the modular restrictions defining the Erd\H{o}s-Straus conjecture, suggesting that advanced sieves combined with algebraic geometry over finite fields may eventually yield a complete resolution.
+
+\section{Methodology and Algebraic Structure}
+
+The standard approach to the Erd\H{o}s-Straus conjecture is to analyze the equation modulo various integers. If a solution exists for some integer $n$, and if $m$ divides $n$, then by substitution, a solution also exists for $m$. Therefore, it suffices to prove the conjecture for prime numbers $p$. We partition the primes into residue classes modulo $q$ for specific small integers $q$ (e.g., $q=24$) and construct explicit rational functions for each class.
+
+Let us define the type for a solution: a tuple $(x, y, z) \in (\mathbb{N}^*)^3$.
+
+\subsection{Lemma 1: Solutions for primes $p \equiv 3 \pmod 4$}
+
+\begin{lemma}
+For any prime $p$, if $p \equiv 3 \pmod 4$, then there exist positive integers $x, y, z$ such that $\frac{4}{p} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$.
+\end{lemma}
+
+\begin{proof}
+Let $p$ be a prime such that $p \equiv 3 \pmod 4$. By the definition of congruences, there exists an integer $k \in \mathbb{N}^*$ such that $p = 4k - 1$.
+Consequently, $p + 1 = 4k$. We construct an explicit parameterization by setting the variables $x, y, z$ as follows:
+\begin{align}
+x &= 2k = \frac{p+1}{2} \\
+y &= 2k = \frac{p+1}{2} \\
+z &= k(4k-1) = \frac{p+1}{4}p
+\end{align}
+We now verify the sum of the unit fractions strictly:
+\begin{equation}
+\frac{1}{x} + \frac{1}{y} + \frac{1}{z} = \frac{1}{2k} + \frac{1}{2k} + \frac{1}{k(4k-1)}
+\end{equation}
+Combining the first two terms yields:
+\begin{equation}
+\frac{1}{2k} + \frac{1}{2k} = \frac{2}{2k} = \frac{1}{k}
+\end{equation}
+Substituting this back into the sum, we obtain:
+\begin{equation}
+\frac{1}{k} + \frac{1}{k(4k-1)}
+\end{equation}
+To add these fractions, we find a common denominator, which is $k(4k-1)$:
+\begin{equation}
+\frac{1}{k} = \frac{4k-1}{k(4k-1)}
+\end{equation}
+Therefore, the sum becomes:
+\begin{equation}
+\frac{4k-1}{k(4k-1)} + \frac{1}{k(4k-1)} = \frac{4k - 1 + 1}{k(4k-1)}
+\end{equation}
+Simplifying the numerator:
+\begin{equation}
+\frac{4k}{k(4k-1)}
+\end{equation}
+Since $k \in \mathbb{N}^*$, $k \neq 0$, we can divide the numerator and denominator by $k$:
+\begin{equation}
+\frac{4}{4k-1}
+\end{equation}
+Recalling our initial substitution $p = 4k-1$, we conclude:
+\begin{equation}
+\frac{4}{4k-1} = \frac{4}{p}
+\end{equation}
+This explicitly constructs the solution for all primes $p \equiv 3 \pmod 4$.
+\end{proof}
+
+\section{Architecture for Autoformalization}
+
+To facilitate formal verification in Lean 4, we define the following structure:
+
+\begin{verbatim}
+import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Nat.Prime
+import Mathlib.Algebra.Order.Ring.Defs
+
+def ErdosStrausProperty (n : \mathbb{N}) : Prop :=
+  \exists x y z : \mathbb{N}, x > 0 \land y > 0 \land z > 0 \land 4 * x * y * z = n * (x * y + y * z + z * x)
+
+lemma erdos_straus_mod_4_eq_3 (k : \mathbb{N}) (hk : k > 0) : ErdosStrausProperty (4 * k - 1) := by
+  sorry
+\end{verbatim}
+
+\end{document}

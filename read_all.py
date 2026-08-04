@@ -1,4 +1,13 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def print_file_contents(filename):
+    resolved_path = os.path.realpath(filename)
+    if os.path.commonpath([BASE_DIR, resolved_path]) != BASE_DIR:
+        print("Access denied")
+        return False
+
     try:
         with open(filename, "r") as f:
             print(f"--- {filename.split('/')[-1]} ---")

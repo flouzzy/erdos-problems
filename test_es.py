@@ -33,11 +33,6 @@ def get_x_factors_doubled_items(num):
     return tuple((p, count * 2) for p, count in get_prime_factors(num).items())
 
 
-def _get_b2_factors(n2_factors, x):
-    b2_factors = n2_factors.copy()
-    for p, count2 in get_x_factors_doubled_items(x):
-        b2_factors[p] = b2_factors.get(p, 0) + count2
-    return b2_factors
 
 def _get_divisors(b2_factors, limit):
     divisors = [1]

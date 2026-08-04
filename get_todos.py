@@ -1,6 +1,11 @@
 import os
+import re
 import sys
+
 import concurrent.futures
+
+IGNORE_PATTERN = re.compile(r"print|line|#|description")
+
 
 
 def process_file(filepath):
@@ -11,10 +16,7 @@ def process_file(filepath):
             for i, line in enumerate(f):
                 if 'sorry' not in line:
                     continue
-                if filepath.endswith('.py') and any(
-                    word in line for word in ["print", "line",
-                                              "#", "description"]
-                ):
+                if filepath.endswith('.py') and IGNORE_PATTERN.search(line):
                     continue
                 description = "Not inferrable"
                 if '--' in line:

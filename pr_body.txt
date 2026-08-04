@@ -1,7 +1,0 @@
-🎯 **What:** Refactored the `process_file` function in `get_todos.py` to reduce the deep nesting of `try/with/for/if/if`.
-
-💡 **Why:** By using early `continue` statements instead of nested `if` blocks for filtering, the main logic is flattened, making the code much easier to read and maintain.
-
-✅ **Verification:** Ran `python3 -m pytest test_get_todos.py` to ensure all functionality is preserved. Formatted with `flake8` to adhere to style guidelines.
-
-✨ **Result:** Improved code readability and reduced cognitive complexity.

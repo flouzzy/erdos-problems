@@ -50,5 +50,31 @@ def hello(
         if os.path.exists(dummy_file):
             os.remove(dummy_file)
 
+
+def test_load_module_untrusted_absolute_path():
+    with pytest.raises(ValueError, match="Untrusted module path"):
+        load_module("untrusted_abs", "/tmp/malicious.py")
+
+def test_load_module_directory_traversal():
+    base_dir = os.path.realpath(os.path.dirname(__file__))
+    with pytest.raises(ValueError, match="Untrusted module path"):
+        load_module("traversal", os.path.join(base_dir, "..", "malicious.py"))
+
+def test_load_module_symlink_bypass(tmp_path):
+    # Create malicious file outside the allowed directory
+    malicious_file = tmp_path / "malicious.py"
+    malicious_file.write_text("x = 'malicious'")
+
+    base_dir = os.path.realpath(os.path.dirname(__file__))
+    symlink_path = os.path.join(base_dir, "symlink_malicious.py")
+
+    try:
+        os.symlink(str(malicious_file), symlink_path)
+        with pytest.raises(ValueError, match="Untrusted module path"):
+            load_module("symlink_bypass", symlink_path)
+    finally:
+        if os.path.exists(symlink_path):
+            os.remove(symlink_path)
+
 if __name__ == '__main__':
     pytest.main(["-v", __file__])

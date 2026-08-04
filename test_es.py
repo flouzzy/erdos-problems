@@ -51,16 +51,16 @@ def _get_divisors(b2_factors, limit):
                     new_divs.append(val)
             power *= p
         divisors.extend(new_divs)
-    divisors.sort()
     return divisors
 
 def _find_y_z(A, B, divisors, x, require_distinct):
     B2 = B * B
+    target_mod = (-B) % A
     for D in divisors:
-        if (B + D) % A == 0:
-            y = (B + D) // A
+        if D % A == target_mod:
             D2 = B2 // D
-            if (B + D2) % A == 0:
+            if D2 % A == target_mod:
+                y = (B + D) // A
                 z = (B + D2) // A
                 if not require_distinct or (x != y and y != z and x != z):
                     return y, z
@@ -79,6 +79,8 @@ def _find_solution(n, require_distinct):
             b2_factors[p] = b2_factors.get(p, 0) + count2
 
         limit = B
+        B2 = B * B
+        target_mod = (-B) % A
 
         divisors = [1]
         for p, exp in b2_factors.items():
@@ -88,14 +90,12 @@ def _find_solution(n, require_distinct):
                 if not layer:
                     break
                 divisors.extend(layer)
-        divisors.sort()
-        B2 = B * B
 
         for D in divisors:
-            if (B + D) % A == 0:
-                y = (B + D) // A
+            if D % A == target_mod:
                 D2 = B2 // D
-                if (B + D2) % A == 0:
+                if D2 % A == target_mod:
+                    y = (B + D) // A
                     z = (B + D2) // A
                     if not require_distinct or (x != y and y != z and x != z):
                         return x, y, z

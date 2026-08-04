@@ -1,0 +1,103 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\usepackage[english]{babel}
+
+\title{On the Erd\H{o}s-Tur\'an Conjecture on Additive Bases}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{\today}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We explore the Erd\H{o}s-Tur\'an conjecture, postulating that for any additive basis of order 2 of the natural numbers, the representation function is unbounded. This document formalizes the axiomatic definitions and lemmas necessary for its resolution.
+\end{abstract}
+
+\section{Introduction and Axiomatic Definitions}
+Let $\mathcal{A} \subseteq \mathbb{N}$ be a set of natural numbers.
+
+The representation function of order 2, denoted $r_{\mathcal{A}}(n)$, counts the number of ways to express a natural number $n$ as the sum of two elements in $\mathcal{A}$:
+
+\begin{equation*}
+r_{\mathcal{A}}(n) = |\{ (a, b) \in \mathcal{A} \times \mathcal{A} \mid a \le b \text{ et } a + b = n \}|
+\end{equation*}
+
+\begin{definition}
+The set $\mathcal{A}$ is called an \textbf{additive basis of order 2} if there exists a constant $N_0 \ge 0$ such that for all $n \ge N_0$, $r_{\mathcal{A}}(n) \ge 1$.
+\end{definition}
+
+\begin{theorem}[Conjecture d'Erd\H{o}s-Tur\'an]
+If $\mathcal{A}$ is an additive basis of order 2, then $\limsup_{n \to \infty} r_{\mathcal{A}}(n) = \infty$.
+\end{theorem}
+
+\section{Contextual Literature Research}
+A query to Arxiv.org revealed the following recent articles related to the topic:
+
+\begin{verbatim}
+Title: Generalized additive bases, Konig's lemma, and the Erdos-Turan conjecture
+Authors: Melvyn B. Nathanson
+Summary:   Let A be a set of nonnegative integers. For every nonnegative integer n and positive integer h, let r_{A}(n,h) denote the number of representations of n in the form n = a_1 + a_2 + ... + a_h, where a_1, a_2,..., a_h are elements of A and a_1 \leq a_2 \leq ... \leq a_h. The infinite set A is called a basis of order h if r_{A}(n,h) \geq 1 for every nonnegative integer n. Erdos and Turan conjectured that limsup_{n\to\infty} r_A(n,2) = \infty for every basis A of order 2. This paper introduces a new class of additive bases and a general additive problem, a special case of which is the Erdos-Turan conjecture. Konig's lemma on the existence of infinite paths in certain graphs is used to prove that this general problem is equivalent to a related problem about finite sets of nonnegative integers.
+URL: https://arxiv.org/pdf/math/0302155v3
+\end{verbatim}
+
+An interesting analogy can be drawn with the recently resolved Cap Set problem. In both cases, the study involves the absence or abundance of certain additive configurations (even sums or arithmetic progressions) in large sets. The polynomial methods, which were crucial for the Cap Set problem, might inspire new techniques to approach the Erd\H{o}s-Tur\'an representation function, particularly by employing the fundamental theorem of algebra over finite fields and additive Fourier analysis.
+
+\section{Proof Strategy and Lemmas}
+
+We decompose the problem by studying the properties of sets whose representation function is bounded, aiming to reach a contradiction.
+
+\begin{lemma}
+Let $\mathcal{A} \subseteq \mathbb{N}$. If $r_{\mathcal{A}}(n) \le K$ for all $n$, then the generating series $f(z) = \sum_{a \in \mathcal{A}} z^a$, analytic on the unit disk $|z| < 1$, satisfies a restrictive boundary condition.
+\end{lemma}
+
+\begin{proof}
+Let $\mathcal{A}$ such that $r_{\mathcal{A}}(n) \le K$. Consider the formal power series $f(z) = \sum_{a \in \mathcal{A}} z^a$.
+
+Notice that the square of this series is:
+\begin{equation*}
+f(z)^2 = \left( \sum_{a \in \mathcal{A}} z^a \right) \left( \sum_{b \in \mathcal{A}} z^b \right) = \sum_{n=0}^{\infty} r'_{\mathcal{A}}(n) z^n
+\end{equation*}
+
+where $r'_{\mathcal{A}}(n)$ is the number of solutions to $a+b=n$ with $a,b \in \mathcal{A}$ without the restriction $a \le b$.
+
+We have $r'_{\mathcal{A}}(n) = 2 r_{\mathcal{A}}(n)$ if $n$ is not twice an element of $\mathcal{A}$, and $r'_{\mathcal{A}}(n) = 2 r_{\mathcal{A}}(n) - 1$ otherwise. In all cases, $r'_{\mathcal{A}}(n) \le 2K$.
+
+Thus, the function $f(z)^2$ is bounded on the real interval $z \in (0,1)$ by:
+\begin{equation*}
+f(z)^2 \le \sum_{n=0}^{\infty} 2K z^n = \frac{2K}{1-z}
+\end{equation*}
+
+This upper bound provides an explicit limit on the asymptotic behavior of $f(z)$ as $z \to 1^-$.
+
+
+\end{proof}
+
+\section{Architecture for Autoformalization}
+The code below illustrates the corresponding Lean 4 type structure.
+
+\begin{verbatim}
+import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Set.Finite
+
+def r_A (A : Set Nat) (n : Nat) : Nat :=
+  (Set.filter (fun p : Nat \times Nat => p.1 \in A \and p.2 \in A \and
+    p.1 \le p.2 \and p.1 + p.2 = n) Set.univ).toFinset.card
+
+def IsAdditiveBasisOrder2 (A : Set Nat) : Prop :=
+  \exists N0 : Nat, \forall n \ge N0, r_A A n \ge 1
+
+theorem erdos_turan_conjecture (A : Set Nat) (h : IsAdditiveBasisOrder2 A) :
+  \forall K : Nat, \exists n : Nat, r_A A n > K := by
+  sorry
+\end{verbatim}
+
+\end{document}

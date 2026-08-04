@@ -12,13 +12,15 @@ def find_solution(n):
         if start_y == den1 / num1:
             start_y += 1
 
+        den1_sq = den1 * den1
+        k = num1 * start_y - den1
         for y in range(start_y, start_y + 4000):
-            num2 = num1*y - den1
-            den2 = den1*y
-            if num2 > 0 and den2 % num2 == 0:
-                z = den2 // num2
-                if z > 0:
-                    return x, y, z
+            if den1_sq % k == 0:
+                if (den1 * y) % k == 0:
+                    z = (den1 * y) // k
+                    if z > 0:
+                        return x, y, z
+            k += num1
     return None
 
 def get_header():

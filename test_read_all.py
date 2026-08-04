@@ -5,7 +5,7 @@ from unittest.mock import patch, call
 from read_all import print_file_contents, main
 
 def test_print_file_contents_success(capsys):
-    with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.py') as temp:
+    with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.py', dir=os.path.dirname(os.path.abspath(__file__))) as temp:
         temp.write("print('hello')")
         temp_name = temp.name
 

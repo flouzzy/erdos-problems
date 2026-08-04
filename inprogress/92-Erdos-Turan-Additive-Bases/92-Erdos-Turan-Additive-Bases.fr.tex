@@ -1,0 +1,103 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\usepackage[french]{babel}
+
+\title{Sur la conjecture d'Erd\H{o}s-Tur\'an concernant les bases additives}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{\today}
+\newtheorem{theorem}{Th\'eor\`eme}
+\newtheorem{lemma}{Lemme}
+\newtheorem{definition}{D\'efinition}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Nous explorons la conjecture d'Erd\H{o}s-Tur\'an, postulant que pour toute base additive d'ordre 2 de l'ensemble des entiers naturels, la fonction de repr\'esentation est non born\'ee. Ce document formalise les d\'efinitions axiomatiques et les lemmes n\'ecessaires \`a sa r\'esolution.
+\end{abstract}
+
+\section{Introduction et D\'efinitions Axiomatiques}
+Soit $\mathcal{A} \subseteq \mathbb{N}$ un ensemble d'entiers naturels.
+
+La fonction de repr\'esentation d'ordre 2, not\'ee $r_{\mathcal{A}}(n)$, compte le nombre de fa\c{c}ons d'exprimer un entier naturel $n$ comme la somme de deux \'el\'ements de $\mathcal{A}$:
+
+\begin{equation*}
+r_{\mathcal{A}}(n) = |\{ (a, b) \in \mathcal{A} \times \mathcal{A} \mid a \le b \text{ et } a + b = n \}|
+\end{equation*}
+
+\begin{definition}
+L'ensemble $\mathcal{A}$ est appel\'e une \textbf{base additive d'ordre 2} s'il existe une constante $N_0 \ge 0$ telle que pour tout $n \ge N_0$, $r_{\mathcal{A}}(n) \ge 1$.
+\end{definition}
+
+\begin{theorem}[Conjecture d'Erd\H{o}s-Tur\'an]
+Si $\mathcal{A}$ est une base additive d'ordre 2, alors $\limsup_{n \to \infty} r_{\mathcal{A}}(n) = \infty$.
+\end{theorem}
+
+\section{Recherche de Litt\'erature Contextuelle}
+Une requ\^ete sur Arxiv.org a r\'ev\'el\'e les articles r\'ecents suivants li\'es au sujet:
+
+\begin{verbatim}
+Title: Generalized additive bases, Konig's lemma, and the Erdos-Turan conjecture
+Authors: Melvyn B. Nathanson
+Summary:   Let A be a set of nonnegative integers. For every nonnegative integer n and positive integer h, let r_{A}(n,h) denote the number of representations of n in the form n = a_1 + a_2 + ... + a_h, where a_1, a_2,..., a_h are elements of A and a_1 \leq a_2 \leq ... \leq a_h. The infinite set A is called a basis of order h if r_{A}(n,h) \geq 1 for every nonnegative integer n. Erdos and Turan conjectured that limsup_{n\to\infty} r_A(n,2) = \infty for every basis A of order 2. This paper introduces a new class of additive bases and a general additive problem, a special case of which is the Erdos-Turan conjecture. Konig's lemma on the existence of infinite paths in certain graphs is used to prove that this general problem is equivalent to a related problem about finite sets of nonnegative integers.
+URL: https://arxiv.org/pdf/math/0302155v3
+\end{verbatim}
+
+Une analogie int\'eressante peut \^etre \'etablie avec le probl\`eme du Cap Set, r\'ecemment r\'esolu. Dans les deux cas, on \'etudie l'absence ou l'abondance de certaines configurations additives (sommes paires ou progressions arithm\'etiques) dans de grands ensembles. Les m\'ethodes polynomiales, qui ont \'et\'e cruciales pour le probl\`eme du Cap Set, pourraient inspirer de nouvelles techniques pour approcher la fonction de repr\'esentation d'Erd\H{o}s-Tur\'an, notamment en utilisant le th\'eor\`eme fondamental de l'alg\`ebre sur des corps finis et l'analyse de Fourier additive.
+
+\section{Strat\'egie de Preuve et Lemmes}
+
+Nous d\'ecomposons le probl\`eme en \'etudiant les propri\'et\'es des ensembles dont la fonction de repr\'esentation est born\'ee, pour ensuite arriver \`a une contradiction.
+
+\begin{lemma}
+Soit $\mathcal{A} \subseteq \mathbb{N}$. Si $r_{\mathcal{A}}(n) \le K$ pour tout $n$, alors la s\'erie g\'en\'eratrice $f(z) = \sum_{a \in \mathcal{A}} z^a$ analytique sur le disque unit\'e $|z| < 1$, satisfait \`a une condition restrictive pres du bord.
+\end{lemma}
+
+\begin{proof}
+Soit $\mathcal{A}$ tel que $r_{\mathcal{A}}(n) \le K$. Consid\'erons la s\'erie formelle $f(z) = \sum_{a \in \mathcal{A}} z^a$.
+
+Remarquons que le carr\'e de cette s\'erie est:
+\begin{equation*}
+f(z)^2 = \left( \sum_{a \in \mathcal{A}} z^a \right) \left( \sum_{b \in \mathcal{A}} z^b \right) = \sum_{n=0}^{\infty} r'_{\mathcal{A}}(n) z^n
+\end{equation*}
+
+o\`u $r'_{\mathcal{A}}(n)$ est le nombre de solutions \`a $a+b=n$ avec $a,b \in \mathcal{A}$ sans la restriction $a \le b$.
+
+On a $r'_{\mathcal{A}}(n) = 2 r_{\mathcal{A}}(n)$ si $n$ n'est pas le double d'un \'el\'ement de $\mathcal{A}$, et $r'_{\mathcal{A}}(n) = 2 r_{\mathcal{A}}(n) - 1$ sinon. Dans tous les cas, $r'_{\mathcal{A}}(n) \le 2K$.
+
+Ainsi, la fonction $f(z)^2$ est major\'ee sur l'intervalle r\'eel $z \in (0,1)$ par:
+\begin{equation*}
+f(z)^2 \le \sum_{n=0}^{\infty} 2K z^n = \frac{2K}{1-z}
+\end{equation*}
+
+Cette majoration donne une borne explicite sur le comportement asymptotique de $f(z)$ lorsque $z \to 1^-$.
+
+
+\end{proof}
+
+\section{Architecture pour l'Autoformalisation}
+Le code ci-dessous montre la structure type Lean 4 correspondante.
+
+\begin{verbatim}
+import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Set.Finite
+
+def r_A (A : Set Nat) (n : Nat) : Nat :=
+  (Set.filter (fun p : Nat \times Nat => p.1 \in A \and p.2 \in A \and
+    p.1 \le p.2 \and p.1 + p.2 = n) Set.univ).toFinset.card
+
+def IsAdditiveBasisOrder2 (A : Set Nat) : Prop :=
+  \exists N0 : Nat, \forall n \ge N0, r_A A n \ge 1
+
+theorem erdos_turan_conjecture (A : Set Nat) (h : IsAdditiveBasisOrder2 A) :
+  \forall K : Nat, \exists n : Nat, r_A A n > K := by
+  sorry
+\end{verbatim}
+
+\end{document}

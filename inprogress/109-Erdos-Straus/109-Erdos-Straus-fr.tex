@@ -8,10 +8,10 @@
 \geometry{margin=2.5cm}
 \usepackage{hyperref}
 
-\newtheorem{theorem}{Théorème}[section]
-\newtheorem{lemma}[theorem]{Lemme}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{definition}[theorem]{Définition}
+\newtheorem{theoreme}{Théorème}[section]
+\newtheorem{lemme}[theoreme]{Lemme}
+\newtheorem{conjecture}[theoreme]{Conjecture}
+\newtheorem{definition}[theoreme]{Définition}
 
 \title{Analyse et Résultats Partiels sur la Conjecture d'Erd\H{o}s-Straus}
 \author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
@@ -22,12 +22,12 @@
 \maketitle
 
 \begin{abstract}
-La conjecture d'Erd\H{o}s-Straus postule que pour tout entier $n \geq 2$, il existe des entiers strictement positifs $x, y, z$ tels que $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$. Dans ce document, nous présentons une analyse approfondie de la conjecture, en la décomposant en lemmes d'arithmétique modulaire, accompagnée d'une revue de la littérature, et nous esquissons une stratégie de preuve structurée adaptée à l'autoformalisation dans des systèmes tels que Lean 4.
+La conjecture d'Erd\H{o}s-Straus postule que pour tout entier $n \geq 2$, il existe des entiers strictement positifs $x, y, z$ tels que $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$. Dans ce document, nous présentons une analyse approfondie de la conjecture, en la décomposant en lemmes d'arithmétique modulaire, accompagnée d'une revue de littérature, et en esquissant une stratégie de preuve structurée adaptée à l'autoformalisation dans des systèmes tels que Lean 4.
 \end{abstract}
 
 \section{Introduction et Énoncé Formel}
 
-Le problème, formulé par Paul Erd\H{o}s et Ernst G. Straus en 1948, est une question centrale de la théorie additive des nombres, concernant spécifiquement les représentations par des fractions unitaires (fractions égyptiennes).
+Le problème, formulé par Paul Erd\H{o}s et Ernst G. Straus en 1948, est une question centrale en théorie additive des nombres, concernant spécifiquement les représentations par fractions unitaires (fractions égyptiennes).
 
 \begin{conjecture}[Erd\H{o}s-Straus]
 Pour tout entier $n \geq 2$, il existe des entiers strictement positifs $x, y, z$ tels que
@@ -36,38 +36,38 @@ Pour tout entier $n \geq 2$, il existe des entiers strictement positifs $x, y, z
 \end{equation}
 \end{conjecture}
 
-En multipliant les deux membres par le produit $nxyz$, nous obtenons l'équation diophantienne équivalente :
+En multipliant les deux côtés par le produit $nxyz$, nous obtenons l'équation diophantienne équivalente :
 \begin{equation}
 4xyz = n(xy + yz + zx)
 \end{equation}
 
 \section{Recherche de Littérature Contextuelle}
 
-Les bornes asymptotiques sur le nombre de solutions à l'équation d'Erd\H{o}s-Straus ont été largement étudiées. Un résultat fondamental de Vaughan (1970) fournit une borne inférieure sur le nombre de $n \leq N$ pour lesquels la conjecture est vérifiée, démontrant que l'ensemble exceptionnel est de densité nulle. Des avancées récentes se sont concentrées sur la restriction de cet ensemble exceptionnel. Elsholtz et Tao (2013) ont établi des bornes sophistiquées en utilisant des méthodes de crible, prouvant que le nombre de contre-exemples jusqu'à $N$ est de $O(N \exp(-c \log N / \log \log N))$.
+Les bornes asymptotiques sur le nombre de solutions à l'équation d'Erd\H{o}s-Straus ont été largement étudiées. Un résultat fondamental de Vaughan (1970) fournit une borne inférieure sur le nombre de $n \leq N$ pour lesquels la conjecture est vérifiée, démontrant que l'ensemble exceptionnel est de densité nulle. Les avancées récentes se sont concentrées sur la majoration supplémentaire de l'ensemble exceptionnel. Elsholtz et Tao (2013) ont établi des bornes sophistiquées utilisant des méthodes de crible, prouvant que le nombre de contre-exemples jusqu'à $N$ est un $O(N \exp(-c \log N / \log \log N))$.
 
-Ce problème présente d'importantes analogies structurelles avec la conjecture faible de Goldbach (résolue par Helfgott en 2013), où la décomposition additive sur les nombres premiers a été traitée via la méthode du cercle de Hardy-Littlewood et des bornes computationnelles rigoureuses. Les outils développés pour le criblage et la caractérisation de sous-ensembles denses dans le problème de Goldbach partagent des connexions théoriques profondes avec les restrictions modulaires définissant la conjecture d'Erd\H{o}s-Straus, suggérant que des cribles avancés combinés à la géométrie algébrique sur les corps finis pourraient éventuellement conduire à une résolution complète.
+Ce problème présente d'importantes analogies structurelles avec la conjecture faible de Goldbach (résolue par Helfgott en 2013), où la décomposition additive sur les nombres premiers a été traitée via la méthode du cercle de Hardy-Littlewood et des bornes computationnelles rigoureuses. Les outils développés pour le criblage et la caractérisation des sous-ensembles denses dans le problème de Goldbach partagent de profondes connexions théoriques avec les restrictions modulaires définissant la conjecture d'Erd\H{o}s-Straus, suggérant que des cribles avancés combinés à la géométrie algébrique sur les corps finis pourraient éventuellement conduire à une résolution complète.
 
 \section{Méthodologie et Structure Algébrique}
 
-L'approche standard de la conjecture d'Erd\H{o}s-Straus consiste à analyser l'équation modulo divers entiers. Si une solution existe pour un entier $n$, et si $m$ divise $n$, alors par substitution, une solution existe également pour $m$. Il suffit donc de prouver la conjecture pour les nombres premiers $p$. Nous partitionnons les nombres premiers en classes de résidus modulo $q$ pour des entiers spécifiques de petite taille $q$ (par exemple, $q=24$) et construisons des fonctions rationnelles explicites pour chaque classe.
+L'approche standard pour la conjecture d'Erd\H{o}s-Straus consiste à analyser l'équation modulo différents entiers. Si une solution existe pour un entier $n$, et si $m$ divise $n$, alors par substitution, une solution existe également pour $m$. Par conséquent, il suffit de prouver la conjecture pour les nombres premiers $p$. Nous partitionnons les nombres premiers en classes de résidus modulo $q$ pour de petits entiers spécifiques $q$ (par exemple, $q=24$) et construisons des fonctions rationnelles explicites pour chaque classe.
 
-Définissons le type d'une solution : un triplet $(x, y, z) \in (\mathbb{N}^*)^3$.
+Définissons le type pour une solution : un uplet $(x, y, z) \in (\mathbb{N}^*)^3$.
 
-\subsection{Lemme 1 : Solutions pour les nombres premiers $p \equiv 3 \pmod 4$}
+\subsection{Lemme 1 : Solutions pour les premiers $p \equiv 3 \pmod 4$}
 
-\begin{lemma}
+\begin{lemme}
 Pour tout nombre premier $p$, si $p \equiv 3 \pmod 4$, alors il existe des entiers strictement positifs $x, y, z$ tels que $\frac{4}{p} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$.
-\end{lemma}
+\end{lemme}
 
 \begin{proof}
-Soit $p$ un nombre premier tel que $p \equiv 3 \pmod 4$. Par définition des congruences, il existe un entier $k \in \mathbb{N}^*$ tel que $p = 4k - 1$.
-Par conséquent, $p + 1 = 4k$. Nous construisons une paramétrisation explicite en définissant les variables $x, y, z$ comme suit :
+Soit $p$ un nombre premier tel que $p \equiv 3 \pmod 4$. Par la définition des congruences, il existe un entier $k \in \mathbb{N}^*$ tel que $p = 4k - 1$.
+Par conséquent, $p + 1 = 4k$. Nous construisons un paramétrage explicite en fixant les variables $x, y, z$ comme suit :
 \begin{align}
 x &= 2k = \frac{p+1}{2} \\
 y &= 2k = \frac{p+1}{2} \\
 z &= k(4k-1) = \frac{p+1}{4}p
 \end{align}
-Nous vérifions maintenant rigoureusement la somme des fractions unitaires :
+Nous vérifions maintenant strictement la somme des fractions unitaires :
 \begin{equation}
 \frac{1}{x} + \frac{1}{y} + \frac{1}{z} = \frac{1}{2k} + \frac{1}{2k} + \frac{1}{k(4k-1)}
 \end{equation}
@@ -87,7 +87,7 @@ Ainsi, la somme devient :
 \begin{equation}
 \frac{4k-1}{k(4k-1)} + \frac{1}{k(4k-1)} = \frac{4k - 1 + 1}{k(4k-1)}
 \end{equation}
-En simplifiant le numérateur :
+Simplification du numérateur :
 \begin{equation}
 \frac{4k}{k(4k-1)}
 \end{equation}
@@ -95,7 +95,7 @@ Puisque $k \in \mathbb{N}^*$, $k \neq 0$, nous pouvons diviser le numérateur et
 \begin{equation}
 \frac{4}{4k-1}
 \end{equation}
-En rappelant notre substitution initiale $p = 4k-1$, nous concluons :
+Rappelant notre substitution initiale $p = 4k-1$, nous concluons :
 \begin{equation}
 \frac{4}{4k-1} = \frac{4}{p}
 \end{equation}

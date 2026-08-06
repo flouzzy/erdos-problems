@@ -1,4 +1,6 @@
-\documentclass[12pt]{article}
+import os
+
+latex_content = r"""\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
@@ -90,3 +92,8 @@ lemma lemma_mod3 (n : Nat) (h1 : n >= 2) (h2 : n % 3 = 2) : Not (S n = empty) :=
 \end{verbatim}
 
 \end{document}
+"""
+
+os.makedirs('inprogress/109-Erdos-Straus', exist_ok=True)
+with open('inprogress/109-Erdos-Straus/109-Erdos-Straus.tex', 'w') as f:
+    f.write(latex_content)

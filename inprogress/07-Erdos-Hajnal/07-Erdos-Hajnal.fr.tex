@@ -1,0 +1,151 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+
+\title{Sur la Conjecture d'Erd\H{o}s-Hajnal : Structure et Indépendance dans les Graphes sans $H$ Induit}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Nous présentons une exposition détaillée, zéro-ellipse, de la conjecture d'Erd\H{o}s-Hajnal et de ses conséquences fondamentales. Ce document définit formellement le problème, construit une architecture pour l'autoformalisation dans des systèmes tels que Lean 4, et procède à une preuve mathématique rigoureuse démontrant des bornes sur les ensembles homogènes dans des graphes évitant des sous-graphes induits spécifiques.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Définitions Axiomatiques et Formulation du Problème}
+
+Soit $G = (V, E)$ un graphe fini, simple et non orienté.
+
+\begin{definition}
+Un graphe $G$ contient un graphe $H$ comme sous-graphe induit s'il existe un sous-ensemble de sommets $S \subseteq V(G)$ tel que le sous-graphe de $G$ induit par $S$, noté $G[S]$, est isomorphe à $H$. Si $G$ ne contient pas $H$ comme sous-graphe induit, $G$ est dit sans $H$.
+\end{definition}
+
+\begin{definition}
+Une clique dans $G$ est un sous-ensemble de sommets $C \subseteq V$ tel que pour tout $u, v \in C$ avec $u \neq v$, l'arête $\{u, v\}$ est dans $E$. Un ensemble indépendant est un sous-ensemble $I \subseteq V$ tel que pour tout $u, v \in I$, $\{u, v\} \notin E$. Un ensemble homogène est soit une clique soit un ensemble indépendant. La taille du plus grand ensemble homogène dans $G$ est notée $h(G) = \max(\omega(G), \alpha(G))$, où $\omega(G)$ est le nombre de clique et $\alpha(G)$ est le nombre d'indépendance.
+\end{definition}
+
+La Conjecture d'Erd\H{o}s-Hajnal stipule :
+
+\begin{theorem}[Erd\H{o}s-Hajnal]
+Pour tout graphe fini $H$, il existe une constante $c(H) > 0$ telle que pour tout graphe $G$ sans $H$ sur $n$ sommets,
+\begin{equation}
+h(G) \geq n^{c(H)}
+\end{equation}
+\end{theorem}
+
+\section{Architecture pour l'Autoformalisation (Lean 4)}
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\small]
+import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Combinatorics.SimpleGraph.Clique
+
+universe u v
+
+variables {V : Type u} [Fintype V]
+variables (G : SimpleGraph V) (H : SimpleGraph V)
+
+def IsInducedSubgraph (H G : SimpleGraph V) : Prop :=
+  \exists (S : Set V), Nonempty (G.induce S \simeqg H)
+
+def HFree (H G : SimpleGraph V) : Prop :=
+  \not IsInducedSubgraph H G
+
+def HomogeneousSet (G : SimpleGraph V) (S : Set V) : Prop :=
+  G.IsClique S \lor (G.compl).IsClique S
+
+theorem Erdos_Hajnal_Conjecture (H : SimpleGraph V) :
+  \exists (c : \mathbb{R}), c > 0 \land
+  \forall (G : SimpleGraph V), HFree H G \rightarrow
+  \exists (S : Set V), HomogeneousSet G S \land
+  (Fintype.card S : \mathbb{R}) \geq (Fintype.card V : \mathbb{R})^c
+\end{lstlisting}
+
+\section{Recherche de Littérature Contextuelle}
+
+Le problème est fondamentalement lié à la théorie de Ramsey. Le théorème de Ramsey stipule que tout graphe sur $n$ sommets contient un ensemble homogène de taille au moins $\frac{1}{2} \log_2 n$. La conjecture d'Erd\H{o}s-Hajnal postule que l'exclusion de tout sous-graphe induit $H$ modifie drastiquement ce comportement, forçant un ensemble homogène de taille polynomiale.
+
+Une profonde analogie existe avec le théorème des graphes parfaits et le théorème fort des graphes parfaits (Chudnovsky, Robertson, Seymour, Thomas, 2006). Les graphes parfaits (qui excluent les trous impairs et les antitrous impairs) satisfont $h(G) \geq n^{1/2}$. La conjecture demande si l'exclusion d'un seul graphe fini arbitraire $H$ est suffisante pour borner $h(G)$ polynomialement.
+
+\section{Stratégie de Preuve et Lemmes}
+
+\subsection{Lemme 1 : Le Cas de Base pour de Petits $H$}
+
+\begin{lemma}
+Si $H$ est un graphe sur 2 sommets, la conjecture est vérifiée avec $c(H) = 1$.
+\end{lemma}
+
+\begin{proof}
+Soit $H$ un graphe sur 2 sommets. Il existe deux tels graphes : $K_2$ (une seule arête) et $\overline{K_2}$ (deux sommets non adjacents).
+
+Cas 1 : $H = K_2$.
+Supposons que $G$ est un graphe sans $K_2$ sur $n$ sommets. Par définition, $G$ ne contient aucune arête. Par conséquent, l'ensemble des sommets $V(G)$ en entier est un ensemble indépendant. Ainsi, $\alpha(G) = n$.
+Nous avons $h(G) = \max(\omega(G), \alpha(G)) = \max(1, n) = n = n^1$.
+Dans ce cas, $c(K_2) = 1 > 0$.
+
+Cas 2 : $H = \overline{K_2}$.
+Supposons que $G$ est un graphe sans $\overline{K_2}$ sur $n$ sommets. Par définition, $G$ ne contient pas deux sommets non adjacents. Par conséquent, chaque paire de sommets distincts est reliée par une arête. Cela signifie que $G$ est un graphe complet $K_n$.
+L'ensemble des sommets $V(G)$ en entier est une clique. Ainsi, $\omega(G) = n$.
+Nous avons $h(G) = \max(\omega(G), \alpha(G)) = \max(n, 1) = n = n^1$.
+Dans ce cas, $c(\overline{K_2}) = 1 > 0$.
+
+Dans les deux cas, pour tout graphe $H$ tel que $|V(H)| = 2$, il existe $c(H) = 1 > 0$ tel que $h(G) \geq n^{c(H)}$.
+\end{proof}
+
+\subsection{Lemme 2 : La Borne de Ramsey est Insuffisante}
+
+\begin{lemma}
+Sans la condition d'être sans $H$, il existe des graphes pour lesquels $h(G) = O(\log n)$.
+\end{lemma}
+
+\begin{proof}
+Nous appliquons la méthode probabiliste d'Erd\H{o}s. Considérons un graphe aléatoire $G \in \mathcal{G}(n, 1/2)$, où chaque arête est incluse avec une probabilité $p = 1/2$ indépendamment.
+
+Soit $k$ un entier. La probabilité qu'un sous-ensemble spécifique de $k$ sommets forme une clique est $(1/2)^{\binom{k}{2}}$.
+De manière similaire, la probabilité qu'un sous-ensemble spécifique de $k$ sommets forme un ensemble indépendant est $(1/2)^{\binom{k}{2}}$.
+
+Soit $X$ la variable aléatoire représentant le nombre d'ensembles homogènes de taille $k$. Par linéarité de l'espérance :
+\begin{align*}
+\mathbb{E}[X] &= \binom{n}{k} \left( \left(\frac{1}{2}\right)^{\binom{k}{2}} + \left(\frac{1}{2}\right)^{\binom{k}{2}} \right) \\
+&= 2 \binom{n}{k} 2^{-\binom{k}{2}} \\
+&\leq 2 \frac{n^k}{k!} 2^{-k(k-1)/2}
+\end{align*}
+
+Si nous posons $k = 2 \log_2 n + 1$, alors :
+\begin{align*}
+2^{-k(k-1)/2} &= 2^{-\frac{(2 \log_2 n + 1)(2 \log_2 n)}{2}} \\
+&= 2^{-2(\log_2 n)^2 - \log_2 n} \\
+&= n^{-2\log_2 n - 1}
+\end{align*}
+
+Ainsi,
+\begin{align*}
+\mathbb{E}[X] &\leq 2 \frac{n^{2\log_2 n + 1}}{k!} n^{-2\log_2 n - 1} \\
+&= \frac{2}{k!} < 1
+\end{align*}
+
+Puisque le nombre attendu d'ensembles homogènes de taille $k = 2\log_2 n + 1$ est strictement inférieur à 1, il doit exister au moins un graphe dans l'espace de probabilité avec exactement 0 ensembles homogènes de taille $k$.
+Pour ce graphe, $h(G) < 2 \log_2 n + 1$, ce qui signifie que $h(G) = O(\log n)$.
+
+Ceci démontre que l'hypothèse d'être sans $H$ est strictement nécessaire pour forcer une borne inférieure polynomiale $n^{c(H)}$.
+\end{proof}
+
+\section{Conclusion}
+
+Les cas de base et les bornes probabilistes établissent la tension fondamentale de la conjecture d'Erd\H{o}s-Hajnal. Alors que les graphes généraux ne contiennent que des ensembles homogènes logarithmiques, on théorise que l'exclusion de toute structure finie $H$ force une régularité structurelle macroscopique massive, étendant la taille de l'ensemble homogène exponentiellement par rapport au cas générique. L'isolement de ces propriétés prépare le terrain pour une décomposition plus poussée via la méthode de substitution et la décomposition modulaire.
+
+\end{document}

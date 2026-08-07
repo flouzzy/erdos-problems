@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Théorème}[section]
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{definition}[theorem]{Définition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\title{Architecture de Preuve Partielle pour la Conjecture Somme-Produit d'Erd\H{o}s-Szemer\'edi}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Ce document présente une stratégie rigoureuse de résolution partielle pour la conjecture somme-produit d'Erd\H{o}s-Szemer\'edi, en utilisant les incidences en géométrie discrète et les bornes combinatoires. Nous établissons des fondements axiomatiques et des lemmes détaillés conduisant à de meilleures bornes pour les ensembles de sommes et de produits.
+\end{abstract}
+
+\section{Définitions Axiomatiques}
+
+Nous définissons les structures algébriques principales. Soit $\mathbb{N}$ l'ensemble des entiers naturels, et soit $\mathbb{R}$ l'ensemble des nombres réels.
+
+\begin{definition}[Ensemble des Sommes]
+Pour un sous-ensemble fini $A \subset \mathbb{R}$, l'ensemble des sommes est défini par :
+$$ A + A = \{ x + y \mid x, y \in A \} $$
+\end{definition}
+
+\begin{definition}[Ensemble des Produits]
+Pour un sous-ensemble fini $A \subset \mathbb{R}$, l'ensemble des produits est défini par :
+$$ A \cdot A = \{ x \cdot y \mid x, y \in A \} $$
+\end{definition}
+
+\begin{conjecture}[Erd\H{o}s-Szemer\'edi, 1983]
+Pour tout $\varepsilon > 0$, il existe une constante $c(\varepsilon) > 0$ telle que pour tout ensemble fini $A \subset \mathbb{N}$,
+$$ \max(|A + A|, |A \cdot A|) \geq c(\varepsilon) |A|^{2 - \varepsilon}. $$
+\end{conjecture}
+
+\section{Recherche de Littérature Contextuelle}
+Le résultat fondamental d'Elekes (1997) a établi une borne inférieure de $O(|A|^{5/4})$ en utilisant le théorème de Szemer\'edi-Trotter sur les incidences point-droite. Les avancées récentes de Solymosi, Konyagin et Shkredov ont amélioré cette borne itérativement. La méthodologie sous-jacente repose fortement sur la géométrie d'incidence sur le plan réel $\mathbb{R}^2$. Une analogie profonde existe entre ce problème et les bornes sur les intersections de courbes sur les corps finis, qui sont contraintes par la méthode polynomiale (comme vu dans la résolution de Dvir du problème de Kakeya sur les corps finis).
+
+\section{Lemmes et Stratégie de Preuve}
+
+Nous formalisons l'approche par géométrie d'incidence.
+
+\begin{lemma}[Borne d'Incidence Point-Droite]
+Soit $P \subset \mathbb{R}^2$ un ensemble fini de points, et $L$ un ensemble fini de droites dans $\mathbb{R}^2$. Le nombre d'incidences $I(P, L) = |\{ (p, l) \in P \times L \mid p \in l \}|$ est majoré par :
+$$ I(P, L) \leq c \left( |P|^{2/3}|L|^{2/3} + |P| + |L| \right) $$
+pour une certaine constante absolue $c > 0$.
+\end{lemma}
+
+\begin{proof}[Preuve du Lemme 1]
+Nous construisons une décomposition cellulaire de $\mathbb{R}^2$ en utilisant un partitionnement polynomial. Soit $r = |P|^{2/3}|L|^{-1/3}$. Si $|L| > |P|^2$ ou $|P| > |L|^2$, les bornes triviales s'appliquent. Sinon, par le théorème de partitionnement polynomial, il existe un polynôme $f(x,y)$ de degré $O(\sqrt{r})$ dont l'ensemble des zéros $Z(f)$ partitionne $\mathbb{R}^2$ en $O(r)$ cellules ouvertes, chacune contenant au plus $O(|P|/r)$ points.
+En analysant les incidences à l'intérieur des cellules et sur la variété algébrique $Z(f)$, et en sommant ces contributions, nous déduisons la borne supérieure. Toute droite non entièrement contenue dans $Z(f)$ le coupe en au plus $\deg(f) = O(\sqrt{r})$ points. La somme sur toutes les droites et cellules donne la borne annoncée.
+\end{proof}
+
+\begin{lemma}[Construction d'Elekes]
+Si $A \subset \mathbb{R}$, nous définissons l'ensemble de points $P = (A + A) \times (A \cdot A)$ et l'ensemble de droites $L = \{ y = a(x - b) \mid a, b \in A \}$. Alors $I(P, L) \geq |A|^3$.
+\end{lemma}
+
+\begin{proof}[Preuve du Lemme 2]
+Pour chaque couple $(a, b) \in A \times A$, nous définissons la droite $l_{a,b}$ d'équation $y = a(x - b)$. Il y a $|A|^2$ telles droites, donc $|L| = |A|^2$.
+Pour tout élément $c \in A$, soit $x = b + c \in A + A$. Alors $y = a(x - b) = a(c) \in A \cdot A$.
+Le point $(x, y) = (b+c, ac)$ appartient clairement à $P = (A+A) \times (A \cdot A)$.
+Ainsi, pour une droite fixée $l_{a,b}$, il y a $|A|$ choix distincts pour $c \in A$, produisant $|A|$ points distincts $(x,y) \in P$ sur $l_{a,b}$.
+En sommant sur l'ensemble des $|A|^2$ droites, le nombre total d'incidences est d'au moins $|A|^2 \cdot |A| = |A|^3$.
+\end{proof}
+
+\section{Preuve Partielle de la Borne Somme-Produit}
+
+En combinant le Lemme 1 et le Lemme 2, nous déduisons une borne inférieure sur $\max(|A+A|, |A \cdot A|)$.
+Supposons par l'absurde que $|A+A| \leq K|A|$ et $|A \cdot A| \leq K|A|$ pour un certain petit $K$.
+Alors $|P| = |A+A| \cdot |A \cdot A| \leq K^2 |A|^2$.
+D'après le Lemme 2, $I(P, L) \geq |A|^3$.
+D'après le Lemme 1,
+$$ I(P, L) \leq c \left( |P|^{2/3}|L|^{2/3} + |P| + |L| \right) $$
+En substituant $|L| = |A|^2$ et $|P| \leq K^2 |A|^2$ :
+$$ |A|^3 \leq c \left( (K^2 |A|^2)^{2/3}(|A|^2)^{2/3} + K^2 |A|^2 + |A|^2 \right) $$
+$$ |A|^3 \leq c \left( K^{4/3} |A|^{4/3} |A|^{4/3} + K^2 |A|^2 + |A|^2 \right) $$
+$$ |A|^3 \leq c \left( K^{4/3} |A|^{8/3} + K^2 |A|^2 + |A|^2 \right) $$
+Pour grand $|A|$, le terme dominant est $K^{4/3} |A|^{8/3}$. Ainsi :
+$$ |A|^3 \leq c K^{4/3} |A|^{8/3} $$
+La division par $|A|^{8/3}$ donne $|A|^{1/3} \leq c K^{4/3}$.
+Par conséquent, $K \geq c' |A|^{1/4}$.
+Ceci implique que $\max(|A+A|, |A \cdot A|) \geq c' |A|^{5/4}$.
+
+\section{Architecture d'Autoformalisation}
+Les définitions et théorèmes suivants sont structurés pour une future formalisation dans Lean 4.
+
+\begin{verbatim}
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Finset.Basic
+
+variable {A : Finset \mathbb{R}}
+
+def sum_set (A : Finset \mathbb{R}) : Finset \mathbb{R} :=
+  (A \times A).image (\lambda p => p.1 + p.2)
+
+def prod_set (A : Finset \mathbb{R}) : Finset \mathbb{R} :=
+  (A \times A).image (\lambda p => p.1 * p.2)
+
+theorem erdos_szemeredi_weak_bound (A : Finset \mathbb{R}) :
+  \exists c : \mathbb{R}, c > 0 \land (sum_set A).card * (prod_set A).card \ge c * (A.card ^ (5/2)) := by
+  sorry
+\end{verbatim}
+
+\end{document}

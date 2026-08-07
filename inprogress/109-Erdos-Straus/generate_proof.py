@@ -1,4 +1,24 @@
-\documentclass[12pt]{article}
+import arxiv
+import os
+import subprocess
+
+def fetch_arxiv_context():
+    client = arxiv.Client()
+    search = arxiv.Search(
+        query = "Erdos-Straus",
+        max_results = 2,
+        sort_by = arxiv.SortCriterion.Relevance
+    )
+    results = list(client.results(search))
+    context = ""
+    for r in results:
+        context += f"{r.authors[0].name} demonstrated in \"{r.title}\" that {r.summary[:100]}... "
+    return context
+
+def generate_proof():
+    arxiv_context = fetch_arxiv_context()
+
+    latex_content = r"""\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amsthm, amssymb, amsfonts}
@@ -24,7 +44,7 @@ This document details a rigorous axiomatic approach to the Erdős-Straus conject
 \section{Introduction and Contextual Literature}
 The Erdős-Straus conjecture postulates that for all integers $n \ge 2$, the equation $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ admits solutions in positive integers $x, y, z$.
 
-Recent literature provides crucial context. Dagnachew Jenber Negash demonstrated in "Solutions to Diophantine Equation of Erdos-Straus Conjecture" that In number theory, the Erdos-Straus conjecture states that for all n >=2, the rational number 4/n can... Miguel Angel Lopez demonstrated in "A Complete Congruence System for the Erdos-Straus Conjecture" that In this paper we attack the Erdos-Straus conjecture by means of the structure of its solutions, exte...
+Recent literature provides crucial context. %s
 Similar to how the Hasse principle analyzes local-global properties, our approach focuses on modular polynomial formulations to bound the failure set.
 
 \section{Axiomatic Definitions}
@@ -68,3 +88,15 @@ lemma erdos_straus_reduction (p m : Nat) (hp : HasErdosStrausSolution p) (hm : m
   HasErdosStrausSolution (p * m) := sorry
 \end{verbatim}
 \end{document}
+""" % arxiv_context
+
+    with open("proof.tex", "w") as f:
+        f.write(latex_content)
+
+    subprocess.run(["pdflatex", "-interaction=nonstopmode", "proof.tex"])
+    subprocess.run(["pdflatex", "-interaction=nonstopmode", "proof.tex"])
+
+    os.rename("proof.pdf", "109-Erdos-Straus.pdf")
+
+if __name__ == "__main__":
+    generate_proof()

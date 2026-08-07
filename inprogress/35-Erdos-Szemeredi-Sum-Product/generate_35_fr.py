@@ -1,4 +1,7 @@
-\documentclass[12pt]{article}
+import os
+
+def generate_proof():
+    latex_content = r"""\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
@@ -120,3 +123,9 @@ sorry
 L'\'etude des ensembles sommes et produits r\'ev\`ele des propri\'et\'es structurelles profondes des entiers. L'architecture de formalisation propos\'ee garantit que les bornes incr\'ementales futures pourront \^etre rigoureusement v\'erifi\'ees.
 
 \end{document}
+"""
+    with open('proof.fr.tex', 'w') as f:
+        f.write(latex_content)
+
+if __name__ == "__main__":
+    generate_proof()

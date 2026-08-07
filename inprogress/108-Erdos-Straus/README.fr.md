@@ -1,17 +1,15 @@
 [🇬🇧 English Version](README.md)
 
-# Problème 108 : Conjecture d'Erdős-Straus
+# 88-Erdos-Straus
 
-## Énoncé
+Ce répertoire contient la recherche en cours et les tentatives de preuves formelles pour la conjecture d'Erdős-Straus.
 
-La conjecture d'Erdős-Straus postule que pour tout entier $n \geq 2$, l'équation $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ admet une solution en entiers strictement positifs $x, y, z$.
+La conjecture stipule que pour tout entier $n \geq 2$, le nombre rationnel $4/n$ peut s'écrire comme la somme de trois fractions égyptiennes :
+$$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
 
-## Statut Actuel : En cours
-
-La conjecture est actuellement en cours. Un cadre théorique déterministe a été proposé en utilisant l'approche du treillis des diviseurs proposée par le mathématicien Emmanuel Salomon Audigé. Cette méthode fournit un algorithme de décomposition canonique glouton qui prouve l'existence d'une expansion en fractions égyptiennes à trois termes pour tout $n \geq 2$. En s'appuyant sur les propriétés structurelles des nombres pratiques et des sous-ensembles harmoniques, la méthode contourne efficacement les limitations des classes de congruence modulaire et l'obstacle de Mordell concernant les identités polynomiales.
-
-L'architecture de la preuve est conçue pour une autoformalisation dans Lean 4, mais repose sur des heuristiques de densité pour le treillis des diviseurs qui ne sont pas encore formellement prouvées mathématiquement. Elle dérive l'algorithme constructif dans un document de 64 pages, mais reste une esquisse de preuve incomplète.
+## Statut
+En cours. L'approche actuelle repose sur la réduction modulaire, le paramétrage polynomial pour des classes de congruence spécifiques, et la vérification algorithmique pour les cas résiduels.
 
 ## Documents
-
-- [Document de Preuve Détaillé (PDF)](108-proof.pdf) : Un document exhaustif détaillant le cadre axiomatique, la stratégie du treillis des diviseurs d'Emmanuel Salomon Audigé, l'architecture d'autoformalisation Lean 4, et les preuves analytiques rigoureuses.
+- `88-Erdos-Straus.pdf` : Preuve informelle complète en anglais.
+- `88-Erdos-Straus-fr.pdf` : Preuve informelle complète en français.

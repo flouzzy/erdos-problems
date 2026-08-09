@@ -1,0 +1,100 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{On the Erdős-Straus Conjecture: Algebraic Analysis and Modular Decomposition}
+\author{Charles EDOU NZE}
+\date{\today}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, sorry, Prop, Nat, open, section, Exists, fun},
+  sensitive=true,
+  comment=[l]--
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document presents a rigorous analysis and a structural decomposition of the Erdős-Straus conjecture. We expose the axiomatic definitions, review relevant contextual literature, isolate key lemmas concerning specific congruence classes, and propose a formalization architecture adapted for a Lean 4 interactive theorem prover.
+\vspace{\fill}
+\begin{center}
+Charles EDOU NZE, chercheur indépendant
+\end{center}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Axiomatic Definitions and Context}
+\begin{definition}
+For any integer $n \in \mathbb{Z}$ with $n \ge 2$, the Erdős-Straus equation is defined as the Diophantine equation:
+\[\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}\]
+where the variables $x, y, z \in \mathbb{Z}_{>0}$ are strictly positive integers.
+\end{definition}
+
+\subsection{Contextual Literature Research}
+The problem was formulated by Paul Erdős and Ernst G. Straus in 1948. Previous works on Diophantine equations of this type utilize local and global analytic principles. A notable approach is the use of modular reduction and polynomial parametrization to solve specific congruence classes. As demonstrated in the paper \textit{"A Complete Congruence System for the Erdos-Straus Conjecture"} (available on ArXiv), analyzing the structure of solutions through decomposition into sums of fractions with identically sized numerators yields significant insights into the conjecture.
+
+\section{Proof Strategy and Lemma Isolation}
+The selected approach is to partition the space of integers $n$ according to their congruence class modulo a highly composite integer, typically $4$ for base cases. We break the conjecture down into specific intermediate sub-problems.
+
+\begin{lemma}
+For $n = 4k+3$ where $k \in \mathbb{Z}_{\ge 0}$, the Erdős-Straus equation admits a solution.
+\end{lemma}
+\begin{proof}
+Let $n = 4k+3$ for some $k \in \mathbb{Z}_{\ge 0}$.
+We explicitly construct a solution by setting $x = k+1$, $y = n(k+1)+1$, and $z = n(k+1)(n(k+1)+1)$.
+First, we substitute $x = k+1$ into the equation. We aim to show that:
+\[ \frac{4}{n} - \frac{1}{k+1} = \frac{1}{y} + \frac{1}{z} \]
+We evaluate the left-hand side with a common denominator $n(k+1)$:
+\begin{align*}
+\frac{4}{n} - \frac{1}{k+1} &= \frac{4(k+1) - n}{n(k+1)} \\
+&= \frac{4k + 4 - (4k+3)}{n(k+1)} \\
+&= \frac{1}{n(k+1)}
+\end{align*}
+Now, we express $\frac{1}{n(k+1)}$ as a sum of two unit fractions using the standard Egyptian fraction identity $\frac{1}{A} = \frac{1}{A+1} + \frac{1}{A(A+1)}$.
+Setting $A = n(k+1)$, we obtain:
+\begin{align*}
+\frac{1}{n(k+1)} &= \frac{1}{n(k+1)+1} + \frac{1}{n(k+1)(n(k+1)+1)}
+\end{align*}
+By identifying the terms, we set:
+\begin{align*}
+y &= n(k+1)+1 \\
+z &= n(k+1)(n(k+1)+1)
+\end{align*}
+Since $n \ge 3$ and $k \ge 0$, it is clear that $x > 0$, $y > 0$, and $z > 0$. Therefore, $(x, y, z) = (k+1, n(k+1)+1, n(k+1)(n(k+1)+1))$ is a valid solution in positive integers.
+\end{proof}
+
+\section{Architecture for Autoformalization}
+The formalization of the Erdős-Straus conjecture requires structuring the statement and the search space decomposition in Lean 4.
+
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
+import Mathlib.Data.Nat.Basic
+import Mathlib.Tactic.Omega
+import Mathlib.Tactic.Ring
+
+-- Definition axiomatique de la propriete d'Erdos-Straus
+def SatisfiesErdosStraus (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
+
+-- Lemme mod 4 = 3
+lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
+  -- Proof implementation pending
+  sorry
+
+-- Theoreme principal
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+  -- Proof implementation pending
+  sorry
+\end{lstlisting}
+
+\end{document}

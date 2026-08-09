@@ -1,0 +1,101 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Théorème}[section]
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{definition}[theorem]{Définition}
+
+\title{Sur la Conjecture d'Erdős-Straus : Analyse Algébrique et Décomposition Modulaire}
+\author{Charles EDOU NZE}
+\date{\today}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, sorry, Prop, Nat, open, section, Exists, fun},
+  sensitive=true,
+  comment=[l]--
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ce document présente une analyse rigoureuse et une décomposition structurelle de la conjecture d'Erdős-Straus. Nous y exposons les définitions axiomatiques, passons en revue la littérature contextuelle pertinente, isolons des lemmes clés concernant des classes de congruences spécifiques, et proposons une architecture de formalisation adaptée à un assistant de preuve interactif de type Lean 4.
+\vspace{\fill}
+\begin{center}
+Charles EDOU NZE, chercheur indépendant
+\end{center}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Définitions Axiomatiques et Contexte}
+\begin{definition}
+Pour tout entier $n \in \mathbb{Z}$ avec $n \ge 2$, l'équation d'Erdős-Straus est définie comme l'équation diophantienne :
+\[\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}\]
+où les variables $x, y, z \in \mathbb{Z}_{>0}$ sont des entiers strictement positifs.
+\end{definition}
+
+\subsection{Recherche de Littérature Contextuelle}
+Le problème a été formulé par Paul Erdős et Ernst G. Straus en 1948. Les travaux antérieurs sur les équations diophantiennes de ce type utilisent des principes analytiques locaux et globaux. Une approche notable est l'utilisation de la réduction modulaire et de la paramétrisation polynomiale pour résoudre des classes de congruences spécifiques. Comme démontré dans l'article \textit{"A Complete Congruence System for the Erdos-Straus Conjecture"} (disponible sur ArXiv), l'analyse de la structure des solutions par la décomposition en sommes de fractions ayant des numérateurs de taille identique fournit des informations significatives sur la conjecture.
+
+\section{Stratégie de Preuve et Isolation des Lemmes}
+L'approche retenue consiste à partitionner l'espace des entiers $n$ selon leur classe de congruence modulo un entier hautement composé, typiquement $4$ pour les cas de base. Nous décomposons la conjecture en sous-problèmes intermédiaires spécifiques.
+
+\begin{lemma}
+Pour $n = 4k+3$ où $k \in \mathbb{Z}_{\ge 0}$, l'équation d'Erdős-Straus admet une solution.
+\end{lemma}
+\begin{proof}
+Soit $n = 4k+3$ pour un certain $k \in \mathbb{Z}_{\ge 0}$.
+Nous construisons explicitement une solution en posant $x = k+1$, $y = n(k+1)+1$, et $z = n(k+1)(n(k+1)+1)$.
+Tout d'abord, nous substituons $x = k+1$ dans l'équation. Notre objectif est de montrer que :
+\[ \frac{4}{n} - \frac{1}{k+1} = \frac{1}{y} + \frac{1}{z} \]
+Nous évaluons le côté gauche avec un dénominateur commun $n(k+1)$ :
+\begin{align*}
+\frac{4}{n} - \frac{1}{k+1} &= \frac{4(k+1) - n}{n(k+1)} \\
+&= \frac{4k + 4 - (4k+3)}{n(k+1)} \\
+&= \frac{1}{n(k+1)}
+\end{align*}
+Maintenant, nous exprimons $\frac{1}{n(k+1)}$ comme une somme de deux fractions unitaires en utilisant l'identité standard des fractions égyptiennes $\frac{1}{A} = \frac{1}{A+1} + \frac{1}{A(A+1)}$.
+En posant $A = n(k+1)$, nous obtenons :
+\begin{align*}
+\frac{1}{n(k+1)} &= \frac{1}{n(k+1)+1} + \frac{1}{n(k+1)(n(k+1)+1)}
+\end{align*}
+Par identification des termes, nous posons :
+\begin{align*}
+y &= n(k+1)+1 \\
+z &= n(k+1)(n(k+1)+1)
+\end{align*}
+Puisque $n \ge 3$ et $k \ge 0$, il est clair que $x > 0$, $y > 0$, et $z > 0$. Par conséquent, $(x, y, z) = (k+1, n(k+1)+1, n(k+1)(n(k+1)+1))$ est une solution valide dans les entiers positifs.
+\end{proof}
+
+\section{Architecture pour l'Autoformalisation}
+La formalisation de la conjecture d'Erdős-Straus nécessite de structurer l'énoncé et la décomposition de l'espace de recherche dans Lean 4.
+
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
+import Mathlib.Data.Nat.Basic
+import Mathlib.Tactic.Omega
+import Mathlib.Tactic.Ring
+
+-- Definition axiomatique de la propriete d'Erdos-Straus
+def SatisfiesErdosStraus (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
+
+-- Lemme mod 4 = 3
+lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
+  -- Implementation de la preuve en attente
+  sorry
+
+-- Theoreme principal
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+  -- Implementation de la preuve en attente
+  sorry
+\end{lstlisting}
+
+\end{document}

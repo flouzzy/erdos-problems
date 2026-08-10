@@ -1,4 +1,11 @@
-\documentclass[12pt, a4paper]{article}
+import os
+
+def generate_tex():
+    tex_file = "inprogress/108-Erdos-Straus/proof.tex"
+    if os.path.dirname(tex_file):
+        os.makedirs(os.path.dirname(tex_file), exist_ok=True)
+
+    content = r"""\documentclass[12pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
@@ -123,3 +130,9 @@ theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n
 \end{lstlisting}
 
 \end{document}
+"""
+    with open(tex_file, "w", encoding="utf-8") as f:
+        f.write(content)
+
+if __name__ == "__main__":
+    generate_tex()

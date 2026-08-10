@@ -1,14 +1,15 @@
-import arxiv
+import urllib.request
+import urllib.parse
+import json
 
-client = arxiv.Client()
-search = arxiv.Search(
-  query = "Erdos-Straus",
-  max_results = 2,
-  sort_by = arxiv.SortCriterion.Relevance
-)
+query = urllib.parse.quote_plus("Erdos Straus conjecture")
+url = f"http://export.arxiv.org/api/query?search_query=all:{query}&start=0&max_results=5"
 
-for result in client.results(search):
-    print(f"Title: {result.title}")
-    print(f"Authors: {[author.name for author in result.authors]}")
-    print(f"Summary: {result.summary}")
-    print("-" * 40)
+try:
+    response = urllib.request.urlopen(url)
+    data = response.read().decode('utf-8')
+    with open('arxiv_results.txt', 'w') as f:
+        f.write(data)
+    print("Success")
+except Exception as e:
+    print(f"Error: {e}")

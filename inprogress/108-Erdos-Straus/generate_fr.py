@@ -121,16 +121,34 @@ import Mathlib.Tactic.Ring
 def SatisfiesErdosStraus (n : Nat) : Prop :=
   Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
 
--- Lemme mod 4 = 3
+-- Demonstration complete du Lemme 2.1 basons-nous sur la parametrisation du document
 lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
-  sorry
+  let n := 4 * k + 3
+  let x := k + 1
+  let y := n * (k + 1) + 1
+  let z := n * (k + 1) * (n * (k + 1) + 1)
+  use x, y, z
+  refine \<by omega, by omega, by omega, ?_\>
+  dsimp [x, y, z, n]
+  ring
 
--- Theoreme principal
+-- Theoreme general (Conjecture ouverte pour l'ensemble des classes residuelles)
 theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
   sorry
 \end{lstlisting}
 
-\end{document}
+
+\section*{Remerciements et M\'ethodologie}
+L'architecture de preuve formelle et la synth\`ese de code pr\'esent\'ees dans ce document ont \'et\'e r\'ealis\'ees avec l'assistance de syst\`emes d'Intelligence Artificielle (IA) avanc\'es. L'IA a \'et\'e utilis\'ee pour r\'ediger les scripts de formalisation Lean 4, structurer les arguments math\'ematiques et explorer les contextualisations de la litt\'erature.
+
+\section*{R\'ef\'erences}
+\begin{itemize}
+    \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
+    \item Miguel Angel Lopez (2024). \textit{A Complete Congruence System for the Erdos-Straus Conjecture}. arXiv:2404.01508v3.
+    \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
+\end{itemize}
+
+\\end{document}
 """
     with open(tex_file, "w", encoding="utf-8") as f:
         f.write(content)

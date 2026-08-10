@@ -1,7 +1,4 @@
-import os
-
-def generate_proof_en():
-    tex_content = r"""\documentclass[12pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
@@ -126,10 +123,3 @@ The formal proof architecture and code synthesis presented in this document were
 \end{itemize}
 
 \\end{document}
-"""
-    with open('inprogress/108-Erdos-Straus/proof.tex', 'w', encoding='utf-8') as f:
-        f.write(tex_content)
-    print("Generated proof.tex in English.")
-
-if __name__ == "__main__":
-    generate_proof_en()

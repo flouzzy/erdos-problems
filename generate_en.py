@@ -1,99 +1,125 @@
 import os
 
-latex_content = r"""\documentclass[12pt]{article}
+def generate_tex():
+    tex_file = "inprogress/108-Erdos-Straus/108-Erdos-Straus.tex"
+    if os.path.dirname(tex_file):
+        os.makedirs(os.path.dirname(tex_file), exist_ok=True)
+
+    content = r"""\documentclass[12pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
-\geometry{a4paper, margin=1in}
+\usepackage{listings}
+\geometry{margin=2.5cm}
 
-\title{Rigorous Analysis of the Erd\H{o}s-Straus Conjecture}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{On the Erdős-Straus Conjecture: Algebraic Analysis and Modular Decomposition}
 \author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur indépendant}}
 \date{\today}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, sorry, Prop, Nat, open, section, Exists, fun},
+  sensitive=true,
+  comment=[l]--
+}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This paper presents a formal analysis of the Erd\H{o}s-Straus conjecture, breaking it down into fundamental axiomatic definitions, contextual literature research, and zero-ellipse intermediate lemmas. It also provides a strict architecture for autoformalization in proof assistants.
+This document presents a rigorous analysis and structural decomposition of the Erdős-Straus conjecture. We lay out axiomatic definitions, review relevant recent literature, isolate key lemmas for specific congruence classes, and provide an architecture for autoformalization in a proof assistant like Lean 4.
 \end{abstract}
 
-\section{Axiomatic Definitions and Formulation}
-Let $\mathbb{N} = \{1, 2, 3, \ldots\}$ be the set of natural numbers.
-The Erd\H{o}s-Straus conjecture states that for every integer $n \ge 2$, there exist positive integers $x, y, z \in \mathbb{N}$ such that:
-\begin{equation}
-\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}
-\end{equation}
+\tableofcontents
+\newpage
 
-To formalize this, we define the solution set for a given $n \ge 2$:
-\begin{equation}
-S(n) = \left\{ (x, y, z) \in \mathbb{N}^3 \;\middle|\; \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} \right\}
-\end{equation}
-The conjecture is equivalent to the statement: $\forall n \ge 2, S(n) \neq \emptyset$.
+\section{Axiomatic Definitions and Context}
+\begin{definition}
+For every integer $n \in \mathbb{N}$ with $n \ge 2$, the Erdős-Straus equation is defined as the Diophantine equation:
+\[\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}\]
+where $x, y, z \in \mathbb{Z}_{>0}$.
+\end{definition}
 
-\section{Contextual Literature Research}
-The Erd\H{o}s-Straus conjecture generalizes the Egyptian fraction representation problem. It is known that for any positive rational number $p/q$, there exist representations as sums of distinct unit fractions. The specific case of $4/n$ constraints the number of terms to three.
+\subsection{Contextual Literature Research}
+The problem, formulated by Paul Erdős and Ernst G. Straus in 1948, posits that the equation always has a positive integer solution for $n \ge 2$. Recent studies by authors such as Miguel Angel Lopez have classified solutions into types, such as Type A and Type B, by defining a complete congruence system. Furthermore, Philemon Urbain Mballa has explored an unexpected connection between the discrete zeta function and the Erdős-Straus conjecture through additive decomposition. This methodology shows strong analogies to the algebraic manipulations used in solving Pell-Fermat equations, where solutions are grouped by modular invariants and analyzed via infinite descents or structural classifications.
 
-Historically, Mordell (1967) proved that the conjecture holds except possibly for prime numbers $n$ congruent to $1, 11, 13, 17, 19, \text{ or } 23 \pmod{24}$. Furthermore, Webb and others have established bounds using sieve methods, showing that the number of exceptions up to $N$ is at most $O(N \exp(-c \log N / \log \log N))$, which relates closely to the distribution of primes in arithmetic progressions.
+\section{Proof Strategy and Lemma Isolation}
+The fundamental approach involves partitioning the integers $n$ by their congruence class modulo an integer, historically $840$, although general cases can be studied for primes.
 
-By analogy with the recent resolution of weak Goldbach's conjecture by Helfgott (2013), which employed the circle method to manage additive prime combinations, one might consider a similarly localized analytic approach. However, the non-linear Diophantine nature of this equation suggests that geometric methods on algebraic surfaces, akin to those used by Manin (1986), could be more directly applicable to bounding the set of non-solutions.
-
-\section{Lemmas and Zero-Ellipse Proof Strategy}
-
-We decompose the problem into modular classes. A well-known identity allows us to handle many cases.
-
-\textbf{Lemma 1 (Identity for specific modular forms):} If $n \equiv 2 \pmod{3}$, then $S(n)$ is non-empty.
-
+\begin{lemma}
+For $n = 4k+3$ with $k \in \mathbb{N}$, the equation admits a positive integer solution.
+\end{lemma}
 \begin{proof}
-Let $n \ge 2$ and assume $n \equiv 2 \pmod{3}$. This implies there exists an integer $k \ge 0$ such that $n = 3k + 2$.
-We substitute $n = 3k + 2$ into the target expression $\frac{4}{n}$ and seek an expansion.
-Consider the terms $x = n$, $y = k+1$, and $z = n(k+1)$. We must verify that:
-\begin{equation}
-\frac{1}{n} + \frac{1}{k+1} + \frac{1}{n(k+1)} = \frac{4}{n}
-\end{equation}
-Starting from the left side, we find a common denominator $n(k+1)$:
-\begin{equation}
-\frac{1}{n} + \frac{1}{k+1} + \frac{1}{n(k+1)} = \frac{k+1}{n(k+1)} + \frac{n}{n(k+1)} + \frac{1}{n(k+1)}
-\end{equation}
-Summing the numerators, we obtain:
-\begin{equation}
-\frac{k+1 + n + 1}{n(k+1)} = \frac{n + k + 2}{n(k+1)}
-\end{equation}
-Substituting $n = 3k + 2$ into the numerator gives:
-\begin{equation}
-\frac{3k + 2 + k + 2}{n(k+1)} = \frac{4k + 4}{n(k+1)} = \frac{4(k+1)}{n(k+1)}
-\end{equation}
-Since $k \ge 0$, $k+1 \neq 0$, we can cancel $k+1$ from the numerator and denominator:
-\begin{equation}
-\frac{4(k+1)}{n(k+1)} = \frac{4}{n}
-\end{equation}
-Thus, $(n, k+1, n(k+1)) \in S(n)$, proving the lemma.
+Let $n = 4k+3$.
+We set $x = (n+1)/4 = (4k+4)/4 = k+1$. Because $n \ge 3$, $k \ge 0$, and thus $x \ge 1$, ensuring $x \in \mathbb{Z}_{>0}$.
+We evaluate the remaining difference:
+\begin{align*}
+\frac{4}{n} - \frac{1}{x} &= \frac{4}{n} - \frac{1}{k+1} \\
+&= \frac{4(k+1) - n}{n(k+1)} \\
+&= \frac{4k+4 - (4k+3)}{n(k+1)} \\
+&= \frac{1}{n(k+1)}
+\end{align*}
+The remaining fraction $\frac{1}{n(k+1)}$ must be split into two unit fractions $\frac{1}{y} + \frac{1}{z}$.
+We employ the standard Egyptian fraction splitting identity:
+\[ \frac{1}{A} = \frac{1}{A+1} + \frac{1}{A(A+1)} \]
+Applying this to $A = n(k+1)$, we set:
+$y = n(k+1) + 1$
+and
+$z = n(k+1)(n(k+1)+1)$
+Since $n \ge 3$ and $k \ge 0$, both $y$ and $z$ are strictly positive integers.
+By substitution:
+\begin{align*}
+\frac{1}{x} + \frac{1}{y} + \frac{1}{z} &= \frac{1}{k+1} + \frac{1}{n(k+1) + 1} + \frac{1}{n(k+1)(n(k+1)+1)} \\
+&= \frac{1}{k+1} + \frac{n(k+1)+1 + 1}{(n(k+1)+1)(n(k+1)(n(k+1)+1))} \\
+\end{align*}
+Wait, the direct sum of the last two is exactly $\frac{1}{n(k+1)}$. Let us show it explicitly:
+\begin{align*}
+\frac{1}{y} + \frac{1}{z} &= \frac{1}{n(k+1)+1} + \frac{1}{n(k+1)(n(k+1)+1)} \\
+&= \frac{n(k+1)}{n(k+1)(n(k+1)+1)} + \frac{1}{n(k+1)(n(k+1)+1)} \\
+&= \frac{n(k+1)+1}{n(k+1)(n(k+1)+1)} \\
+&= \frac{1}{n(k+1)}
+\end{align*}
+Adding $\frac{1}{x} = \frac{1}{k+1}$, we get:
+\begin{align*}
+\frac{1}{x} + \frac{1}{y} + \frac{1}{z} &= \frac{1}{k+1} + \frac{1}{n(k+1)} \\
+&= \frac{n}{n(k+1)} + \frac{1}{n(k+1)} \\
+&= \frac{n+1}{n(k+1)} \\
+&= \frac{4k+4}{n(k+1)} \\
+&= \frac{4(k+1)}{n(k+1)} \\
+&= \frac{4}{n}
+\end{align*}
+This proves the lemma for all $n \equiv 3 \pmod 4$.
 \end{proof}
 
 \section{Architecture for Autoformalization}
-To integrate this proof into an assistant like Lean 4, the structure must be explicitly typed:
+The formalization of the Erdős-Straus conjecture requires structuring the statement and the search space decomposition in Lean 4.
 
-\begin{verbatim}
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Rat.Basic
+import Mathlib.Tactic.Omega
+import Mathlib.Tactic.Ring
 
--- Axiomatic Definitions
-def S (n : Nat) : Set (Nat * Nat * Nat) :=
-  { p | 4 * (p.1 * p.2.1 * p.2.2) =
-        n * (p.2.1 * p.2.2 + p.1 * p.2.2 + p.1 * p.2.1)
-        /\ p.1 > 0 /\ p.2.1 > 0 /\ p.2.2 > 0 }
+-- Axiomatic definition of the Erdos-Straus property
+def SatisfiesErdosStraus (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
 
--- Conjecture Type
-def erdos_straus_conjecture : Prop :=
-  forall n : Nat, n >= 2 -> Not (S n = empty)
-
--- Lemma 1 Type
-lemma lemma_mod3 (n : Nat) (h1 : n >= 2) (h2 : n % 3 = 2) : Not (S n = empty) :=
+-- Lemma for mod 4 = 3
+lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
   sorry
-\end{verbatim}
+
+-- Main Theorem
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+  sorry
+\end{lstlisting}
 
 \end{document}
 """
+    with open(tex_file, "w", encoding="utf-8") as f:
+        f.write(content)
 
-os.makedirs('inprogress/109-Erdos-Straus', exist_ok=True)
-with open('inprogress/109-Erdos-Straus/109-Erdos-Straus.tex', 'w') as f:
-    f.write(latex_content)
+if __name__ == "__main__":
+    generate_tex()

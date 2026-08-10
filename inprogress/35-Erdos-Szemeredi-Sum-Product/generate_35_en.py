@@ -1,4 +1,7 @@
-\documentclass[12pt]{article}
+import os
+
+def generate_proof():
+    latex_content = r"""\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
@@ -6,7 +9,7 @@
 \usepackage{hyperref}
 \usepackage{enumitem}
 
-\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{corollary}[theorem]{Corollary}
@@ -16,6 +19,7 @@
 \date{\today}
 
 \begin{document}
+
 \maketitle
 
 \begin{abstract}
@@ -117,3 +121,9 @@ sorry
 The study of sum and product sets reveals deep structural properties of the integers. The formalization architecture proposed ensures that future incremental bounds can be rigorously verified.
 
 \end{document}
+"""
+    with open('proof.tex', 'w') as f:
+        f.write(latex_content)
+
+if __name__ == "__main__":
+    generate_proof()

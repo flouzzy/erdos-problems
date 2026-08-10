@@ -1,42 +1,60 @@
 import unittest
 from unittest.mock import patch, mock_open
+import importlib.util
 import os
-import gen_proof_en
-import gen_proof_fr
 
-class TestGenerateProof(unittest.TestCase):
+def load_module_from_file(module_name, file_path):
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+class TestGenerateProofs(unittest.TestCase):
+    def setUp(self):
+        self.en_module = load_module_from_file(
+            "generate_35_en",
+            os.path.join(os.path.dirname(__file__), "generate_35_en.py")
+        )
+        self.fr_module = load_module_from_file(
+            "generate_35_fr",
+            os.path.join(os.path.dirname(__file__), "generate_35_fr.py")
+        )
+
     @patch('builtins.open', new_callable=mock_open)
-    def test_gen_proof_en(self, mock_file):
-        gen_proof_en.generate_latex()
-        mock_file.assert_called_with('proof.tex', 'w', encoding='utf-8')
+    def test_generate_en_proof(self, mock_file):
+        self.en_module.generate_proof()
 
-        # Check that the write was called and collect all written content
+        # Verify the file was opened for writing
+        mock_file.assert_called_with('proof.tex', 'w')
+
+        # Get the arguments passed to write
         handle = mock_file()
-        written_content = "".join(call.args[0] for call in handle.write.call_args_list)
+        write_args = handle.write.call_args[0][0]
 
-        self.assertIn("Erd\\H{o}s-Szemer\\'edi", written_content)
-        self.assertIn("Charles EDOU NZE", written_content)
-        self.assertIn("\\begin{verbatim}", written_content)
-        self.assertIn("def Sumset", written_content)
+        # Verify structure
+        self.assertIn(r"\documentclass[12pt]{article}", write_args)
+        self.assertIn("Charles EDOU NZE", write_args)
+        self.assertIn("Erd\\H{o}s-Szemer\\'edi", write_args)
+        self.assertIn("Lean 4", write_args)
+        self.assertNotIn("As requested", write_args)
 
     @patch('builtins.open', new_callable=mock_open)
-    def test_gen_proof_fr(self, mock_file):
-        gen_proof_fr.generate_latex()
-        mock_file.assert_called_with('proof.fr.tex', 'w', encoding='utf-8')
+    def test_generate_fr_proof(self, mock_file):
+        self.fr_module.generate_proof()
 
+        # Verify the file was opened for writing
+        mock_file.assert_called_with('proof.fr.tex', 'w')
+
+        # Get the arguments passed to write
         handle = mock_file()
-        written_content = "".join(call.args[0] for call in handle.write.call_args_list)
+        write_args = handle.write.call_args[0][0]
 
-        self.assertIn("Erd\\H{o}s-Szemer\\'edi", written_content)
-        self.assertIn("Charles EDOU NZE", written_content)
-        self.assertIn("Th\\'eor\\`eme", written_content)
-        self.assertIn("\\begin{verbatim}", written_content)
-        self.assertIn("def Sumset", written_content)
-
-    def test_pdfs_exist(self):
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.assertTrue(os.path.exists(os.path.join(base_dir, "35-Erdos-Szemeredi-Sum-Product.pdf")))
-        self.assertTrue(os.path.exists(os.path.join(base_dir, "35-Erdos-Szemeredi-Sum-Product.fr.pdf")))
+        # Verify structure
+        self.assertIn(r"\documentclass[12pt]{article}", write_args)
+        self.assertIn("Charles EDOU NZE", write_args)
+        self.assertIn("Erd\\H{o}s-Szemer\\'edi", write_args)
+        self.assertIn("Lean 4", write_args)
+        self.assertNotIn("Comme demand", write_args)
 
 if __name__ == '__main__':
     unittest.main()

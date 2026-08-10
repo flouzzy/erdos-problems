@@ -1,4 +1,24 @@
-\documentclass[12pt]{article}
+import urllib.request
+import urllib.parse
+import xml.etree.ElementTree as ET
+import os
+
+def generate_latex():
+    # Attempt to query arxiv for related bounds
+    related_bounds_str = ""
+    try:
+        url = 'http://export.arxiv.org/api/query?search_query=all:%22Erdos-Szemeredi%22&start=0&max_results=3'
+        response = urllib.request.urlopen(url, timeout=5)
+        xml = response.read()
+        root = ET.fromstring(xml)
+        for entry in root.findall('{http://www.w3.org/2005/Atom}entry'):
+            title = entry.find('{http://www.w3.org/2005/Atom}title').text.strip()
+            authors = [author.find('{http://www.w3.org/2005/Atom}name').text for author in entry.findall('{http://www.w3.org/2005/Atom}author')]
+            related_bounds_str += f"\\item {title}, by {', '.join(authors)}.\n"
+    except Exception as e:
+        related_bounds_str = "\\item Konyagin, S. and Shkredov, I. (2015). On sum sets of sets, having small product set.\\n\\item Solymosi, J. (2009). Bounding multiplicative energy by the sumset.\\n"
+
+    latex_content = r"""\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{geometry}
@@ -43,7 +63,7 @@ The Erd\H{o}s-Szemer\'edi Sum-Product conjecture (1983) asserts that for any $\e
 \section{Contextual Literature Research}
 The Sum-Product phenomenon illustrates a deep dichotomy between the additive and multiplicative structures of the integers. Recent progress in this area includes bounds derived from incidence geometry (e.g., the Szemer\'edi-Trotter theorem). Notable related works:
 \begin{itemize}
-\item Konyagin, S. and Shkredov, I. (2015). On sum sets of sets, having small product set.\item Solymosi, J. (2009). Bounding multiplicative energy by the sumset.
+""" + related_bounds_str + r"""
 \end{itemize}
 Analogy: The resolution of the Szemer\'edi-Trotter theorem in incidence geometry provided a robust framework for crossing numbers in graphs, which Solymosi subsequently adapted to establish the bound $\max(|A + A|, |A \cdot A|) \gg |A|^{4/3 - o(1)}$.
 
@@ -125,3 +145,9 @@ theorem erdos_szemeredi (h_eps : epsilon > 0) :
 \vfill
 Charles EDOU NZE, chercheur indépendant
 \end{document}
+"""
+    with open('proof.tex', 'w', encoding='utf-8') as f:
+        f.write(latex_content)
+
+if __name__ == '__main__':
+    generate_latex()

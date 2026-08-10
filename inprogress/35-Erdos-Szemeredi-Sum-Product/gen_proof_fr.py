@@ -1,4 +1,23 @@
-\documentclass[12pt]{article}
+import urllib.request
+import urllib.parse
+import xml.etree.ElementTree as ET
+import os
+
+def generate_latex():
+    related_bounds_str = ""
+    try:
+        url = 'http://export.arxiv.org/api/query?search_query=all:%22Erdos-Szemeredi%22&start=0&max_results=3'
+        response = urllib.request.urlopen(url, timeout=5)
+        xml = response.read()
+        root = ET.fromstring(xml)
+        for entry in root.findall('{http://www.w3.org/2005/Atom}entry'):
+            title = entry.find('{http://www.w3.org/2005/Atom}title').text.strip()
+            authors = [author.find('{http://www.w3.org/2005/Atom}name').text for author in entry.findall('{http://www.w3.org/2005/Atom}author')]
+            related_bounds_str += f"\\item {title}, par {', '.join(authors)}.\n"
+    except Exception as e:
+        related_bounds_str = "\\item Konyagin, S. and Shkredov, I. (2015). On sum sets of sets, having small product set.\\item Solymosi, J. (2009). Bounding multiplicative energy by the sumset.\n"
+
+    latex_content = r"""\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
@@ -45,8 +64,7 @@ La conjecture Somme-Produit d'Erd\H{o}s-Szemer\'edi (1983) affirme que pour tout
 \section{Recherche de Litt\'erature Contextuelle}
 Le ph\'enom\`ene Somme-Produit illustre une dichotomie profonde entre les structures additives et multiplicatives des entiers. Les r\'ecents progr\`es dans ce domaine incluent des bornes d\'eriv\'ees de la g\'eom\'etrie d'incidence (par exemple, le th\'eor\`eme de Szemer\'edi-Trotter). Travaux connexes notables :
 \begin{itemize}
-\item Konyagin, S. and Shkredov, I. (2015). On sum sets of sets, having small product set.\item Solymosi, J. (2009). Bounding multiplicative energy by the sumset.
-
+""" + related_bounds_str + r"""
 \end{itemize}
 Analogie : La r\'esolution du th\'eor\`eme de Szemer\'edi-Trotter en g\'eom\'etrie d'incidence a fourni un cadre robuste pour les nombres de croisements dans les graphes, que Solymosi a ensuite adapt\'e pour \'etablir la borne $\max(|A + A|, |A \cdot A|) \gg |A|^{4/3 - o(1)}$.
 
@@ -128,3 +146,9 @@ theorem erdos_szemeredi (h_eps : epsilon > 0) :
 \vfill
 Charles EDOU NZE, chercheur indépendant
 \end{document}
+"""
+    with open('proof.fr.tex', 'w', encoding='utf-8') as f:
+        f.write(latex_content)
+
+if __name__ == '__main__':
+    generate_latex()

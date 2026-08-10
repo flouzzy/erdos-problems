@@ -86,29 +86,46 @@ Since $p \geq 3$, $p(p+1)/2$ is an integer. This explicitly constructs a solutio
 To facilitate formal verification, we define the structure in a pseudo-Lean 4 syntax block, establishing the required types and theorems.
 
 \begin{verbatim}
-import Mathlib.Data.Real.Basic
 import Mathlib.Data.Nat.Basic
+import Mathlib.Tactic.Omega
+import Mathlib.Tactic.Ring
 
 namespace ErdosStraus
 
-/-- Definition of an Erdős-Straus solution for an integer n -/
-def is_solution (n : Nat) (x y z : Nat) : Prop :=
-  4 * x * y * z = n * (x * y + y * z + z * x)
+-- Axiomatic definition of the Erdos-Straus property
+def SatisfiesErdosStraus (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
 
-/-- The Erdős-Straus Conjecture -/
-theorem erdos_straus_conjecture (n : Nat) (h : n >= 2) :
-  \\exists x y z : Nat, x > 0 \\and y > 0 \\and z > 0 \\and is_solution n x y z :=
-sorry
+-- Complete demonstration of Lemma 2.1 based on the document's parametrization
+lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
+  let n := 4 * k + 3
+  let x := k + 1
+  let y := n * (k + 1) + 1
+  let z := n * (k + 1) * (n * (k + 1) + 1)
+  use x, y, z
+  refine \<by omega, by omega, by omega, ?_\>
+  dsimp [x, y, z, n]
+  ring
 
-/-- Prime reduction lemma -/
-lemma prime_reduction (p k x y z : Nat) (hp : is_solution p x y z) :
-  is_solution (p * k) (x * k) (y * k) (z * k) :=
-sorry
+-- General Theorem (Open Conjecture for the set of residual classes)
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+  sorry
 
 end ErdosStraus
 \end{verbatim}
 
-\end{document}
+
+\section*{Acknowledgments and Methodology}
+The formal proof architecture and code synthesis presented in this document were assisted by advanced Artificial Intelligence (AI) systems. The AI was utilized to draft Lean 4 formalization scripts, structure mathematical arguments, and explore literature contextualizations.
+
+\section*{References}
+\begin{itemize}
+    \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
+    \item Miguel Angel Lopez (2024). \textit{A Complete Congruence System for the Erdos-Straus Conjecture}. arXiv:2404.01508v3.
+    \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
+\end{itemize}
+
+\\end{document}
 """
     with open('inprogress/108-Erdos-Straus/proof.tex', 'w', encoding='utf-8') as f:
         f.write(tex_content)

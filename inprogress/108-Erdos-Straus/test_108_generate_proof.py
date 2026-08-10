@@ -13,7 +13,7 @@ class TestGenerateProof(unittest.TestCase):
         handle = mock_file()
         content = "".join(call.args[0] for call in handle.write.call_args_list)
         self.assertIn("Erd\\H{o}s-Straus Conjecture", content)
-        self.assertIn("is_solution", content)
+        self.assertIn("SatisfiesErdosStraus", content)
         self.assertIn("Axiomatic Definitions", content)
         self.assertIn("Charles EDOU NZE", content)
 
@@ -26,7 +26,7 @@ class TestGenerateProof(unittest.TestCase):
         handle = mock_file()
         content = "".join(call.args[0] for call in handle.write.call_args_list)
         self.assertIn("Conjecture d'Erd\\H{o}s-Straus", content)
-        self.assertIn("is_solution", content)
+        self.assertIn("SatisfiesErdosStraus", content)
         self.assertIn("Charles EDOU NZE", content)
 
 if __name__ == '__main__':

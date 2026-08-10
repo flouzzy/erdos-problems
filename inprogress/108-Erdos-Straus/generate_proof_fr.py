@@ -87,29 +87,46 @@ Puisque $p \geq 3$, $p(p+1)/2$ est un entier. Ceci construit explicitement une s
 Afin de faciliter la vérification formelle, nous définissons la structure dans un bloc de syntaxe pseudo-Lean 4, établissant les types et théorèmes requis.
 
 \begin{verbatim}
-import Mathlib.Data.Real.Basic
 import Mathlib.Data.Nat.Basic
+import Mathlib.Tactic.Omega
+import Mathlib.Tactic.Ring
 
 namespace ErdosStraus
 
-/-- Definition of an Erdős-Straus solution for an integer n -/
-def is_solution (n : Nat) (x y z : Nat) : Prop :=
-  4 * x * y * z = n * (x * y + y * z + z * x)
+-- Definition axiomatique de la propriete d'Erdos-Straus
+def SatisfiesErdosStraus (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
 
-/-- The Erdős-Straus Conjecture -/
-theorem erdos_straus_conjecture (n : Nat) (h : n >= 2) :
-  \\exists x y z : Nat, x > 0 \\and y > 0 \\and z > 0 \\and is_solution n x y z :=
-sorry
+-- Demonstration complete du Lemme 2.1 basons-nous sur la parametrisation du document
+lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
+  let n := 4 * k + 3
+  let x := k + 1
+  let y := n * (k + 1) + 1
+  let z := n * (k + 1) * (n * (k + 1) + 1)
+  use x, y, z
+  refine \<by omega, by omega, by omega, ?_\>
+  dsimp [x, y, z, n]
+  ring
 
-/-- Prime reduction lemma -/
-lemma prime_reduction (p k x y z : Nat) (hp : is_solution p x y z) :
-  is_solution (p * k) (x * k) (y * k) (z * k) :=
-sorry
+-- Theoreme general (Conjecture ouverte pour l'ensemble des classes residuelles)
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+  sorry
 
 end ErdosStraus
 \end{verbatim}
 
-\end{document}
+
+\section*{Remerciements et M\'ethodologie}
+L'architecture de preuve formelle et la synth\`ese de code pr\'esent\'ees dans ce document ont \'et\'e r\'ealis\'ees avec l'assistance de syst\`emes d'Intelligence Artificielle (IA) avanc\'es. L'IA a \'et\'e utilis\'ee pour r\'ediger les scripts de formalisation Lean 4, structurer les arguments math\'ematiques et explorer les contextualisations de la litt\'erature.
+
+\section*{R\'ef\'erences}
+\begin{itemize}
+    \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
+    \item Miguel Angel Lopez (2024). \textit{A Complete Congruence System for the Erdos-Straus Conjecture}. arXiv:2404.01508v3.
+    \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
+\end{itemize}
+
+\\end{document}
 """
     with open('inprogress/108-Erdos-Straus/proof.fr.tex', 'w', encoding='utf-8') as f:
         f.write(tex_content)

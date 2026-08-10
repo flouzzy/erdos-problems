@@ -109,17 +109,35 @@ import Mathlib.Data.Nat.Basic
 import Mathlib.Tactic.Omega
 import Mathlib.Tactic.Ring
 
--- Axiomatic definition of the Erd\H{o}s-Straus property
+-- Axiomatic definition of the Erdos-Straus property
 def SatisfiesErdosStraus (n : Nat) : Prop :=
   Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
 
--- Lemma mod 4 = 3
+-- Complete demonstration of Lemma 2.1 based on the document's parametrization
 lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
-  sorry
+  let n := 4 * k + 3
+  let x := k + 1
+  let y := n * (k + 1) + 1
+  let z := n * (k + 1) * (n * (k + 1) + 1)
+  use x, y, z
+  refine \<by omega, by omega, by omega, ?_\>
+  dsimp [x, y, z, n]
+  ring
 
--- Main theorem
+-- General Theorem (Open Conjecture for the set of residual classes)
 theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
   sorry
 \end{lstlisting}
+
+
+\section*{Acknowledgments and Methodology}
+The formal proof architecture and code synthesis presented in this document were assisted by advanced Artificial Intelligence (AI) systems. The AI was utilized to draft Lean 4 formalization scripts, structure mathematical arguments, and explore literature contextualizations.
+
+\section*{References}
+\begin{itemize}
+    \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
+    \item Miguel Angel Lopez (2024). \textit{A Complete Congruence System for the Erdos-Straus Conjecture}. arXiv:2404.01508v3.
+    \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
+\end{itemize}
 
 \end{document}

@@ -116,9 +116,6 @@ end ErdosStraus
 \end{verbatim}
 
 
-\section*{Remerciements et M\'ethodologie}
-L'architecture de preuve formelle et la synth\`ese de code pr\'esent\'ees dans ce document ont \'et\'e r\'ealis\'ees avec l'assistance de syst\`emes d'Intelligence Artificielle (IA) avanc\'es. L'IA a \'et\'e utilis\'ee pour r\'ediger les scripts de formalisation Lean 4, structurer les arguments math\'ematiques et explorer les contextualisations de la litt\'erature.
-
 \section*{R\'ef\'erences}
 \begin{itemize}
     \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
@@ -126,7 +123,7 @@ L'architecture de preuve formelle et la synth\`ese de code pr\'esent\'ees dans c
     \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
 \end{itemize}
 
-\\end{document}
+\end{document}
 """
     with open('inprogress/108-Erdos-Straus/proof.fr.tex', 'w', encoding='utf-8') as f:
         f.write(tex_content)

@@ -115,9 +115,6 @@ end ErdosStraus
 \end{verbatim}
 
 
-\section*{Acknowledgments and Methodology}
-The formal proof architecture and code synthesis presented in this document were assisted by advanced Artificial Intelligence (AI) systems. The AI was utilized to draft Lean 4 formalization scripts, structure mathematical arguments, and explore literature contextualizations.
-
 \section*{References}
 \begin{itemize}
     \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
@@ -125,7 +122,7 @@ The formal proof architecture and code synthesis presented in this document were
     \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
 \end{itemize}
 
-\\end{document}
+\end{document}
 """
     with open('inprogress/108-Erdos-Straus/proof.tex', 'w', encoding='utf-8') as f:
         f.write(tex_content)

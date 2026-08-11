@@ -1,123 +1,142 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
-\usepackage{amsmath, amssymb, amsthm}
+\usepackage{amsmath, amssymb, amsthm, mathrsfs}
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=1in}
+\usepackage{fancyhdr}
 
-\title{Architecture de Preuve Rigoureuse pour la Conjecture d'Erd\H{o}s-Straus}
-\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{\small Charles EDOU NZE, chercheur indépendant}
+
+\newtheorem{theorem}{Théorème}[section]
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{definition}[theorem]{Définition}
+\newtheorem{corollary}[theorem]{Corollaire}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remarque}
+
+\title{Approche Rigoureuse de la Conjecture d'Erdős-Straus}
+\author{Charles EDOU NZE}
 \date{\today}
-
-\newtheorem{theorem}{Th\'eor\`eme}
-\newtheorem{lemma}{Lemme}
-\newtheorem{definition}{D\'efinition}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Ce document pr\'esente un cadre structur\'e et une r\'esolution partielle de la conjecture d'Erd\H{o}s-Straus. Il d\'efinit les fronti\`eres axiomatiques formelles, \'etablit les structures alg\'ebriques contextuelles, d\'etaille les lemmes de r\'eduction modulaire, et formule une architecture pr\^ete pour la formalisation automatis\'ee dans des syst\`emes tels que Lean 4.
+La conjecture d'Erdős-Straus postule que pour tout entier $n \geq 2$, il existe des entiers strictement positifs $x, y, z$ tels que $4/n = 1/x + 1/y + 1/z$. Nous fournissons des définitions axiomatiques de l'équation diophantienne, examinons les développements récents, isolons des lemmes basés sur l'arithmétique modulaire, et esquissons une architecture formelle pour une autoformalisation potentielle dans Lean 4.
+\let\thefootnote\relax\footnotetext{Charles EDOU NZE, chercheur indépendant}
 \end{abstract}
 
-\tableofcontents
-\newpage
-
-\section{D\'efinitions Axiomatiques et Sp\'ecifications de Type}
-
-Soit $\mathbb{N}$ l'ensemble des entiers strictement positifs $\{1, 2, 3, \ldots\}$. La conjecture affirme que pour tout $n \in \mathbb{N}$ avec $n \geq 2$, le nombre rationnel $4/n$ peut \^etre partitionn\'e en la somme de trois fractions unitaires.
-
-\begin{definition}[Équation d'Erd\H{o}s-Straus]
-Pour $n \in \mathbb{N}_{\geq 2}$, une solution \`a l'\'equation d'Erd\H{o}s-Straus est un triplet ordonn\'e $(x, y, z) \in \mathbb{N}^3$ tel que :
-$$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
+\section{Définitions Axiomatiques et Énoncé du Problème}
+Soit $\mathbb{N}^*$ l'ensemble des entiers strictement positifs, $\mathbb{N}^* = \{1, 2, 3, \ldots\}$.
+\begin{definition}[Représentation d'Erdős-Straus]
+Pour un entier $n \in \mathbb{N}_{\geq 2}$, une \textit{représentation d'Erdős-Straus} de $n$ est un triplet $(x, y, z) \in (\mathbb{N}^*)^3$ satisfaisant l'équation diophantienne :
+\begin{equation} \label{eq:es}
+\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}
+\end{equation}
 \end{definition}
 
-Sous forme polynomiale, cela \'equivaut \`a trouver des entiers positifs $x, y, z$ satisfaisant :
-$$ 4xyz = n(xy + yz + zx) $$
+\begin{conjecture}[Conjecture d'Erdős-Straus]
+Pour tout entier $n \ge 2$, il existe au moins une représentation d'Erdős-Straus $(x, y, z) \in (\mathbb{N}^*)^3$.
+\end{conjecture}
 
-\section{Recherche de Litt\'erature Contextuelle}
+Il est une réduction fondamentale bien établie que si la conjecture est vraie pour tous les nombres premiers $p \ge 3$, elle est vraie pour tous les entiers $n \ge 2$. Ainsi, nous restreignons notre domaine à $n = p \in \mathbb{P}_{\ge 3}$.
 
-La conjecture d'Erd\H{o}s-Straus est fondamentalement un probl\`eme d'\'equations diophantiennes sur les rationnels. Les r\'esultats cl\'es de la litt\'erature incluent :
-\begin{itemize}
-    \item \textbf{Th\'eor\`eme de Mordell :} Bornes sur le nombre de solutions aux \'equations diophantiennes de degr\'e 3.
-    \item \textbf{Webb et Schinzel (1983) :} Ont d\'emontr\'e que la conjecture est vraie pour tout $n$ sauf \'eventuellement ceux dans certaines classes de congruence modulo $840$.
-    \item \textbf{Elsholtz et Tao (2013) :} Ont \'etabli des bornes sup\'erieures sur le nombre de solutions \`a l'\'equation $4/n = 1/x + 1/y + 1/z$.
-\end{itemize}
+\section{Recherche de Littérature Contextuelle}
+Une ligne importante de recherche récente sur la conjecture implique le paramétrage des solutions basé sur des classes de congruence. Notamment, l'article «~Congruence Classes of Supporting the Erdös-Straus Conjecture I: Tame Solutions~» explore la nature algébrique des solutions lorsque $n = 24m + 1$. Une solution $(n_1, n_2, n_3)$ avec $n_1 \le n_2, n_3$ où $n_1 = 6m + k$ est qualifiée de \textit{solution docile} (tame) si $n_2$ et $n_3$ divisent $(6m+k)(24m+1)$. La littérature établit que parmi les nombres premiers de la forme $24m+1$ avec $m \le 30000$, les nombres premiers sauvages (ceux dépourvus de solutions dociles) sont exceptionnellement rares. Cette catégorisation structurelle motive notre recours à l'arithmétique modulaire pour partitionner l'espace des solutions premières.
 
-Une analogie peut \^etre \'etablie avec la conjecture d'Erd\H{o}s-Graham faiblement r\'esolue, o\`u des contraintes modulaires similaires dictent la densit\'e des sommes de sous-ensembles.
+\section{Stratégie de Preuve et Isolation des Lemmes}
+Pour aborder la conjecture générale sur les nombres premiers, nous décomposons les entiers modulo $24$. Les nombres premiers se répartissent en classes modulo $24$.
+Nous définissons d'abord des identités polynomiales qui couvrent diverses classes de congruence.
 
-\section{Strat\'egie de Preuve et Lemmes}
-
-Nous proc\'edons par r\'eduction modulaire, en examinant la conjecture pour un nombre premier $n$. Si la conjecture est vraie pour tous les nombres premiers, elle est vraie pour tous les entiers par un simple argument de mise \`a l'\'echelle.
-
-\begin{lemma}[Lemme de R\'eduction aux Nombres Premiers]
-Si l'\'equation d'Erd\H{o}s-Straus a une solution pour tous les nombres premiers $p \geq 2$, alors elle a une solution pour tous les entiers $n \geq 2$.
+\begin{lemma}[Identité Polynomiale Modulo la Classe] \label{lem:poly}
+Soit $p$ un nombre premier. Si $p \equiv 3 \pmod 4$ ou $p \equiv 2 \pmod 3$, alors $p$ admet une représentation d'Erdős-Straus.
 \end{lemma}
-\begin{proof}
-Soit $n = p \cdot k$, o\`u $p$ est premier et $k \in \mathbb{N}$. Supposons qu'il existe une solution pour $p$ :
-$$ \frac{4}{p} = \frac{1}{a} + \frac{1}{b} + \frac{1}{c} $$
-En divisant les deux c\^ot\'es par $k$, on obtient :
-$$ \frac{4}{pk} = \frac{1}{ak} + \frac{1}{bk} + \frac{1}{ck} $$
-Puisque $n = pk$, nous avons :
-$$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
-o\`u $x=ak$, $y=bk$, et $z=ck$. Ceci ach\`eve la preuve de la r\'eduction.
-\end{proof}
 
-\begin{lemma}[Param\'etrisation Polynomiale]
-Pour un nombre premier $p \equiv 3 \pmod 4$, il existe une param\'etrisation des solutions.
-\end{lemma}
 \begin{proof}
-Consid\'erons le cas o\`u l'un des d\'enominateurs est param\'etr\'e par une fonction de $p$. Soit $x = (p+1)/4$. Puisque $p \equiv 3 \pmod 4$, $p+1$ est divisible par 4, donc $x$ est un entier. Alors :
-$$ \frac{4}{p} = \frac{1}{(p+1)/4} + \frac{1}{y} + \frac{1}{z} = \frac{4}{p+1} + \frac{1}{y} + \frac{1}{z} $$
-En r\'esolvant pour le reste :
-$$ \frac{4}{p} - \frac{4}{p+1} = \frac{4(p+1) - 4p}{p(p+1)} = \frac{4}{p(p+1)} $$
-Nous avons donc besoin de $\frac{1}{y} + \frac{1}{z} = \frac{4}{p(p+1)}$.
-Soit $y = \frac{p(p+1)}{2}$ et $z = \frac{p(p+1)}{2}$. Alors :
-$$ \frac{1}{y} + \frac{1}{z} = \frac{2}{p(p+1)} + \frac{2}{p(p+1)} = \frac{4}{p(p+1)} $$
-Puisque $p \geq 3$, $p(p+1)/2$ est un entier. Ceci construit explicitement une solution pour tout $p \equiv 3 \pmod 4$.
+Nous analysons les cas par l'arithmétique modulaire. Nous cherchons à trouver $x, y, z$ sous forme de polynômes en $p$. Une transformation standard de l'équation \eqref{eq:es} donne $4xyz = p(xy + yz + zx)$.
+Posons $x = p \cdot a$, $y = p \cdot b$, $z = c$.
+L'équation devient :
+\begin{equation}
+\frac{4}{p} = \frac{1}{pa} + \frac{1}{pb} + \frac{1}{c} \implies \frac{4c - p}{pc} = \frac{a+b}{pab}
+\end{equation}
+Si nous choisissons $c = \lceil p/4 \rceil$, alors $4c - p \in \{1, 2, 3\}$.
+Nous pouvons analyser les classes de résidus :
+
+\textbf{Cas 1 :} $p \equiv 3 \pmod 4$. Alors $p = 4k + 3$ pour un certain $k \in \mathbb{N}$.
+Posons $c = k + 1$. Alors $4c - p = 4(k+1) - (4k+3) = 1$.
+L'équation se simplifie en $\frac{1}{p(k+1)} = \frac{a+b}{pab}$.
+Nous pouvons satisfaire cela en choisissant $a = k+1+1 = k+2$ et $b = (k+1)(k+2)$.
+Vérifions explicitement :
+\begin{align*}
+\frac{1}{p(k+2)} + \frac{1}{p(k+1)(k+2)} &= \frac{k+1 + 1}{p(k+1)(k+2)} \\
+&= \frac{k+2}{p(k+1)(k+2)} \\
+&= \frac{1}{p(k+1)} = \frac{1}{pc}
+\end{align*}
+Puisque $c = (p+1)/4$, nous avons :
+\begin{align*}
+\frac{1}{pa} + \frac{1}{pb} + \frac{1}{c} &= \frac{1}{pc} + \frac{1}{c} \\
+&= \frac{1+p}{pc} \\
+&= \frac{1+p}{p(p+1)/4} = \frac{4(p+1)}{p(p+1)} = \frac{4}{p}
+\end{align*}
+Chaque étape et changement d'indice est strictement positif et borné. Ainsi, pour $p \equiv 3 \pmod 4$, une représentation valide est explicitement générée par le triplet $(p(k+2), p(k+1)(k+2), k+1)$, où $k = (p-3)/4$.
+
+\textbf{Cas 2 :} $p \equiv 2 \pmod 3$. Alors $p = 3k + 2$ pour un certain $k \in \mathbb{N}$.
+Revenons à l'équation originale $\frac{4}{p} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$. Posons $x = p$, ce qui est permis puisque $p \in \mathbb{N}^*$.
+Alors $\frac{4}{p} = \frac{1}{p} + \frac{1}{y} + \frac{1}{z}$, ce qui signifie que nous devons résoudre $\frac{3}{p} = \frac{1}{y} + \frac{1}{z}$.
+Posons $y = p \cdot m$ et $z = p \cdot m \cdot n$. Alors $\frac{3}{p} = \frac{1}{pm} + \frac{1}{pmn}$, ce qui implique $3mn = n + 1$.
+Au lieu de cette substitution, multiplions $\frac{3}{p} = \frac{1}{y} + \frac{1}{z}$ par $pyz$. Nous obtenons $3yz = p(y+z)$.
+Posons $y = c$ et $z = pd$. Alors $3cpd = p(c+pd) \implies 3cd = c + pd$.
+Isolons $c$ : $c(3d - 1) = pd$. Ainsi $c = \frac{pd}{3d-1}$.
+Pour s'assurer que $c$ est un entier, nous avons besoin que $3d - 1$ divise $pd$. Puisque $p$ est premier, si $3d - 1$ divise $p$, alors $3d - 1 \in \{1, p\}$.
+Si $3d - 1 = 1$, alors $3d = 2$, ce qui n'a pas de solution entière.
+Si $3d - 1 = p$, alors $3d = p + 1$. Puisque $p = 3k + 2$, nous avons $p + 1 = 3k + 3 = 3(k+1)$.
+Ainsi, nous pouvons choisir $d = k + 1$.
+Alors $c = \frac{p(k+1)}{p} = k + 1$.
+Vérifions explicitement avec ces choix. Nous fixons $x = p$, $y = k + 1$, et $z = p(k+1)$.
+\begin{align*}
+\frac{1}{x} + \frac{1}{y} + \frac{1}{z} &= \frac{1}{p} + \frac{1}{k+1} + \frac{1}{p(k+1)} \\
+&= \frac{k+1}{p(k+1)} + \frac{p}{p(k+1)} + \frac{1}{p(k+1)} \\
+&= \frac{p + k + 2}{p(k+1)}
+\end{align*}
+Substituons $k = (p-2)/3$ :
+\begin{align*}
+\frac{p + (p-2)/3 + 2}{p((p-2)/3 + 1)} &= \frac{(3p + p - 2 + 6)/3}{p(p - 2 + 3)/3} \\
+&= \frac{4p + 4}{p(p+1)} \\
+&= \frac{4(p+1)}{p(p+1)} = \frac{4}{p}
+\end{align*}
+Puisque $p \ge 2$, $k \ge 0$, et donc $x, y, z$ sont des entiers strictement positifs. Par conséquent, pour $p \equiv 2 \pmod 3$, une représentation valide est explicitement générée par le triplet $(p, (p+1)/3, p(p+1)/3)$.
+
+Ceci conclut la preuve constructive pour ces deux classes de congruence spécifiques.
 \end{proof}
 
 \section{Architecture pour l'Autoformalisation}
-
-Afin de faciliter la vérification formelle, nous définissons la structure dans un bloc de syntaxe pseudo-Lean 4, établissant les types et théorèmes requis.
+Pour faciliter la vérification symbolique future via un démonstrateur de théorèmes agentique tel que Lean 4, nous définissons les types formels et les hypothèses nécessaires.
 
 \begin{verbatim}
-import Mathlib.Data.Nat.Basic
-import Mathlib.Tactic.Omega
-import Mathlib.Tactic.Ring
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Nat.Prime
 
-namespace ErdosStraus
+-- Definition of the Erdős-Straus representation
+def is_es_representation (n x y z : \mathbb{N}) : Prop :=
+  x > 0 \land  y > 0 \land  z > 0 \land  (4 : \mathbb{Q}) / n = 1 / x + 1 / y + 1 / z
 
--- Definition axiomatique de la propriete d'Erdos-Straus
-def SatisfiesErdosStraus (n : Nat) : Prop :=
-  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
-
--- Demonstration complete du Lemme 2.1 basons-nous sur la parametrisation du document
-lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
-  let n := 4 * k + 3
-  let x := k + 1
-  let y := n * (k + 1) + 1
-  let z := n * (k + 1) * (n * (k + 1) + 1)
-  use x, y, z
-  refine \<by omega, by omega, by omega, ?_\>
-  dsimp [x, y, z, n]
-  ring
-
--- Theoreme general (Conjecture ouverte pour l'ensemble des classes residuelles)
-theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+-- Reduction Lemma signature
+theorem es_reduction_to_primes (h : \forall  p : \mathbb{N}, p.Prime \to
+  \exists  x y z, is_es_representation p x y z) :
+  \forall  n : \mathbb{N}, n \ge  2 \to  \exists  x y z, is_es_representation n x y z := by
   sorry
 
-end ErdosStraus
+-- Polynomial Modulo Lemma
+theorem es_mod_4_case_3 (k : \mathbb{N}) :
+  let p := 4 * k + 3
+  is_es_representation p (p * (k + 2)) (p * (k + 1) * (k + 2)) (k + 1) := by
+  sorry
 \end{verbatim}
-
-
-\section*{R\'ef\'erences}
-\begin{itemize}
-    \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
-    \item Miguel Angel Lopez (2024). \textit{A Complete Congruence System for the Erdos-Straus Conjecture}. arXiv:2404.01508v3.
-    \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
-\end{itemize}
 
 \end{document}

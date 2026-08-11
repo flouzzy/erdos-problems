@@ -1,4 +1,9 @@
-\documentclass[12pt, a4paper]{article}
+import os
+
+def generate_tex():
+    tex_file = "proof.tex"
+
+    content = r"""\documentclass[12pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
@@ -131,3 +136,9 @@ theorem erdos_discrepancy (x : SignSeq) (h_bin : IsBinarySeq x) (C : Nat) :
 \end{lstlisting}
 
 \end{document}
+"""
+    with open(tex_file, "w", encoding="utf-8") as f:
+        f.write(content)
+
+if __name__ == "__main__":
+    generate_tex()

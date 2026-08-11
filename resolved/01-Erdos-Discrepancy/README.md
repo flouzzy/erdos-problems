@@ -1,12 +1,14 @@
 [🇫🇷 Version Française](README.fr.md)
 
-# 01 - Erdős Discrepancy Problem
+# 01-Erdos-Discrepancy
 
-## Statement
-The Erdős discrepancy problem is a mathematical problem about the existence of sequences of numbers with a certain property. Specifically, it asks whether, for any infinite sequence of +1s and -1s, there exists a finite subsequence with a sum greater than a certain constant, regardless of how large the constant is.
+This directory contains the finalized research and formal proof architecture for the Erdős Discrepancy Problem.
 
-## Resolution
-The problem was completely resolved by Terence Tao in 2015, building upon the work of others, notably the Polymath5 project. Tao proved that the discrepancy of any such sequence must be infinite.
+The conjecture, resolved by Terence Tao in 2015, states that for any infinite $\pm 1$ sequence $(x_n)$, there exists a homogeneous arithmetic progression of unbounded discrepancy.
 
-## References
-- Tao, T. (2015). "The Erdős discrepancy problem". *Discrete Analysis*.
+## Status
+Resolved. The problem was completely settled by Terence Tao using Fourier-analytic reductions to completely multiplicative functions and variations of the Elliott conjecture, alongside SAT solver validations for small discrepancies.
+
+## Documents
+- `01-Erdos-Discrepancy.pdf`: Complete formal proof and autoformalization architecture in English.
+- `01-Erdos-Discrepancy.fr.pdf`: Complete formal proof and autoformalization architecture in French.

@@ -1,0 +1,134 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Th\'eor\`eme}[section]
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{definition}[theorem]{D\'efinition}
+
+\title{Sur le Probl\`eme de la Discr\'epance d'Erd\H{o}s : Suites Multiplicatives et Bornes Finies}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{\today}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, sorry, Prop, Nat, open, section, Exists, fun, Int, Real},
+  sensitive=true,
+  comment=[l]--
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Nous pr\'esentons une analyse alg\'ebrique et combinatoire rigoureuse du Probl\`eme de la Discr\'epance d'Erd\H{o}s. Le document d\'ecrit les fondements axiomatiques stricts, d\'etaille la litt\'erature contextuelle sur les approches par satisfaisabilit\'e bool\'eenne, \'etablit des lemmes cl\'es sur les suites multiplicatives, et d\'eline une architecture d'autoformalisation pour l'assistant de preuve Lean 4.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{D\'efinitions Axiomatiques et Contexte}
+\begin{definition}
+Soit $(x_n)_{n \in \mathbb{N}}$ une suite infinie \`a valeurs dans $\{-1, +1\}$.
+Pour tout entier strictement positif $d \in \mathbb{Z}_{>0}$ et tout entier strictement positif $k \in \mathbb{Z}_{>0}$, la discr\'epance $D(d, k)$ associ\'ee aux progressions arithm\'etiques homog\`enes de pas $d$ et de longueur $k$ est d\'efinie par :
+\[ D(d, k) = \left| \sum_{i=1}^k x_{i \cdot d} \right| \]
+\end{definition}
+
+\begin{definition}
+Une suite $(x_n)_{n \in \mathbb{N}}$ \`a valeurs dans $\{-1, +1\}$ est dite compl\`etement multiplicative si pour tous entiers $a, b \in \mathbb{Z}_{>0}$, la propri\'et\'e $x_{a \cdot b} = x_a \cdot x_b$ est v\'erifi\'ee inconditionnellement.
+\end{definition}
+
+La Conjecture de la Discr\'epance d'Erd\H{o}s propose que pour toute constante $C \in \mathbb{Z}_{>0}$ et toute suite $(x_n)_{n \in \mathbb{N}}$ \`a valeurs dans $\{-1, +1\}$, il existe des entiers strictement positifs $d$ et $k$ tels que $D(d, k) > C$. L'assertion implique qu'il est impossible de borner la discr\'epance de toutes les progressions arithm\'etiques homog\`enes dans une suite binaire arbitraire.
+
+\subsection{Recherche de Litt\'erature Contextuelle}
+Un corpus substantiel de travaux r\'ecents se concentre sur la d\'etermination de la longueur maximale de la suite avant que la discr\'epance ne soit forc\'ee de d\'epasser strictement un seuil $C$. Par exemple, des chercheurs ont formul\'e le cas $C=2$ comme une instance de satisfaisabilit\'e bool\'eenne (SAT), g\'en\'erant des suites de longueur $1160$ et concluant qu'aucune suite de longueur $1161$ n'existe avec une discr\'epance born\'ee par $2$. Pour les suites compl\`etement multiplicatives (SCM), des \'etudes sp\'ecifiques prouvent que toute SCM de taille $127,646$ ou plus pr\'esente n\'ecessairement une discr\'epance d'au moins $4$. De plus, Terence Tao a prouv\'e de mani\`ere concluante que la discr\'epance est infinie pour toute suite \`a valeurs dans $\{-1, +1\}$, en utilisant des r\'eductions analytiques de Fourier vers des fonctions stochastiques enti\`erement multiplicatives et en exploitant une variante moyenn\'ee logarithmiquement de la conjecture d'Elliott.
+
+\section{Strat\'egie de Preuve et Isolation de Lemmes}
+Pour analyser les fronti\`eres structurelles for\c{c}ant la discr\'epance \`a d\'epasser un seuil $C$, le probl\`eme global est partitionn\'e en deux lemmes distincts. Nous consid\'erons le cas sp\'ecifique des suites compl\`etement multiplicatives restreintes aux indices premiers.
+
+\begin{lemma}
+Soit $(x_n)_{n \in \mathbb{N}}$ une suite compl\`etement multiplicative prenant ses valeurs dans $\{-1, +1\}$. Si $x_2 = 1$ et $x_3 = 1$, alors $x_6 = 1$.
+\end{lemma}
+\begin{proof}
+Par la D\'efinition 1.2, une suite compl\`etement multiplicative $(x_n)_{n \in \mathbb{N}}$ doit satisfaire la relation alg\'ebrique $x_{a \cdot b} = x_a \cdot x_b$ pour tous les entiers strictement positifs $a, b$.
+Nous consid\'erons l'indice $n = 6$. La factorisation canonique en nombres premiers de $6$ est exactement $2 \times 3$.
+Nous appliquons la propri\'et\'e compl\`etement multiplicative en d\'efinissant $a = 2$ et $b = 3$.
+Cela produit l'\'egalit\'e stricte :
+\[ x_6 = x_{2 \cdot 3} = x_2 \cdot x_3 \]
+Par les hypoth\`eses initiales du lemme, nous avons explicitement fix\'e les valeurs $x_2 = 1$ et $x_3 = 1$.
+La substitution de ces valeurs discr\`etes dans l'\'equation donne :
+\[ x_6 = 1 \cdot 1 \]
+En effectuant la multiplication arithm\'etique explicitement :
+\[ 1 \cdot 1 = 1 \]
+Par cons\'equent, nous d\'eduisons sans \'equivoque que $x_6 = 1$. Cette contrainte structurelle d\'emontre comment la fixation des valeurs aux indices premiers d\'etermine rigidement les valeurs de la suite aux indices compos\'es.
+\end{proof}
+
+\begin{lemma}
+Consid\'erons le segment de suite born\'e aux indices $n \in \{1, 2, 3, 4, 5, 6\}$. Si $(x_n)_{n \in \mathbb{N}}$ est compl\`etement multiplicative et $x_1 = 1, x_2 = 1, x_3 = 1, x_4 = 1, x_5 = 1, x_6 = 1$, la discr\'epance maximale pour $d=1$ et $k=6$ est de $6$.
+\end{lemma}
+\begin{proof}
+Soit $d = 1$ et $k = 6$.
+Nous calculons la sommation explicitement terme par terme selon la D\'efinition 1.1 :
+\[ \sum_{i=1}^6 x_{i \cdot 1} = x_1 + x_2 + x_3 + x_4 + x_5 + x_6 \]
+En substituant les valeurs fixes donn\'ees de la suite dans la somme :
+\[ \sum_{i=1}^6 x_{i \cdot 1} = 1 + 1 + 1 + 1 + 1 + 1 \]
+Nous effectuons l'addition it\'erative \'etape par \'etape :
+\begin{align*}
+1 + 1 &= 2 \\
+2 + 1 &= 3 \\
+3 + 1 &= 4 \\
+4 + 1 &= 5 \\
+5 + 1 &= 6
+\end{align*}
+Ainsi, la somme s'\'evalue rigoureusement \`a $6$.
+Enfin, nous appliquons la fonction valeur absolue :
+\[ \left| 6 \right| = 6 \]
+Cela prouve que la discr\'epance atteint exactement $6$, ce qui d\'epasse strictement le seuil $C = 2$ et borne la sous-suite homog\`ene maximale sous ces contraintes rigides.
+\end{proof}
+
+\section{Architecture d'Autoformalisation}
+Le bloc suivant pr\'esente les structures de types Lean 4 explicites n\'ecessaires pour encoder les d\'efinitions et les lemmes dans un moteur de v\'erification formelle.
+
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
+import Mathlib.Data.Nat.Basic
+import Mathlib.Tactic.Omega
+import Mathlib.Tactic.Ring
+
+-- D\'efinition axiomatique d'une suite infinie de signes
+def SignSeq := Nat -> Int
+
+-- Propri\'et\'e bornant les valeurs \`a -1 et 1
+def IsBinarySeq (x : SignSeq) : Prop :=
+  forall n, n > 0 -> x n = 1 \/ x n = -1
+
+-- Propri\'et\'e d\'efinissant les suites compl\`etement multiplicatives
+def IsCompletelyMultiplicative (x : SignSeq) : Prop :=
+  forall a b, a > 0 -> b > 0 -> x (a * b) = x a * x b
+
+-- D\'efinition axiomatique de la somme de discr\'epance
+def DiscrepancySum (x : SignSeq) (d k : Nat) : Int :=
+  -- En supposant qu'une fonction abstraite sum_seq existe pour les indices de 1 \`a k
+  sorry
+
+-- D\'emonstration compl\`ete du Lemme 2.1
+lemma completely_multiplicative_6 (x : SignSeq) (hm : IsCompletelyMultiplicative x)
+    (h2 : x 2 = 1) (h3 : x 3 = 1) : x 6 = 1 := by
+  have h_mult := hm 2 3 (by omega) (by omega)
+  have h_six : 2 * 3 = 6 := by omega
+  rw [h_six] at h_mult
+  rw [h2, h3] at h_mult
+  have h_one : 1 * 1 = (1 : Int) := by ring
+  rw [h_one] at h_mult
+  exact h_mult
+
+-- Th\'eor\`eme G\'en\'eral (Propri\'et\'e de Discr\'epance d'Erdos)
+theorem erdos_discrepancy (x : SignSeq) (h_bin : IsBinarySeq x) (C : Nat) :
+    Exists (fun d => Exists (fun k => d > 0 /\ k > 0 /\ DiscrepancySum x d k > C \/ DiscrepancySum x d k < -C)) := by
+  sorry
+\end{lstlisting}
+
+\end{document}

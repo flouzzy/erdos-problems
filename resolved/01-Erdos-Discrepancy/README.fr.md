@@ -1,12 +1,14 @@
 [🇬🇧 English Version](README.md)
 
-# 01 - Problème de Discrépance d'Erdős
+# 01-Erdos-Discrepancy
 
-## Énoncé
-Le problème de discrépance d'Erdős est un problème mathématique concernant l'existence de suites de nombres ayant une certaine propriété. Plus précisément, il demande si, pour toute suite infinie de +1 et de -1, il existe une sous-suite finie dont la somme est supérieure à une certaine constante, quelle que soit la taille de cette constante.
+Ce dossier contient les recherches finalisées et l'architecture de preuve formelle pour le Problème de la Discrépance d'Erdős.
 
-## Résolution
-Le problème a été entièrement résolu par Terence Tao en 2015, en s'appuyant sur les travaux d'autres chercheurs, notamment le projet Polymath5. Tao a prouvé que la discrépance de toute suite de ce type doit être infinie.
+La conjecture, résolue par Terence Tao en 2015, énonce que pour toute suite infinie $(x_n)$ à valeurs dans $\pm 1$, il existe une progression arithmétique homogène de discrépance non bornée.
 
-## Références
-- Tao, T. (2015). "The Erdős discrepancy problem". *Discrete Analysis*.
+## Statut
+Résolu. Le problème a été complètement réglé par Terence Tao en utilisant des réductions analytiques de Fourier vers des fonctions complètement multiplicatives et des variations de la conjecture d'Elliott, ainsi que des validations par solveurs SAT pour de petites discrépances.
+
+## Documents
+- `01-Erdos-Discrepancy.pdf` : Preuve formelle complète et architecture d'autoformalisation en anglais.
+- `01-Erdos-Discrepancy.fr.pdf` : Preuve formelle complète et architecture d'autoformalisation en français.

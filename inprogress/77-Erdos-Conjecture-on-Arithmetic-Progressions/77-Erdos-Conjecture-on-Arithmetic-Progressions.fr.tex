@@ -1,122 +1,100 @@
-\documentclass[12pt]{article}
+\documentclass[11pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
 \usepackage[french]{babel}
+\usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{hyperref}
-\usepackage{geometry}
-\geometry{a4paper, margin=1in}
 
-\title{Analyse et R\'esultats Partiels sur la Conjecture d'Erd\H{o}s sur les Progressions Arithm\'etiques}
-\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{Conjecture d'Erdős sur les progressions arithmétiques (Problème 77)}
+\author{}
 \date{}
-
-\newtheorem{theorem}{Th\'eor\`eme}
-\newtheorem{lemma}[theorem]{Lemme}
-\newtheorem{definition}[theorem]{D\'efinition}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-Ce document fournit une d\'ecomposition axiomatique rigoureuse, une revue de la litt\'erature et une structure de preuve partielle \'etape par \'etape pour la Conjecture d'Erd\H{o}s sur les Progressions Arithm\'etiques. L'architecture est con\c{c}ue pour faciliter une future autoformalisation dans des syst\`emes tels que Lean 4.
+Nous étudions la conjecture d'Erdős sur les progressions arithmétiques, en formalisant les définitions axiomatiques nécessaires, en examinant les bornes associées aux progressions arithmétiques de longueur $k$, et en établissant des lemmes fondamentaux de densité. Une architecture formelle pour Lean 4 est également fournie.
+\vspace{1cm}
+\begin{center}
+\textit{Charles EDOU NZE, chercheur indépendant}
+\end{center}
 \end{abstract}
 
-\section{Analyse et D\'ecomposition}
+\section{Analyse et Décomposition}
+La conjecture d'Erdős sur les progressions arithmétiques stipule que si la somme des inverses des éléments d'un ensemble $A$ d'entiers strictement positifs diverge, alors $A$ contient des progressions arithmétiques de longueur arbitraire.
 
-\subsection{D\'efinitions Axiomatiques}
-Soit $\mathbb{N} = \{1, 2, \dots \}$ l'ensemble des entiers strictement positifs. Nous d\'efinissons les types et les variables de mani\`ere rigoureuse.
-\begin{definition}[Somme Harmonique Divergente]
-Soit $A \subseteq \mathbb{N}$ un sous-ensemble. Nous disons que $A$ poss\`ede une somme harmonique divergente, not\'ee $\mathcal{D}(A)$, si la s\'erie des inverses de ses \'el\'ements diverge :
-\[
-\sum_{n \in A} \frac{1}{n} = \infty.
-\]
+\begin{definition}
+Un ensemble $A \subset \mathbb{N}_{>0}$ est dit \textit{large} si :
+$$ \sum_{n \in A} \frac{1}{n} = \infty $$
 \end{definition}
 
-\begin{definition}[Progression Arithm\'etique de Longueur $k$]
-Pour $k \in \mathbb{N}, k \ge 3$, un ensemble $A \subseteq \mathbb{N}$ contient une progression arithm\'etique de longueur $k$, not\'ee $\mathcal{AP}_k(A)$, s'il existe $a \in \mathbb{N}$ et $d \in \mathbb{N}$ tels que pour tout $0 \le i < k$, $a + id \in A$.
+\begin{definition}
+Pour $k \in \mathbb{N}_{\ge 3}$, une progression arithmétique de longueur $k$ dans $A$ est une suite de la forme $\{a, a+d, a+2d, \dots, a+(k-1)d\} \subset A$ pour un certain $a \in \mathbb{N}$ et $d \in \mathbb{N}_{>0}$.
 \end{definition}
 
-\textbf{\'Enonc\'e de la Conjecture :}
-Pour tout $A \subseteq \mathbb{N}$, si $\mathcal{D}(A)$ est vraie, alors pour tout $k \ge 3$, $\mathcal{AP}_k(A)$ est vraie.
 
-\subsection{Structures Alg\'ebriques et Combinatoires Sous-jacentes}
-Le probl\`eme m\^ele fondamentalement combinatoire additive et th\'eorie analytique des nombres. L'ensemble $A$ est consid\'er\'e comme un sous-ensemble dense au sens pond\'er\'e. La structure naturelle implique l'analyse de Fourier sur les groupes cycliques $\mathbb{Z}/N\mathbb{Z}$ (m\'ethode du cercle de Hardy-Littlewood) et l'utilisation des normes de Gowers pour d\'etecter les structures lin\'eaires. Une perspective alternative utilise la th\'eorie ergodique, associant le sous-ensemble $A$ \`a un syst\`eme dynamique pr\'eservant la mesure.
+\section{Recherche de Littérature Contextuelle}
+Ce problème figure comme le Problème 16 dans la liste de Bloom des problèmes d'Erdős. Il est étroitement lié aux bornes sur $r_k(N)$, la cardinalité maximale d'un sous-ensemble de $\{1, 2, \dots, N\}$ ne contenant aucune progression arithmétique de longueur $k$.
 
-\section{Recherche de Litt\'erature Contextuelle}
-Le th\'eor\`eme le plus important li\'e \`a cette conjecture est le th\'eor\`eme de Szemer\'edi, qui \'etablit que tout sous-ensemble de $\mathbb{N}$ ayant une densit\'e sup\'erieure strictement positive contient des progressions arithm\'etiques de longueur arbitraire. Le th\'eor\`eme de Green-Tao constitue une avanc\'ee majeure en prouvant que les nombres premiers, un ensemble de densit\'e nulle mais de somme harmonique divergente, contiennent des progressions arithm\'etiques de longueur arbitraire.
-Les r\'ecentes avanc\'ees de Kelley et Meka (2023) sur le th\'eor\`eme de Roth donnent des bornes quantitatives fortes sur les ensembles sans progression arithm\'etique de longueur 3.
-
-Par analogie, la r\'esolution du probl\`eme du Cap Set par Ellenberg et Gijswijt utilise la m\'ethode polynomiale. Bien que les m\'ethodes des corps finis ne se traduisent pas directement dans $\mathbb{Z}$, les m\'ethodes alg\'ebriques analogues aux bornes de Croot-Lev-Pach fournissent des indications pour borner les sous-ensembles sans structures lin\'eaires.
-
-\section{Strat\'egie de Preuve et Isolation des Lemmes}
-Pour aborder une version simplifi\'ee (par exemple, $k=3$ sur des sous-ensembles restreints), nous d\'ecomposons le probl\`eme en plusieurs lemmes.
-
+\section{Stratégie de Preuve \& Isolation de Lemmes}
+Notre stratégie consiste à établir que si $A(N) = |A \cap \{1, \dots, N\}|$ est suffisamment borné, la somme des inverses converge. Nous divisons cela en deux lemmes principaux :
 \begin{itemize}
-    \item \textbf{Lemme 1 (Incr\'ement de Densit\'e) :} Si un sous-ensemble $A$ de $\{1, \dots, N\}$ ne contient pas de progression arithm\'etique de longueur 3, il doit \^etre corr\'el\'e avec un ensemble de Bohr, ce qui permet un incr\'ement de densit\'e sur une sous-structure structur\'ee.
-    \item \textbf{Lemme 2 (Borne Harmonique sur la Clairsemance) :} Si un ensemble $A$ ne contient aucune progression arithm\'etique de longueur 3, sa fonction de comptage $A(x) = |A \cap \{1, \dots, x\}|$ est born\'ee par $O(x / (\log x)^c)$ pour un certain $c > 1$.
+\item \textbf{Lemme 1} : Une formule de sommation exacte reliant la somme des inverses à $A(n)/n(n+1)$.
+\item \textbf{Lemme 2} : Un résultat de convergence utilisant le critère de l'intégrale pour une borne spécifique sur $A(n)$.
 \end{itemize}
 
-\section{Preuve Informelle du Lemme 2}
-\begin{proof}[Preuve du Lemme 2]
-Nous pr\'esentons la preuve \'etape par \'etape. Soit $A \subset \mathbb{N}$ tel que $A$ ne contient aucune progression arithm\'etique de longueur 3.
-Soit $N$ un grand entier, et soit $A_N = A \cap \{1, 2, \dots, N\}$.
-D'apr\`es les bornes quantitatives de Kelley et Meka, la taille de $A_N$ v\'erifie l'in\'egalit\'e :
-\[
-|A_N| \le \frac{N}{\exp(c (\log N)^{\beta})}
-\]
-pour certaines constantes $c > 0$ et $\beta > 0$.
-Nous \'evaluons la somme harmonique de $A$ par sommation d'Abel.
-Soit $S(N) = \sum_{n \in A, n \le N} \frac{1}{n}$.
-En utilisant la sommation par parties, nous exprimons $S(N)$ en fonction de $A(x) = |A \cap \{1, \dots, \lfloor x \rfloor\}|$ :
-\[
-S(N) = \frac{A(N)}{N} + \int_{1}^{N} \frac{A(t)}{t^2} dt.
-\]
-Nous majorons le premier terme :
-\[
-\frac{A(N)}{N} \le \frac{1}{\exp(c (\log N)^{\beta})}.
-\]
-Lorsque $N$ tend vers l'infini, ce terme tend vers $0$.
-Pour le terme int\'egral, nous substituons la majoration de $A(t)$ :
-\[
-\int_{1}^{N} \frac{A(t)}{t^2} dt \le \int_{1}^{N} \frac{t \exp(-c (\log t)^{\beta})}{t^2} dt = \int_{1}^{N} \frac{1}{t \exp(c (\log t)^{\beta})} dt.
-\]
-Nous calculons cette int\'egrale \`a l'aide du changement de variable $u = \log t$. Ainsi, $du = \frac{1}{t} dt$. Les bornes d'int\'egration changent de $t=1$ \`a $u=0$, et de $t=N$ \`a $u = \log N$ :
-\[
-\int_{0}^{\log N} \frac{1}{\exp(c u^{\beta})} du.
-\]
-Pour tout $\beta > 0$, l'int\'egrale $\int_{0}^{\infty} \exp(-c u^{\beta}) du$ est convergente. Plus pr\'ecis\'ement, en posant $v = c u^{\beta}$, $dv = c \beta u^{\beta - 1} du$, nous trouvons que l'int\'egrale est proportionnelle \`a la fonction Gamma $\Gamma(1/\beta)$.
-Puisque l'int\'egrale est major\'ee par une constante finie ind\'ependante de $N$, il s'ensuit que $S(N)$ est born\'e lorsque $N \to \infty$.
-Ainsi, $\sum_{n \in A} \frac{1}{n} < \infty$.
-Par contrapos\'ee, si $\sum_{n \in A} \frac{1}{n} = \infty$, l'ensemble $A$ doit contenir une progression arithm\'etique de longueur 3. Ceci ach\`eve la preuve du Lemme 2.
+\section{Preuve Informelle}
+Soit $r_k(N)$ la cardinalité maximale d'un sous-ensemble de $\{1, 2, \dots, N\}$ ne contenant aucune progression arithmétique de longueur $k$. Si $A$ ne contient aucune progression arithmétique de longueur $k$, alors pour tout entier $N \ge 1$, nous avons $|A \cap \{1, \dots, N\}| \le r_k(N)$.
+
+\begin{lemma}
+Soit $A(N) = |A \cap \{1, \dots, N\}|$. Pour tout entier positif $M$, la somme finie des inverses satisfait :
+$$ \sum_{\substack{n \in A \\ n \le M}} \frac{1}{n} = \sum_{n=1}^M \frac{A(n)}{n(n+1)} + \frac{A(M)}{M+1} $$
+\end{lemma}
+\begin{proof}
+Par définition, la fonction indicatrice de $A$, notée $1_A(n)$, nous permet d'écrire $A(n) - A(n-1) = 1_A(n)$, avec $A(0)=0$. Nous développons la somme :
+\begin{align*}
+\sum_{\substack{n \in A \\ n \le M}} \frac{1}{n} &= \sum_{n=1}^M \frac{1_A(n)}{n} \\
+&= \sum_{n=1}^M \frac{A(n) - A(n-1)}{n} \\
+&= \frac{A(1) - A(0)}{1} + \frac{A(2) - A(1)}{2} + \dots + \frac{A(M) - A(M-1)}{M} \\
+&= A(1)\left(1 - \frac{1}{2}\right) + A(2)\left(\frac{1}{2} - \frac{1}{3}\right) + \dots + A(M-1)\left(\frac{1}{M-1} - \frac{1}{M}\right) + \frac{A(M)}{M} \\
+&= \sum_{n=1}^{M-1} A(n) \left( \frac{1}{n} - \frac{1}{n+1} \right) + \frac{A(M)}{M} \\
+&= \sum_{n=1}^{M-1} A(n) \left( \frac{n+1 - n}{n(n+1)} \right) + \frac{A(M)}{M} \\
+&= \sum_{n=1}^{M-1} \frac{A(n)}{n(n+1)} + \frac{A(M)}{M}
+\end{align*}
+Remarquons que $\frac{A(M)}{M} = \frac{A(M)}{M(M+1)} + \frac{A(M)}{M+1}$, l'identité est donc vérifiée pour $M$.
 \end{proof}
 
-\section{Architecture pour l'Autoformalisation}
-La structure de la preuve est directement adapt\'ee pour une impl\'ementation dans Lean 4.
+\begin{lemma}
+S'il existe des constantes $C > 0$ et $\epsilon > 0$ telles que $A(n) \le C \frac{n}{(\log n)^{1+\epsilon}}$ pour tout $n \ge 2$, alors $\sum_{n \in A} \frac{1}{n} < \infty$.
+\end{lemma}
+\begin{proof}
+En appliquant le lemme précédent, quand $M \to \infty$, puisque $A(M) \le M$, $\frac{A(M)}{M+1} \le 1$. La série infinie $\sum_{n \in A} \frac{1}{n}$ converge si et seulement si $\sum_{n=1}^\infty \frac{A(n)}{n(n+1)}$ converge. En utilisant la borne sur $A(n)$, pour $n \ge 2$ :
+$$ \frac{A(n)}{n(n+1)} \le \frac{C \frac{n}{(\log n)^{1+\epsilon}}}{n(n+1)} = \frac{C}{(n+1)(\log n)^{1+\epsilon}} $$
+Puisque $\frac{1}{n+1} < \frac{1}{n}$, nous avons :
+$$ \frac{A(n)}{n(n+1)} < \frac{C}{n(\log n)^{1+\epsilon}} $$
+Le test de convergence par intégrale stipule que $\sum_{n=2}^\infty f(n)$ converge si $\int_2^\infty f(x)dx < \infty$ pour une fonction positive décroissante. Soit $f(x) = \frac{1}{x(\log x)^{1+\epsilon}}$. Nous calculons l'intégrale en utilisant la substitution $u = \log x, du = \frac{1}{x}dx$ :
+$$ \int_2^\infty \frac{1}{x(\log x)^{1+\epsilon}} dx = \int_{\log 2}^\infty \frac{1}{u^{1+\epsilon}} du = \left[ \frac{-1}{\epsilon u^\epsilon} \right]_{\log 2}^\infty = \frac{1}{\epsilon (\log 2)^\epsilon} $$
+Puisque l'intégrale s'évalue à une constante finie, la série $\sum_{n=2}^\infty \frac{1}{n(\log n)^{1+\epsilon}}$ converge, impliquant que $\sum_{n \in A} \frac{1}{n}$ converge.
+\end{proof}
 
+
+\section{Architecture pour l'Autoformalisation}
 \begin{verbatim}
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
--- Axiomatic definition of the divergent harmonic sum
-def has_divergent_harmonic_sum (A : Set Nat) : Prop :=
-  Filter.Tendsto (fun N => \sum_{n \in A \cap {x | x \le N}} (1 / (n : Real)))
-    Filter.atTop Filter.atTop
+def has_k_AP (A : Set Nat) (k : Nat) : Prop :=
+  Exists (fun a => Exists (fun d => d > 0 /\ \forall  i < k, (a + i * d) \in  A))
 
--- Axiomatic definition of containing an arithmetic progression of length k
-def contains_AP (A : Set Nat) (k : Nat) : Prop :=
-  \exists a d : Nat, d > 0 \and \forall i : Nat, i < k \to a + i * d \in A
-
--- Main Theorem Statement (Erdős Conjecture)
-theorem erdos_ap_conjecture (A : Set Nat) (h : has_divergent_harmonic_sum A) :
-  \forall k \ge 3, contains_AP A k := by
-  sorry
-
--- Lemma 2
-lemma ap3_harmonic_bound (A : Set Nat) (h : \not contains_AP A 3) :
-  \not has_divergent_harmonic_sum A := by
-  sorry
+theorem erdos_ap_conjecture (A : Set Nat) :
+  (tsum (fun n : A => (1 : \mathbb{R}) / (n : \mathbb{R})) = \top ) -> \forall  k >= 3, has_k_AP A k
 \end{verbatim}
+
 
 \end{document}

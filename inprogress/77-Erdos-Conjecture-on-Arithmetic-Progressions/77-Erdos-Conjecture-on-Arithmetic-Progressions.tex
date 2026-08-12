@@ -1,120 +1,100 @@
-\documentclass[12pt]{article}
+\documentclass[11pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{hyperref}
-\usepackage{geometry}
-\geometry{a4paper, margin=1in}
 
-\title{Analysis and Partial Results on the Erd\H{o}s Conjecture on Arithmetic Progressions}
-\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
-\date{}
-
-\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
+
+\title{Erdős Conjecture on Arithmetic Progressions (Problem 77)}
+\author{}
+\date{}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-This document provides a rigorous axiomatic decomposition, literature review, and step-by-step partial proof structure for the Erd\H{o}s Conjecture on Arithmetic Progressions. The architecture is designed to facilitate future autoformalization in systems such as Lean 4.
+We investigate the Erdős Conjecture on Arithmetic Progressions, formalizing the necessary axiomatic definitions, reviewing the bounds associated with $k$-term arithmetic progressions, and establishing fundamental density lemmas. A formal architecture for Lean 4 is also provided.
+\vspace{1cm}
+\begin{center}
+\textit{Charles EDOU NZE, chercheur indépendant}
+\end{center}
 \end{abstract}
 
 \section{Analysis and Decomposition}
+The Erdős conjecture on arithmetic progressions states that if the sum of the reciprocals of the members of a set $A$ of positive integers diverges, then $A$ contains arbitrarily long arithmetic progressions.
 
-\subsection{Axiomatic Definitions}
-Let $\mathbb{N} = \{1, 2, \dots \}$ denote the set of positive integers. We define the types and variables rigorously.
-\begin{definition}[Divergent Harmonic Sum]
-Let $A \subseteq \mathbb{N}$ be a subset. We say that $A$ has a divergent harmonic sum, denoted as $\mathcal{D}(A)$, if the series of reciprocals of its elements diverges:
-\[
-\sum_{n \in A} \frac{1}{n} = \infty.
-\]
+\begin{definition}
+A set $A \subset \mathbb{N}_{>0}$ is termed \textit{large} if:
+$$ \sum_{n \in A} \frac{1}{n} = \infty $$
 \end{definition}
 
-\begin{definition}[Arithmetic Progression of Length $k$]
-For $k \in \mathbb{N}, k \ge 3$, a set $A \subseteq \mathbb{N}$ contains an arithmetic progression of length $k$, denoted as $\mathcal{AP}_k(A)$, if there exist $a \in \mathbb{N}$ and $d \in \mathbb{N}$ such that for all $0 \le i < k$, $a + id \in A$.
+\begin{definition}
+For $k \in \mathbb{N}_{\ge 3}$, a $k$-term arithmetic progression in $A$ is a sequence of the form $\{a, a+d, a+2d, \dots, a+(k-1)d\} \subset A$ for some $a \in \mathbb{N}$ and $d \in \mathbb{N}_{>0}$.
 \end{definition}
 
-\textbf{Conjecture Statement:}
-For any $A \subseteq \mathbb{N}$, if $\mathcal{D}(A)$ holds, then for all $k \ge 3$, $\mathcal{AP}_k(A)$ holds.
-
-\subsection{Underlying Algebraic and Combinatorial Structures}
-The problem fundamentally intertwines additive combinatorics and analytic number theory. The set $A$ is viewed as a dense subset in a weighted sense. The natural structure involves Fourier analysis on the cyclic groups $\mathbb{Z}/N\mathbb{Z}$ (the Hardy-Littlewood circle method) and the use of Gowers norms to detect linear structures. An alternative perspective uses ergodic theory, mapping the subset $A$ to a measure-preserving dynamical system.
 
 \section{Contextual Literature Research}
-The most prominent theorem related to this conjecture is Szemer\'edi's Theorem, which establishes that any subset of $\mathbb{N}$ with positive upper density contains arbitrarily long arithmetic progressions. The Green-Tao theorem provides a massive breakthrough by proving that the primes, a set with vanishing density but divergent harmonic sum, contain arbitrarily long arithmetic progressions.
-Recent advancements by Kelley and Meka (2023) on Roth's theorem give strong quantitative bounds on sets without 3-term arithmetic progressions.
-
-By analogy, the resolution of the Cap Set Problem by Ellenberg and Gijswijt utilizes the polynomial method. While finite field methods do not directly translate to $\mathbb{Z}$, algebraic methods analogous to Croot-Lev-Pach bounds provide insights into bounding subsets without linear structures.
+This problem is listed as Problem 16 in Bloom's list of Erdős' problems. It closely relates to bounds on $r_k(N)$, the maximum cardinality of a subset of $\{1, 2, \dots, N\}$ that contains no $k$-term arithmetic progression.
 
 \section{Proof Strategy \& Isolation of Lemmas}
-To tackle a simplified version (e.g., $k=3$ over restricted subsets), we decompose the problem into several lemmas.
-
+Our strategy involves establishing that if $A(N) = |A \cap \{1, \dots, N\}|$ is sufficiently bounded, the sum of reciprocals converges. We divide this into two main lemmas:
 \begin{itemize}
-    \item \textbf{Lemma 1 (Density Increment):} If a subset $A$ of $\{1, \dots, N\}$ lacks 3-term arithmetic progressions, it must correlate with a Bohr set, allowing an increment in density on a structured substructure.
-    \item \textbf{Lemma 2 (Harmonic Bound on Sparsity):} If a set $A$ contains no 3-term arithmetic progressions, its counting function $A(x) = |A \cap \{1, \dots, x\}|$ is bounded by $O(x / (\log x)^c)$ for some $c > 1$.
+\item \textbf{Lemma 1}: An exact summation formula linking the reciprocal sum to $A(n)/n(n+1)$.
+\item \textbf{Lemma 2}: A convergence result using the integral test given a specific bound on $A(n)$.
 \end{itemize}
 
-\section{Informal Proof of Lemma 2 (Zero Ellipsis)}
-\begin{proof}[Proof of Lemma 2]
-We present the proof step by step. Let $A \subset \mathbb{N}$ such that $A$ contains no 3-term arithmetic progressions.
-Let $N$ be a large integer, and let $A_N = A \cap \{1, 2, \dots, N\}$.
-According to the quantitative bounds by Kelley and Meka, the size of $A_N$ satisfies the inequality:
-\[
-|A_N| \le \frac{N}{\exp(c (\log N)^{\beta})}
-\]
-for some constants $c > 0$ and $\beta > 0$.
-We evaluate the harmonic sum of $A$ by partial summation.
-Let $S(N) = \sum_{n \in A, n \le N} \frac{1}{n}$.
-Using summation by parts, we express $S(N)$ in terms of $A(x) = |A \cap \{1, \dots, \lfloor x \rfloor\}|$:
-\[
-S(N) = \frac{A(N)}{N} + \int_{1}^{N} \frac{A(t)}{t^2} dt.
-\]
-We bound the first term:
-\[
-\frac{A(N)}{N} \le \frac{1}{\exp(c (\log N)^{\beta})}.
-\]
-As $N$ approaches infinity, this term approaches $0$.
-For the integral term, we substitute the bound for $A(t)$:
-\[
-\int_{1}^{N} \frac{A(t)}{t^2} dt \le \int_{1}^{N} \frac{t \exp(-c (\log t)^{\beta})}{t^2} dt = \int_{1}^{N} \frac{1}{t \exp(c (\log t)^{\beta})} dt.
-\]
-We compute this integral using the substitution $u = \log t$. Thus, $du = \frac{1}{t} dt$. The limits of integration change from $t=1$ to $u=0$, and $t=N$ to $u = \log N$:
-\[
-\int_{0}^{\log N} \frac{1}{\exp(c u^{\beta})} du.
-\]
-For any $\beta > 0$, the integral $\int_{0}^{\infty} \exp(-c u^{\beta}) du$ is convergent. Specifically, letting $v = c u^{\beta}$, $dv = c \beta u^{\beta - 1} du$, we find that the integral is proportional to the Gamma function $\Gamma(1/\beta)$.
-Since the integral is bounded by a finite constant independent of $N$, it follows that $S(N)$ is bounded as $N \to \infty$.
-Thus, $\sum_{n \in A} \frac{1}{n} < \infty$.
-By contraposition, if $\sum_{n \in A} \frac{1}{n} = \infty$, the set $A$ must contain a 3-term arithmetic progression. This completes the proof of Lemma 2.
+\section{Informal Proof}
+Let $r_k(N)$ denote the maximum cardinality of a subset of $\{1, 2, \dots, N\}$ that contains no $k$-term arithmetic progression. If $A$ contains no $k$-term arithmetic progressions, then for every integer $N \ge 1$, we have $|A \cap \{1, \dots, N\}| \le r_k(N)$.
+
+\begin{lemma}
+Let $A(N) = |A \cap \{1, \dots, N\}|$. For any positive integer $M$, the finite sum of reciprocals satisfies:
+$$ \sum_{\substack{n \in A \\ n \le M}} \frac{1}{n} = \sum_{n=1}^M \frac{A(n)}{n(n+1)} + \frac{A(M)}{M+1} $$
+\end{lemma}
+\begin{proof}
+By definition, the indicator function of $A$, denoted $1_A(n)$, allows us to write $A(n) - A(n-1) = 1_A(n)$, with $A(0)=0$. We expand the sum:
+\begin{align*}
+\sum_{\substack{n \in A \\ n \le M}} \frac{1}{n} &= \sum_{n=1}^M \frac{1_A(n)}{n} \\
+&= \sum_{n=1}^M \frac{A(n) - A(n-1)}{n} \\
+&= \frac{A(1) - A(0)}{1} + \frac{A(2) - A(1)}{2} + \dots + \frac{A(M) - A(M-1)}{M} \\
+&= A(1)\left(1 - \frac{1}{2}\right) + A(2)\left(\frac{1}{2} - \frac{1}{3}\right) + \dots + A(M-1)\left(\frac{1}{M-1} - \frac{1}{M}\right) + \frac{A(M)}{M} \\
+&= \sum_{n=1}^{M-1} A(n) \left( \frac{1}{n} - \frac{1}{n+1} \right) + \frac{A(M)}{M} \\
+&= \sum_{n=1}^{M-1} A(n) \left( \frac{n+1 - n}{n(n+1)} \right) + \frac{A(M)}{M} \\
+&= \sum_{n=1}^{M-1} \frac{A(n)}{n(n+1)} + \frac{A(M)}{M}
+\end{align*}
+Notice that $\frac{A(M)}{M} = \frac{A(M)}{M(M+1)} + \frac{A(M)}{M+1}$, so the identity holds identically for $M$.
 \end{proof}
 
-\section{Architecture for Autoformalization}
-The proof structure is directly mapped for implementation in Lean 4.
+\begin{lemma}
+If there exist constants $C > 0$ and $\epsilon > 0$ such that $A(n) \le C \frac{n}{(\log n)^{1+\epsilon}}$ for all $n \ge 2$, then $\sum_{n \in A} \frac{1}{n} < \infty$.
+\end{lemma}
+\begin{proof}
+Applying the previous lemma, as $M \to \infty$, since $A(M) \le M$, $\frac{A(M)}{M+1} \le 1$. The infinite sum $\sum_{n \in A} \frac{1}{n}$ converges if and only if $\sum_{n=1}^\infty \frac{A(n)}{n(n+1)}$ converges. Using the bound on $A(n)$, for $n \ge 2$:
+$$ \frac{A(n)}{n(n+1)} \le \frac{C \frac{n}{(\log n)^{1+\epsilon}}}{n(n+1)} = \frac{C}{(n+1)(\log n)^{1+\epsilon}} $$
+Since $\frac{1}{n+1} < \frac{1}{n}$, we have:
+$$ \frac{A(n)}{n(n+1)} < \frac{C}{n(\log n)^{1+\epsilon}} $$
+The integral test for convergence states that $\sum_{n=2}^\infty f(n)$ converges if $\int_2^\infty f(x)dx < \infty$ for a positive monotonically decreasing function. Let $f(x) = \frac{1}{x(\log x)^{1+\epsilon}}$. We compute the integral using substitution $u = \log x, du = \frac{1}{x}dx$:
+$$ \int_2^\infty \frac{1}{x(\log x)^{1+\epsilon}} dx = \int_{\log 2}^\infty \frac{1}{u^{1+\epsilon}} du = \left[ \frac{-1}{\epsilon u^\epsilon} \right]_{\log 2}^\infty = \frac{1}{\epsilon (\log 2)^\epsilon} $$
+Since the integral evaluates to a finite constant, the sum $\sum_{n=2}^\infty \frac{1}{n(\log n)^{1+\epsilon}}$ converges, implying $\sum_{n \in A} \frac{1}{n}$ converges.
+\end{proof}
 
+
+\section{Architecture for Autoformalization}
 \begin{verbatim}
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
--- Axiomatic definition of the divergent harmonic sum
-def has_divergent_harmonic_sum (A : Set Nat) : Prop :=
-  Filter.Tendsto (fun N => \sum_{n \in A \cap {x | x \le N}} (1 / (n : Real)))
-    Filter.atTop Filter.atTop
+def has_k_AP (A : Set Nat) (k : Nat) : Prop :=
+  Exists (fun a => Exists (fun d => d > 0 /\ \forall  i < k, (a + i * d) \in  A))
 
--- Axiomatic definition of containing an arithmetic progression of length k
-def contains_AP (A : Set Nat) (k : Nat) : Prop :=
-  \exists a d : Nat, d > 0 \and \forall i : Nat, i < k \to a + i * d \in A
-
--- Main Theorem Statement (Erdős Conjecture)
-theorem erdos_ap_conjecture (A : Set Nat) (h : has_divergent_harmonic_sum A) :
-  \forall k \ge 3, contains_AP A k := by
-  sorry
-
--- Lemma 2
-lemma ap3_harmonic_bound (A : Set Nat) (h : \not contains_AP A 3) :
-  \not has_divergent_harmonic_sum A := by
-  sorry
+theorem erdos_ap_conjecture (A : Set Nat) :
+  (tsum (fun n : A => (1 : \mathbb{R}) / (n : \mathbb{R})) = \top ) -> \forall  k >= 3, has_k_AP A k
 \end{verbatim}
+
 
 \end{document}

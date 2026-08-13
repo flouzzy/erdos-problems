@@ -1,4 +1,8 @@
-\documentclass[12pt, a4paper]{article}
+import os
+import subprocess
+
+def generate_tex():
+    tex_content = r"""\documentclass[12pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
@@ -120,3 +124,16 @@ lemma dyadic_density_diverges (A : Set Nat) (h : ReciprocalSumDiverges A) :
 \end{lstlisting}
 
 \end{document}
+"""
+    filepath = "77-Erdos-Conjecture-on-Arithmetic-Progressions.tex"
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(tex_content)
+
+    try:
+        subprocess.run(["pdflatex", "-interaction=nonstopmode", filepath], check=True, stdout=subprocess.DEVNULL)
+    except subprocess.CalledProcessError as e:
+        print(f"Error compiling {filepath}")
+        print(e)
+
+if __name__ == "__main__":
+    generate_tex()

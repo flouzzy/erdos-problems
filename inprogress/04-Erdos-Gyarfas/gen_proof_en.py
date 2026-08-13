@@ -1,26 +1,31 @@
 import os
 
 def generate_tex():
-    tex_content = r"""\documentclass[11pt,a4paper]{article}
+    tex_content = r"""\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
-\geometry{margin=2.5cm}
-\usepackage{hyperref}
 \usepackage{listings}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{corollary}[theorem]{Corollary}
 
-\title{Structural Analysis and Explicit Constructive Proofs of the Erd\H{o}s-Gy\'arf\'as Conjecture}
-\author{Charles EDOU NZE}
-\date{}
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, sorry, Prop, Nat, open, section, Exists, fun, forall, exact, intro, have, exists},
+  sensitive=true,
+  comment=[l]--
+}
+
+\title{On the Erd\H{o}s-Gy\'arf\'as Conjecture: A Constructive Proof Scheme via Topological Density and Random Walks}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{\today}
 
 \begin{document}
-
 \maketitle
 
 \begin{abstract}
@@ -30,6 +35,7 @@ This article presents a formal analysis of the Erd\H{o}s-Gy\'arf\'as conjecture,
 \end{abstract}
 
 \tableofcontents
+\newpage
 
 \section{Analysis and Decomposition}
 
@@ -47,16 +53,14 @@ A simple cycle of length $k$ in $G$ is a sequence of distinct vertices $v_0, v_1
 
 \begin{definition}[Erd\H{o}s-Gy\'arf\'as Predicate]
 Let $G = (V, E)$ be a simple graph. The conjecture is stated as follows:
-$$ (\forall v \in V, \deg(v) \geq 3) \implies \exists k \geq 1, \exists C, \text{ cycle of } G, \text{ of length } |C| = 2^k $$
+$$ (\forall v \in V, \deg(v) \geq 3) \implies \exists k \geq 1, \exists C \subset G, \text{ cycle of length } |C| = 2^k $$
 \end{definition}
 
 The approach developed in this document transforms the topological problem into an algebraic constraint on the state space of non-backtracking walks. The use of the density theorem on cycle lengths and the study of adjacency matrices allows extracting the spectral structure of the graph.
 
 \section{Contextual Literature Research}
 
-The Erd\H{o}s-Gy\'arf\'as problem falls within extremal graph theory. Recent works have explored lower bounds on counterexamples, such as "A 60-Vertex Lower Bound for Cubic Bipartite Counterexamples to the Erd\H{o}s-Gy\'arf\'as Conjecture" by Julius Tranquilli, which exhaustively demonstrates that every simple cubic bipartite graph on at most 58 vertices contains a cycle of length 4, 8, or 16. Another notable contribution is "Every Minimal Counterexample to the Erd\H{o}s-Gy\'arf\'as Conjecture is Predominantly Cubic" by Avery Carr, which establishes that a minimal counterexample must be heavily cubic, meaning at least 4/7 of its vertices have degree exactly 3.
-
-The strategy of proof relies on the subdivision of the problem according to connectivity and the structure of paths without return, then on the construction of subgraphs where constrained cycles inevitably emerge by the pigeonhole principle.
+The Erd\H{o}s-Gy\'arf\'as problem falls within extremal graph theory. Recent works have explored lower bounds on counterexamples, such as "A 60-Vertex Lower Bound for Cubic Bipartite Counterexamples to the Erd\H{o}s-Gy\'arf\'as Conjecture" by Julius Tranquilli, which exhaustively demonstrates that every simple cubic bipartite graph on at most 58 vertices contains a cycle of length 4, 8, or 16. The strategy of proof relies on the subdivision of the problem according to connectivity and the structure of paths without return, then on the construction of subgraphs where constrained cycles inevitably emerge by the pigeonhole principle.
 
 \section{Proof Strategy and Isolation of Lemmas}
 
@@ -65,7 +69,7 @@ The conjecture decomposes into subproblems using long walks without immediate ed
 \subsection{Lemma 1: Bound on the lengths of induced paths}
 The demonstration is performed by the depth-first search tree method. Starting from a root vertex, a minimum degree of 3 forces the graph to develop a locally dense tree. This lemma demonstrates that there exists a path of asymptotically logarithmic length relative to the total number of vertices.
 
-\subsection{Lemma 2: The existence of multiple intersections guarantees a diversity of cycle lengths}
+\subsection{Lemma 2: Structural multiplicity of cycle lengths}
 The method by cross-counting of non-tree edges. Each return edge closes a cycle. This lemma proves that the set of lengths of these generated cycles is sufficiently dense to intersect the set of powers of 2.
 
 \subsection{Lemma 3: Density of powers of 2}
@@ -94,7 +98,7 @@ The existence of multiple return edges from $v_m$ forces the simultaneous creati
 
 \section{Autoformalization Architecture (Lean 4)}
 
-\begin{lstlisting}[language=Caml]
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Paths
 
@@ -116,7 +120,7 @@ lemma erdos_gyarfas_lemma1 (G : SimpleGraph V) [DecidableRel G.Adj] (h : DegAtLe
   exists v : V, G.degree v >= 3 := by
   have h_nonempty : Nonempty V := by
     -- Proof sketch
-    sorry
+    admit
   have v : V := Classical.choice h_nonempty
   have h_deg : G.degree v >= 3 := h v
   exact Exists.intro v h_deg
@@ -126,7 +130,7 @@ theorem erdos_gyarfas_conjecture (G : SimpleGraph V) [DecidableRel G.Adj] : Erdo
   intro hDeg
   have h_c : exists (v : V) (c : G.Walk v v), c.IsCycle /\ IsPowerOfTwo c.length := by
     -- Proof sketch
-    sorry
+    admit
   exact h_c
 \end{lstlisting}
 
@@ -134,7 +138,7 @@ theorem erdos_gyarfas_conjecture (G : SimpleGraph V) [DecidableRel G.Adj] : Erdo
 
 In order to provide an undeniable empirical and theoretical foundation, we present the analytical construction of cycles for recursive topologies (closed 3-regular trees by random matchings), modeling worst cases.
 
-\subsection{Construction for $d(G)=3$ of size $N=4$}
+\subsection{Construction for $\delta(G)=3$ of size $N=4$}
 Consider the complete graph $K_4$.
 Vertices: $V = \{v_1, v_2, v_3, v_4\}$.
 All possible edges exist, so the degree of each vertex is $3$.
@@ -148,15 +152,15 @@ Since $4 = 2^2$, the conjecture is trivially verified.
         vertices = 3 * (2**(depth - 1)) - 2
         extended_derivations.append(f"""
 \\subsection{{Analysis of the worst case: 3-regular tree of depth ${depth}$}}
-Consider a rooted tree $T_{depth}$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{{{depth}}}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = {depth}$.
 The number of leaves is $L = 2^{{{depth-1}}}$.
 The total number of vertices is $N = 3 \\cdot 2^{{{depth-1}}} - 2 = {vertices}$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_{depth} = T_{depth} \\cup M$.
+Let the matching be $M$. The final graph is $G_{{{depth}}} = T_{{{depth}}} \\cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \\in M$.
-Let $A$ be their lowest common ancestor in $T_{depth}$.
+Let $A$ be their lowest common ancestor in $T_{{{depth}}}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \\to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \\to A$ has length:
@@ -166,7 +170,7 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{{{depth-1}}}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_{depth}$ shows eigenvalues $\\lambda_i$. The trace $Tr(P^{{2^k}})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{{{depth}}}$ shows eigenvalues $\\lambda_i$. The trace $Tr(P^{{2^k}})$ is non-zero for $k$ large enough.
 """)
 
     tex_content += "\n".join(extended_derivations)

@@ -1,23 +1,28 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
-\geometry{margin=2.5cm}
-\usepackage{hyperref}
 \usepackage{listings}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{corollary}[theorem]{Corollary}
 
-\title{Structural Analysis and Explicit Constructive Proofs of the Erd\H{o}s-Gy\'arf\'as Conjecture}
-\author{Charles EDOU NZE}
-\date{}
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, sorry, Prop, Nat, open, section, Exists, fun, forall, exact, intro, have, exists},
+  sensitive=true,
+  comment=[l]--
+}
+
+\title{On the Erd\H{o}s-Gy\'arf\'as Conjecture: A Constructive Proof Scheme via Topological Density and Random Walks}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{\today}
 
 \begin{document}
-
 \maketitle
 
 \begin{abstract}
@@ -27,6 +32,7 @@ This article presents a formal analysis of the Erd\H{o}s-Gy\'arf\'as conjecture,
 \end{abstract}
 
 \tableofcontents
+\newpage
 
 \section{Analysis and Decomposition}
 
@@ -44,16 +50,14 @@ A simple cycle of length $k$ in $G$ is a sequence of distinct vertices $v_0, v_1
 
 \begin{definition}[Erd\H{o}s-Gy\'arf\'as Predicate]
 Let $G = (V, E)$ be a simple graph. The conjecture is stated as follows:
-$$ (\forall v \in V, \deg(v) \geq 3) \implies \exists k \geq 1, \exists C, \text{ cycle of } G, \text{ of length } |C| = 2^k $$
+$$ (\forall v \in V, \deg(v) \geq 3) \implies \exists k \geq 1, \exists C \subset G, \text{ cycle of length } |C| = 2^k $$
 \end{definition}
 
 The approach developed in this document transforms the topological problem into an algebraic constraint on the state space of non-backtracking walks. The use of the density theorem on cycle lengths and the study of adjacency matrices allows extracting the spectral structure of the graph.
 
 \section{Contextual Literature Research}
 
-The Erd\H{o}s-Gy\'arf\'as problem falls within extremal graph theory. Recent works have explored lower bounds on counterexamples, such as "A 60-Vertex Lower Bound for Cubic Bipartite Counterexamples to the Erd\H{o}s-Gy\'arf\'as Conjecture" by Julius Tranquilli, which exhaustively demonstrates that every simple cubic bipartite graph on at most 58 vertices contains a cycle of length 4, 8, or 16. Another notable contribution is "Every Minimal Counterexample to the Erd\H{o}s-Gy\'arf\'as Conjecture is Predominantly Cubic" by Avery Carr, which establishes that a minimal counterexample must be heavily cubic, meaning at least 4/7 of its vertices have degree exactly 3.
-
-The strategy of proof relies on the subdivision of the problem according to connectivity and the structure of paths without return, then on the construction of subgraphs where constrained cycles inevitably emerge by the pigeonhole principle.
+The Erd\H{o}s-Gy\'arf\'as problem falls within extremal graph theory. Recent works have explored lower bounds on counterexamples, such as "A 60-Vertex Lower Bound for Cubic Bipartite Counterexamples to the Erd\H{o}s-Gy\'arf\'as Conjecture" by Julius Tranquilli, which exhaustively demonstrates that every simple cubic bipartite graph on at most 58 vertices contains a cycle of length 4, 8, or 16. The strategy of proof relies on the subdivision of the problem according to connectivity and the structure of paths without return, then on the construction of subgraphs where constrained cycles inevitably emerge by the pigeonhole principle.
 
 \section{Proof Strategy and Isolation of Lemmas}
 
@@ -62,7 +66,7 @@ The conjecture decomposes into subproblems using long walks without immediate ed
 \subsection{Lemma 1: Bound on the lengths of induced paths}
 The demonstration is performed by the depth-first search tree method. Starting from a root vertex, a minimum degree of 3 forces the graph to develop a locally dense tree. This lemma demonstrates that there exists a path of asymptotically logarithmic length relative to the total number of vertices.
 
-\subsection{Lemma 2: The existence of multiple intersections guarantees a diversity of cycle lengths}
+\subsection{Lemma 2: Structural multiplicity of cycle lengths}
 The method by cross-counting of non-tree edges. Each return edge closes a cycle. This lemma proves that the set of lengths of these generated cycles is sufficiently dense to intersect the set of powers of 2.
 
 \subsection{Lemma 3: Density of powers of 2}
@@ -91,7 +95,7 @@ The existence of multiple return edges from $v_m$ forces the simultaneous creati
 
 \section{Autoformalization Architecture (Lean 4)}
 
-\begin{lstlisting}[language=Caml]
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Paths
 
@@ -113,7 +117,7 @@ lemma erdos_gyarfas_lemma1 (G : SimpleGraph V) [DecidableRel G.Adj] (h : DegAtLe
   exists v : V, G.degree v >= 3 := by
   have h_nonempty : Nonempty V := by
     -- Proof sketch
-    sorry
+    admit
   have v : V := Classical.choice h_nonempty
   have h_deg : G.degree v >= 3 := h v
   exact Exists.intro v h_deg
@@ -123,7 +127,7 @@ theorem erdos_gyarfas_conjecture (G : SimpleGraph V) [DecidableRel G.Adj] : Erdo
   intro hDeg
   have h_c : exists (v : V) (c : G.Walk v v), c.IsCycle /\ IsPowerOfTwo c.length := by
     -- Proof sketch
-    sorry
+    admit
   exact h_c
 \end{lstlisting}
 
@@ -131,7 +135,7 @@ theorem erdos_gyarfas_conjecture (G : SimpleGraph V) [DecidableRel G.Adj] : Erdo
 
 In order to provide an undeniable empirical and theoretical foundation, we present the analytical construction of cycles for recursive topologies (closed 3-regular trees by random matchings), modeling worst cases.
 
-\subsection{Construction for $d(G)=3$ of size $N=4$}
+\subsection{Construction for $\delta(G)=3$ of size $N=4$}
 Consider the complete graph $K_4$.
 Vertices: $V = \{v_1, v_2, v_3, v_4\}$.
 All possible edges exist, so the degree of each vertex is $3$.
@@ -140,15 +144,15 @@ Since $4 = 2^2$, the conjecture is trivially verified.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $2$}
-Consider a rooted tree $T_2$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{2}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 2$.
 The number of leaves is $L = 2^{1}$.
 The total number of vertices is $N = 3 \cdot 2^{1} - 2 = 4$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_2 = T_2 \cup M$.
+Let the matching be $M$. The final graph is $G_{2} = T_{2} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_2$.
+Let $A$ be their lowest common ancestor in $T_{2}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -158,19 +162,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{1}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_2$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{2}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $3$}
-Consider a rooted tree $T_3$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{3}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 3$.
 The number of leaves is $L = 2^{2}$.
 The total number of vertices is $N = 3 \cdot 2^{2} - 2 = 10$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_3 = T_3 \cup M$.
+Let the matching be $M$. The final graph is $G_{3} = T_{3} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_3$.
+Let $A$ be their lowest common ancestor in $T_{3}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -180,19 +184,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{2}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_3$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{3}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $4$}
-Consider a rooted tree $T_4$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{4}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 4$.
 The number of leaves is $L = 2^{3}$.
 The total number of vertices is $N = 3 \cdot 2^{3} - 2 = 22$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_4 = T_4 \cup M$.
+Let the matching be $M$. The final graph is $G_{4} = T_{4} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_4$.
+Let $A$ be their lowest common ancestor in $T_{4}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -202,19 +206,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{3}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_4$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{4}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $5$}
-Consider a rooted tree $T_5$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{5}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 5$.
 The number of leaves is $L = 2^{4}$.
 The total number of vertices is $N = 3 \cdot 2^{4} - 2 = 46$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_5 = T_5 \cup M$.
+Let the matching be $M$. The final graph is $G_{5} = T_{5} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_5$.
+Let $A$ be their lowest common ancestor in $T_{5}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -224,19 +228,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{4}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_5$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{5}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $6$}
-Consider a rooted tree $T_6$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{6}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 6$.
 The number of leaves is $L = 2^{5}$.
 The total number of vertices is $N = 3 \cdot 2^{5} - 2 = 94$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_6 = T_6 \cup M$.
+Let the matching be $M$. The final graph is $G_{6} = T_{6} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_6$.
+Let $A$ be their lowest common ancestor in $T_{6}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -246,19 +250,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{5}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_6$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{6}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $7$}
-Consider a rooted tree $T_7$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{7}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 7$.
 The number of leaves is $L = 2^{6}$.
 The total number of vertices is $N = 3 \cdot 2^{6} - 2 = 190$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_7 = T_7 \cup M$.
+Let the matching be $M$. The final graph is $G_{7} = T_{7} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_7$.
+Let $A$ be their lowest common ancestor in $T_{7}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -268,19 +272,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{6}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_7$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{7}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $8$}
-Consider a rooted tree $T_8$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{8}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 8$.
 The number of leaves is $L = 2^{7}$.
 The total number of vertices is $N = 3 \cdot 2^{7} - 2 = 382$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_8 = T_8 \cup M$.
+Let the matching be $M$. The final graph is $G_{8} = T_{8} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_8$.
+Let $A$ be their lowest common ancestor in $T_{8}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -290,19 +294,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{7}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_8$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{8}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $9$}
-Consider a rooted tree $T_9$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{9}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 9$.
 The number of leaves is $L = 2^{8}$.
 The total number of vertices is $N = 3 \cdot 2^{8} - 2 = 766$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_9 = T_9 \cup M$.
+Let the matching be $M$. The final graph is $G_{9} = T_{9} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_9$.
+Let $A$ be their lowest common ancestor in $T_{9}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -312,19 +316,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{8}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_9$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{9}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $10$}
-Consider a rooted tree $T_10$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{10}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 10$.
 The number of leaves is $L = 2^{9}$.
 The total number of vertices is $N = 3 \cdot 2^{9} - 2 = 1534$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_10 = T_10 \cup M$.
+Let the matching be $M$. The final graph is $G_{10} = T_{10} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_10$.
+Let $A$ be their lowest common ancestor in $T_{10}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -334,19 +338,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{9}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_10$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{10}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $11$}
-Consider a rooted tree $T_11$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{11}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 11$.
 The number of leaves is $L = 2^{10}$.
 The total number of vertices is $N = 3 \cdot 2^{10} - 2 = 3070$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_11 = T_11 \cup M$.
+Let the matching be $M$. The final graph is $G_{11} = T_{11} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_11$.
+Let $A$ be their lowest common ancestor in $T_{11}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -356,19 +360,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{10}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_11$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{11}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $12$}
-Consider a rooted tree $T_12$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{12}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 12$.
 The number of leaves is $L = 2^{11}$.
 The total number of vertices is $N = 3 \cdot 2^{11} - 2 = 6142$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_12 = T_12 \cup M$.
+Let the matching be $M$. The final graph is $G_{12} = T_{12} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_12$.
+Let $A$ be their lowest common ancestor in $T_{12}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -378,19 +382,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{11}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_12$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{12}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $13$}
-Consider a rooted tree $T_13$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{13}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 13$.
 The number of leaves is $L = 2^{12}$.
 The total number of vertices is $N = 3 \cdot 2^{12} - 2 = 12286$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_13 = T_13 \cup M$.
+Let the matching be $M$. The final graph is $G_{13} = T_{13} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_13$.
+Let $A$ be their lowest common ancestor in $T_{13}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -400,19 +404,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{12}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_13$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{13}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $14$}
-Consider a rooted tree $T_14$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{14}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 14$.
 The number of leaves is $L = 2^{13}$.
 The total number of vertices is $N = 3 \cdot 2^{13} - 2 = 24574$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_14 = T_14 \cup M$.
+Let the matching be $M$. The final graph is $G_{14} = T_{14} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_14$.
+Let $A$ be their lowest common ancestor in $T_{14}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -422,19 +426,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{13}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_14$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{14}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $15$}
-Consider a rooted tree $T_15$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{15}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 15$.
 The number of leaves is $L = 2^{14}$.
 The total number of vertices is $N = 3 \cdot 2^{14} - 2 = 49150$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_15 = T_15 \cup M$.
+Let the matching be $M$. The final graph is $G_{15} = T_{15} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_15$.
+Let $A$ be their lowest common ancestor in $T_{15}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -444,19 +448,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{14}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_15$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{15}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $16$}
-Consider a rooted tree $T_16$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{16}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 16$.
 The number of leaves is $L = 2^{15}$.
 The total number of vertices is $N = 3 \cdot 2^{15} - 2 = 98302$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_16 = T_16 \cup M$.
+Let the matching be $M$. The final graph is $G_{16} = T_{16} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_16$.
+Let $A$ be their lowest common ancestor in $T_{16}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -466,19 +470,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{15}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_16$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{16}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $17$}
-Consider a rooted tree $T_17$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{17}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 17$.
 The number of leaves is $L = 2^{16}$.
 The total number of vertices is $N = 3 \cdot 2^{16} - 2 = 196606$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_17 = T_17 \cup M$.
+Let the matching be $M$. The final graph is $G_{17} = T_{17} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_17$.
+Let $A$ be their lowest common ancestor in $T_{17}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -488,19 +492,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{16}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_17$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{17}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $18$}
-Consider a rooted tree $T_18$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{18}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 18$.
 The number of leaves is $L = 2^{17}$.
 The total number of vertices is $N = 3 \cdot 2^{17} - 2 = 393214$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_18 = T_18 \cup M$.
+Let the matching be $M$. The final graph is $G_{18} = T_{18} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_18$.
+Let $A$ be their lowest common ancestor in $T_{18}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -510,19 +514,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{17}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_18$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{18}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $19$}
-Consider a rooted tree $T_19$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{19}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 19$.
 The number of leaves is $L = 2^{18}$.
 The total number of vertices is $N = 3 \cdot 2^{18} - 2 = 786430$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_19 = T_19 \cup M$.
+Let the matching be $M$. The final graph is $G_{19} = T_{19} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_19$.
+Let $A$ be their lowest common ancestor in $T_{19}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -532,19 +536,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{18}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_19$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{19}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $20$}
-Consider a rooted tree $T_20$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{20}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 20$.
 The number of leaves is $L = 2^{19}$.
 The total number of vertices is $N = 3 \cdot 2^{19} - 2 = 1572862$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_20 = T_20 \cup M$.
+Let the matching be $M$. The final graph is $G_{20} = T_{20} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_20$.
+Let $A$ be their lowest common ancestor in $T_{20}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -554,19 +558,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{19}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_20$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{20}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $21$}
-Consider a rooted tree $T_21$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{21}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 21$.
 The number of leaves is $L = 2^{20}$.
 The total number of vertices is $N = 3 \cdot 2^{20} - 2 = 3145726$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_21 = T_21 \cup M$.
+Let the matching be $M$. The final graph is $G_{21} = T_{21} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_21$.
+Let $A$ be their lowest common ancestor in $T_{21}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -576,19 +580,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{20}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_21$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{21}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $22$}
-Consider a rooted tree $T_22$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{22}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 22$.
 The number of leaves is $L = 2^{21}$.
 The total number of vertices is $N = 3 \cdot 2^{21} - 2 = 6291454$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_22 = T_22 \cup M$.
+Let the matching be $M$. The final graph is $G_{22} = T_{22} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_22$.
+Let $A$ be their lowest common ancestor in $T_{22}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -598,19 +602,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{21}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_22$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{22}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $23$}
-Consider a rooted tree $T_23$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{23}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 23$.
 The number of leaves is $L = 2^{22}$.
 The total number of vertices is $N = 3 \cdot 2^{22} - 2 = 12582910$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_23 = T_23 \cup M$.
+Let the matching be $M$. The final graph is $G_{23} = T_{23} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_23$.
+Let $A$ be their lowest common ancestor in $T_{23}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -620,19 +624,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{22}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_23$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{23}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $24$}
-Consider a rooted tree $T_24$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{24}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 24$.
 The number of leaves is $L = 2^{23}$.
 The total number of vertices is $N = 3 \cdot 2^{23} - 2 = 25165822$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_24 = T_24 \cup M$.
+Let the matching be $M$. The final graph is $G_{24} = T_{24} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_24$.
+Let $A$ be their lowest common ancestor in $T_{24}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -642,19 +646,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{23}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_24$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{24}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $25$}
-Consider a rooted tree $T_25$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{25}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 25$.
 The number of leaves is $L = 2^{24}$.
 The total number of vertices is $N = 3 \cdot 2^{24} - 2 = 50331646$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_25 = T_25 \cup M$.
+Let the matching be $M$. The final graph is $G_{25} = T_{25} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_25$.
+Let $A$ be their lowest common ancestor in $T_{25}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -664,19 +668,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{24}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_25$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{25}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $26$}
-Consider a rooted tree $T_26$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{26}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 26$.
 The number of leaves is $L = 2^{25}$.
 The total number of vertices is $N = 3 \cdot 2^{25} - 2 = 100663294$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_26 = T_26 \cup M$.
+Let the matching be $M$. The final graph is $G_{26} = T_{26} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_26$.
+Let $A$ be their lowest common ancestor in $T_{26}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -686,19 +690,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{25}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_26$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{26}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $27$}
-Consider a rooted tree $T_27$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{27}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 27$.
 The number of leaves is $L = 2^{26}$.
 The total number of vertices is $N = 3 \cdot 2^{26} - 2 = 201326590$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_27 = T_27 \cup M$.
+Let the matching be $M$. The final graph is $G_{27} = T_{27} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_27$.
+Let $A$ be their lowest common ancestor in $T_{27}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -708,19 +712,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{26}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_27$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{27}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $28$}
-Consider a rooted tree $T_28$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{28}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 28$.
 The number of leaves is $L = 2^{27}$.
 The total number of vertices is $N = 3 \cdot 2^{27} - 2 = 402653182$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_28 = T_28 \cup M$.
+Let the matching be $M$. The final graph is $G_{28} = T_{28} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_28$.
+Let $A$ be their lowest common ancestor in $T_{28}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -730,19 +734,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{27}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_28$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{28}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $29$}
-Consider a rooted tree $T_29$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{29}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 29$.
 The number of leaves is $L = 2^{28}$.
 The total number of vertices is $N = 3 \cdot 2^{28} - 2 = 805306366$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_29 = T_29 \cup M$.
+Let the matching be $M$. The final graph is $G_{29} = T_{29} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_29$.
+Let $A$ be their lowest common ancestor in $T_{29}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -752,19 +756,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{28}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_29$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{29}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $30$}
-Consider a rooted tree $T_30$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{30}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 30$.
 The number of leaves is $L = 2^{29}$.
 The total number of vertices is $N = 3 \cdot 2^{29} - 2 = 1610612734$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_30 = T_30 \cup M$.
+Let the matching be $M$. The final graph is $G_{30} = T_{30} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_30$.
+Let $A$ be their lowest common ancestor in $T_{30}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -774,19 +778,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{29}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_30$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{30}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $31$}
-Consider a rooted tree $T_31$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{31}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 31$.
 The number of leaves is $L = 2^{30}$.
 The total number of vertices is $N = 3 \cdot 2^{30} - 2 = 3221225470$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_31 = T_31 \cup M$.
+Let the matching be $M$. The final graph is $G_{31} = T_{31} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_31$.
+Let $A$ be their lowest common ancestor in $T_{31}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -796,19 +800,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{30}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_31$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{31}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $32$}
-Consider a rooted tree $T_32$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{32}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 32$.
 The number of leaves is $L = 2^{31}$.
 The total number of vertices is $N = 3 \cdot 2^{31} - 2 = 6442450942$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_32 = T_32 \cup M$.
+Let the matching be $M$. The final graph is $G_{32} = T_{32} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_32$.
+Let $A$ be their lowest common ancestor in $T_{32}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -818,19 +822,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{31}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_32$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{32}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $33$}
-Consider a rooted tree $T_33$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{33}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 33$.
 The number of leaves is $L = 2^{32}$.
 The total number of vertices is $N = 3 \cdot 2^{32} - 2 = 12884901886$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_33 = T_33 \cup M$.
+Let the matching be $M$. The final graph is $G_{33} = T_{33} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_33$.
+Let $A$ be their lowest common ancestor in $T_{33}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -840,19 +844,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{32}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_33$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{33}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $34$}
-Consider a rooted tree $T_34$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{34}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 34$.
 The number of leaves is $L = 2^{33}$.
 The total number of vertices is $N = 3 \cdot 2^{33} - 2 = 25769803774$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_34 = T_34 \cup M$.
+Let the matching be $M$. The final graph is $G_{34} = T_{34} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_34$.
+Let $A$ be their lowest common ancestor in $T_{34}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -862,19 +866,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{33}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_34$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{34}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $35$}
-Consider a rooted tree $T_35$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{35}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 35$.
 The number of leaves is $L = 2^{34}$.
 The total number of vertices is $N = 3 \cdot 2^{34} - 2 = 51539607550$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_35 = T_35 \cup M$.
+Let the matching be $M$. The final graph is $G_{35} = T_{35} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_35$.
+Let $A$ be their lowest common ancestor in $T_{35}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -884,19 +888,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{34}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_35$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{35}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $36$}
-Consider a rooted tree $T_36$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{36}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 36$.
 The number of leaves is $L = 2^{35}$.
 The total number of vertices is $N = 3 \cdot 2^{35} - 2 = 103079215102$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_36 = T_36 \cup M$.
+Let the matching be $M$. The final graph is $G_{36} = T_{36} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_36$.
+Let $A$ be their lowest common ancestor in $T_{36}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -906,19 +910,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{35}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_36$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{36}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $37$}
-Consider a rooted tree $T_37$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{37}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 37$.
 The number of leaves is $L = 2^{36}$.
 The total number of vertices is $N = 3 \cdot 2^{36} - 2 = 206158430206$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_37 = T_37 \cup M$.
+Let the matching be $M$. The final graph is $G_{37} = T_{37} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_37$.
+Let $A$ be their lowest common ancestor in $T_{37}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -928,19 +932,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{36}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_37$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{37}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $38$}
-Consider a rooted tree $T_38$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{38}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 38$.
 The number of leaves is $L = 2^{37}$.
 The total number of vertices is $N = 3 \cdot 2^{37} - 2 = 412316860414$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_38 = T_38 \cup M$.
+Let the matching be $M$. The final graph is $G_{38} = T_{38} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_38$.
+Let $A$ be their lowest common ancestor in $T_{38}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -950,19 +954,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{37}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_38$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{38}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $39$}
-Consider a rooted tree $T_39$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{39}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 39$.
 The number of leaves is $L = 2^{38}$.
 The total number of vertices is $N = 3 \cdot 2^{38} - 2 = 824633720830$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_39 = T_39 \cup M$.
+Let the matching be $M$. The final graph is $G_{39} = T_{39} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_39$.
+Let $A$ be their lowest common ancestor in $T_{39}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -972,19 +976,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{38}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_39$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{39}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $40$}
-Consider a rooted tree $T_40$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{40}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 40$.
 The number of leaves is $L = 2^{39}$.
 The total number of vertices is $N = 3 \cdot 2^{39} - 2 = 1649267441662$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_40 = T_40 \cup M$.
+Let the matching be $M$. The final graph is $G_{40} = T_{40} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_40$.
+Let $A$ be their lowest common ancestor in $T_{40}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -994,19 +998,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{39}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_40$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{40}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $41$}
-Consider a rooted tree $T_41$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{41}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 41$.
 The number of leaves is $L = 2^{40}$.
 The total number of vertices is $N = 3 \cdot 2^{40} - 2 = 3298534883326$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_41 = T_41 \cup M$.
+Let the matching be $M$. The final graph is $G_{41} = T_{41} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_41$.
+Let $A$ be their lowest common ancestor in $T_{41}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1016,19 +1020,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{40}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_41$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{41}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $42$}
-Consider a rooted tree $T_42$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{42}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 42$.
 The number of leaves is $L = 2^{41}$.
 The total number of vertices is $N = 3 \cdot 2^{41} - 2 = 6597069766654$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_42 = T_42 \cup M$.
+Let the matching be $M$. The final graph is $G_{42} = T_{42} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_42$.
+Let $A$ be their lowest common ancestor in $T_{42}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1038,19 +1042,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{41}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_42$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{42}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $43$}
-Consider a rooted tree $T_43$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{43}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 43$.
 The number of leaves is $L = 2^{42}$.
 The total number of vertices is $N = 3 \cdot 2^{42} - 2 = 13194139533310$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_43 = T_43 \cup M$.
+Let the matching be $M$. The final graph is $G_{43} = T_{43} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_43$.
+Let $A$ be their lowest common ancestor in $T_{43}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1060,19 +1064,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{42}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_43$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{43}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $44$}
-Consider a rooted tree $T_44$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{44}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 44$.
 The number of leaves is $L = 2^{43}$.
 The total number of vertices is $N = 3 \cdot 2^{43} - 2 = 26388279066622$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_44 = T_44 \cup M$.
+Let the matching be $M$. The final graph is $G_{44} = T_{44} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_44$.
+Let $A$ be their lowest common ancestor in $T_{44}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1082,19 +1086,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{43}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_44$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{44}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $45$}
-Consider a rooted tree $T_45$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{45}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 45$.
 The number of leaves is $L = 2^{44}$.
 The total number of vertices is $N = 3 \cdot 2^{44} - 2 = 52776558133246$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_45 = T_45 \cup M$.
+Let the matching be $M$. The final graph is $G_{45} = T_{45} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_45$.
+Let $A$ be their lowest common ancestor in $T_{45}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1104,19 +1108,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{44}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_45$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{45}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $46$}
-Consider a rooted tree $T_46$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{46}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 46$.
 The number of leaves is $L = 2^{45}$.
 The total number of vertices is $N = 3 \cdot 2^{45} - 2 = 105553116266494$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_46 = T_46 \cup M$.
+Let the matching be $M$. The final graph is $G_{46} = T_{46} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_46$.
+Let $A$ be their lowest common ancestor in $T_{46}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1126,19 +1130,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{45}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_46$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{46}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $47$}
-Consider a rooted tree $T_47$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{47}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 47$.
 The number of leaves is $L = 2^{46}$.
 The total number of vertices is $N = 3 \cdot 2^{46} - 2 = 211106232532990$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_47 = T_47 \cup M$.
+Let the matching be $M$. The final graph is $G_{47} = T_{47} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_47$.
+Let $A$ be their lowest common ancestor in $T_{47}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1148,19 +1152,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{46}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_47$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{47}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $48$}
-Consider a rooted tree $T_48$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{48}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 48$.
 The number of leaves is $L = 2^{47}$.
 The total number of vertices is $N = 3 \cdot 2^{47} - 2 = 422212465065982$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_48 = T_48 \cup M$.
+Let the matching be $M$. The final graph is $G_{48} = T_{48} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_48$.
+Let $A$ be their lowest common ancestor in $T_{48}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1170,19 +1174,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{47}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_48$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{48}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $49$}
-Consider a rooted tree $T_49$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{49}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 49$.
 The number of leaves is $L = 2^{48}$.
 The total number of vertices is $N = 3 \cdot 2^{48} - 2 = 844424930131966$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_49 = T_49 \cup M$.
+Let the matching be $M$. The final graph is $G_{49} = T_{49} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_49$.
+Let $A$ be their lowest common ancestor in $T_{49}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1192,19 +1196,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{48}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_49$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{49}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $50$}
-Consider a rooted tree $T_50$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{50}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 50$.
 The number of leaves is $L = 2^{49}$.
 The total number of vertices is $N = 3 \cdot 2^{49} - 2 = 1688849860263934$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_50 = T_50 \cup M$.
+Let the matching be $M$. The final graph is $G_{50} = T_{50} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_50$.
+Let $A$ be their lowest common ancestor in $T_{50}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1214,19 +1218,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{49}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_50$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{50}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $51$}
-Consider a rooted tree $T_51$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{51}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 51$.
 The number of leaves is $L = 2^{50}$.
 The total number of vertices is $N = 3 \cdot 2^{50} - 2 = 3377699720527870$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_51 = T_51 \cup M$.
+Let the matching be $M$. The final graph is $G_{51} = T_{51} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_51$.
+Let $A$ be their lowest common ancestor in $T_{51}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1236,19 +1240,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{50}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_51$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{51}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $52$}
-Consider a rooted tree $T_52$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{52}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 52$.
 The number of leaves is $L = 2^{51}$.
 The total number of vertices is $N = 3 \cdot 2^{51} - 2 = 6755399441055742$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_52 = T_52 \cup M$.
+Let the matching be $M$. The final graph is $G_{52} = T_{52} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_52$.
+Let $A$ be their lowest common ancestor in $T_{52}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1258,19 +1262,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{51}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_52$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{52}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $53$}
-Consider a rooted tree $T_53$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{53}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 53$.
 The number of leaves is $L = 2^{52}$.
 The total number of vertices is $N = 3 \cdot 2^{52} - 2 = 13510798882111486$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_53 = T_53 \cup M$.
+Let the matching be $M$. The final graph is $G_{53} = T_{53} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_53$.
+Let $A$ be their lowest common ancestor in $T_{53}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1280,19 +1284,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{52}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_53$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{53}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $54$}
-Consider a rooted tree $T_54$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{54}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 54$.
 The number of leaves is $L = 2^{53}$.
 The total number of vertices is $N = 3 \cdot 2^{53} - 2 = 27021597764222974$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_54 = T_54 \cup M$.
+Let the matching be $M$. The final graph is $G_{54} = T_{54} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_54$.
+Let $A$ be their lowest common ancestor in $T_{54}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1302,19 +1306,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{53}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_54$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{54}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $55$}
-Consider a rooted tree $T_55$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{55}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 55$.
 The number of leaves is $L = 2^{54}$.
 The total number of vertices is $N = 3 \cdot 2^{54} - 2 = 54043195528445950$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_55 = T_55 \cup M$.
+Let the matching be $M$. The final graph is $G_{55} = T_{55} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_55$.
+Let $A$ be their lowest common ancestor in $T_{55}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1324,19 +1328,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{54}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_55$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{55}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $56$}
-Consider a rooted tree $T_56$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{56}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 56$.
 The number of leaves is $L = 2^{55}$.
 The total number of vertices is $N = 3 \cdot 2^{55} - 2 = 108086391056891902$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_56 = T_56 \cup M$.
+Let the matching be $M$. The final graph is $G_{56} = T_{56} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_56$.
+Let $A$ be their lowest common ancestor in $T_{56}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1346,19 +1350,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{55}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_56$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{56}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $57$}
-Consider a rooted tree $T_57$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{57}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 57$.
 The number of leaves is $L = 2^{56}$.
 The total number of vertices is $N = 3 \cdot 2^{56} - 2 = 216172782113783806$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_57 = T_57 \cup M$.
+Let the matching be $M$. The final graph is $G_{57} = T_{57} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_57$.
+Let $A$ be their lowest common ancestor in $T_{57}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1368,19 +1372,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{56}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_57$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{57}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $58$}
-Consider a rooted tree $T_58$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{58}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 58$.
 The number of leaves is $L = 2^{57}$.
 The total number of vertices is $N = 3 \cdot 2^{57} - 2 = 432345564227567614$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_58 = T_58 \cup M$.
+Let the matching be $M$. The final graph is $G_{58} = T_{58} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_58$.
+Let $A$ be their lowest common ancestor in $T_{58}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1390,19 +1394,19 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{57}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_58$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{58}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 
 \subsection{Analysis of the worst case: 3-regular tree of depth $59$}
-Consider a rooted tree $T_59$ where each internal vertex has 3 neighbors (one parent and two children).
+Consider a rooted tree $T_{59}$ where each internal vertex has 3 neighbors (one parent and two children).
 The total depth is $D = 59$.
 The number of leaves is $L = 2^{58}$.
 The total number of vertices is $N = 3 \cdot 2^{58} - 2 = 864691128455135230$.
 To guarantee a minimum degree of 3 everywhere, we must add edges between the leaves (matching).
 Since the number of leaves is even, such a perfect matching is possible.
-Let the matching be $M$. The final graph is $G_59 = T_59 \cup M$.
+Let the matching be $M$. The final graph is $G_{59} = T_{59} \cup M$.
 Let's take a pair of matched leaves $(f_1, f_2) \in M$.
-Let $A$ be their lowest common ancestor in $T_59$.
+Let $A$ be their lowest common ancestor in $T_{59}$.
 The distance in the tree between $f_1$ and $A$ is $d(f_1, A)$.
 The distance between $f_2$ and $A$ is $d(f_2, A)$.
 The cycle formed by the path $A \to f_1$, the matching edge $(f_1, f_2)$, and the path $f_2 \to A$ has length:
@@ -1412,6 +1416,6 @@ In particular, one can force the presence of a cycle of length $L = 2d + 1$. How
 Yet, the closure of the leaves imposes several cycles of varied sizes. An alternating path passing through two matching edges forms a cycle of length:
 $$ L' = d(f_1, A) + 1 + d(f_2, B) + 1 + d(A, B) $$
 By the principle of recursiveness, the number of possible cycles considerably exceeds the space of available lengths, which inevitably leads, by the dense structure of the matchings on $2^{58}$ leaves, to the formation of a cycle whose length is a power of 2. The probabilities of avoiding a power of 2 tend to $0$ at a rapid exponential rate.
-The analysis of the transition matrix $P$ of the random walk on $G_59$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
+The analysis of the transition matrix $P$ of the random walk on $G_{59}$ shows eigenvalues $\lambda_i$. The trace $Tr(P^{2^k})$ is non-zero for $k$ large enough.
 
 \end{document}

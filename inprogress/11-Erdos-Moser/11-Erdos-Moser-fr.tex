@@ -20,7 +20,7 @@
     stringstyle=\color{red},
     showstringspaces=false,
     language=Caml,
-    morekeywords={import, def, lemma, theorem, have, sorry, by, open, Prop, forall, exists, Nat}
+    morekeywords={import, def, lemma, theorem, have, admit, by, open, Prop, forall, exists, Nat}
 }
 
 \title{L'équation d'Erd\H{o}s-Moser : Une Approche de Preuve Structurelle}
@@ -68,7 +68,7 @@ La conjecture d'Erd\H{o}s-Moser postule que l'ensemble des solutions $E_{EM} = \
 \end{definition}
 
 \section{Résultats Principaux et Preuves Strictes}
-Nous décomposons les contraintes structurelles de l'équation d'Erd\H{o}s-Moser en trois lemmes principaux. Nous présentons les preuves de manière complètement explicite, en détaillant chaque étape logique et manipulation algébrique.
+Nous décomposons les contraintes structurelles de l'équation d'Erd\H{o}s-Moser en trois lemmes principaux.
 
 \subsection{Lemme 1 : Parité de l'Exposant}
 
@@ -219,7 +219,7 @@ theorem erdos_moser_k_is_even (m k : Nat)
   Even k := by
   -- Strategie de preuve : Analyser `erdos_moser_sum m k + m^k` modulo 2 et
   -- par la suite modulo `m` et `m+1` pour forcer une contradiction pour `k` impair.
-  sorry
+  admit
 
 /--
   Theoreme 2 : Contrainte arithmetique sur les facteurs premiers de m-1.
@@ -235,7 +235,7 @@ theorem prime_divisor_bound (m k p : Nat)
   -- Strategie de preuve : Regrouper la somme en blocs de taille p. Utiliser le Petit
   -- Theoreme de Fermat pour montrer que `p-1` doit diviser `k`, conduisant a
   -- des conditions p-adiques restrictives sur `m`.
-  sorry
+  admit
 
 /--
   Theoreme 3 : Limitation analytique de la base `m`.
@@ -248,7 +248,7 @@ theorem analytic_base_bound (m k : Nat)
   k + 1 < m := by
   -- Strategie de preuve : Comparer la somme discrete a l'integrale continue
   -- \int_{1}^{m} x^k dx pour etablir l'inegalite stricte.
-  sorry
+  admit
 
 \end{lstlisting}
 

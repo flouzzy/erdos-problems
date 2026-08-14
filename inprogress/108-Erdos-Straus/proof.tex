@@ -1,17 +1,25 @@
-\documentclass[12pt,a4paper]{article}
-\usepackage{amsmath,amssymb,amsthm}
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
-\usepackage{fancyhdr}
-\geometry{a4paper, margin=1in}
-
-\title{Rigorous Analysis of the Erd\H{o}s-Straus Conjecture: Modular Congruences and Algorithmic Reduction}
-\author{Charles EDOU NZE}
-\date{\today}
+\usepackage{listings}
+\geometry{margin=2.5cm}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
-\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{On the Erd\H{o}s-Straus Conjecture: Algebraic Analysis and Modular Decomposition}
+\author{Charles EDOU NZE}
+\date{\today}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, admit, Prop, Nat, open, section, Exists, fun, Set, Finset, Real, Filter, Topology},
+  sensitive=true,
+  comment=[l]--
+}
 
 \begin{document}
 \maketitle
@@ -21,129 +29,107 @@
 \cfoot{\footnotesize Charles EDOU NZE, chercheur ind\'ependant}
 
 \begin{abstract}
-We present a rigorous investigation into the Erd\H{o}s-Straus conjecture, which asserts that the diophantine equation $4/n = 1/x + 1/y + 1/z$ admits positive integer solutions for every integer $n \ge 2$. Building upon established literature such as "Solutions to Diophantine Equation of Erdos-Straus Conjecture", we formalize the problem through strict axiomatic definitions, analyze the underlying modular congruences, and establish polynomial parameterizations for residual classes. Furthermore, we construct an explicit scaffolding for autoformalization in Lean 4 to ensure symbolic verification.
+This document formally addresses the Erd\H{o}s-Straus conjecture, which asserts that for all integers $n \ge 2$, the equation $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ possesses positive integer solutions $x, y, z$. The structure encompasses strict axiomatic definitions, a review of pertinent literature focusing on modular sieves and divisor parametrization, a decomposition into congruence classes modulo $4$ and $3$, and detailed derivations covering these classes. A formal architecture in Lean 4 is subsequently outlined.
+\vfill
+\noindent \textit{Charles EDOU NZE, chercheur ind\'ependant}
 \end{abstract}
 
-\section{Axiomatic Definitions and Problem Statement}
+\tableofcontents
+\newpage
+
+\section{Axiomatic Definitions}
+
 \begin{definition}
-Let $\mathbb{N}$ denote the set of positive integers. For an arbitrary but fixed integer $n \in \mathbb{N}$ with $n \ge 2$, the Erd\H{o}s-Straus equation is given by:
-\begin{equation}
-\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} \label{eq:es}
-\end{equation}
-where $x, y, z \in \mathbb{N}$.
+Let $n \in \mathbb{N}$ with $n \ge 2$. A positive integer triplet $(x, y, z) \in (\mathbb{N}_{>0})^3$ is defined as a solution to the Erd\H{o}s-Straus Diophantine equation if it satisfies:
+\[ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} \]
 \end{definition}
+
 \begin{definition}
-A triplet $(x, y, z) \in \mathbb{N}^3$ is said to be a \textbf{valid solution} for a given $n \ge 2$ if it strictly satisfies equation \eqref{eq:es}. Let $S(n)$ denote the set of all valid solutions for $n$. The Erd\H{o}s-Straus conjecture is equivalent to the proposition that $\forall n \ge 2, S(n) \neq \emptyset$.
+We define the predicate $\mathcal{E}(n)$ to be true if and only if there exists a solution triplet $(x, y, z) \in (\mathbb{N}_{>0})^3$ for a given integer $n \ge 2$.
 \end{definition}
 
 \section{Contextual Literature}
-Recent explorations into the structure of solutions, notably documented in "Solutions to Diophantine Equation of Erdos-Straus Conjecture", highlight that solutions can often be derived through modular restrictions and polynomial parameterization. A prevalent strategy is to divide the integers into residue classes modulo $24$ or $840$, mapping subsets of the primes to explicit polynomial forms that satisfy the equation.
 
-\section{Lemmas and Step-by-Step Proofs}
+The Erd\H{o}s-Straus conjecture formulates a fundamental question concerning the representation of rational numbers as sums of unit fractions. Significant advances have relied on analyzing the equation via modular arithmetic. Approaches involving modular sieves have empirically verified the conjecture up to $N = 10^{17}$ (Salez, 2014) and beyond. Theoretical studies extensively employ divisor parametrizations and polynomial identities. A prominent analytic result establishes that the number of solutions is bounded poly-logarithmically on average. The methodology developed herein leverages these polynomial identities parameterized by congruence classes.
 
-\subsection{Reduction to Prime Cases}
-\begin{lemma} \label{lem:prime_reduction}
-If $S(p) \neq \emptyset$ for all prime numbers $p$, then $S(n) \neq \emptyset$ for all composite $n \ge 2$.
+\section{Lemma Isolation and Zero-Ellipse Proofs}
+
+The reduction of the conjecture to prime values $n = p$ is standard, as a solution for a prime factor $p$ can be extended to composite numbers via scalar multiplication. We establish specific lemmas for distinct congruence classes.
+
+\begin{lemma}
+For any integer $k \ge 0$, if $n = 4k + 3$, then $\mathcal{E}(n)$ holds.
 \end{lemma}
+
 \begin{proof}
-Let $n \in \mathbb{N}$ with $n \ge 2$. By the Fundamental Theorem of Arithmetic, if $n$ is not prime, there exists a prime $p$ such that $p \mid n$. Thus, we can write $n = p \cdot k$ for some $k \in \mathbb{N}$.
-By the hypothesis, $S(p) \neq \emptyset$. Let $(x_p, y_p, z_p) \in S(p)$. Then:
-\begin{align}
-\frac{4}{p} &= \frac{1}{x_p} + \frac{1}{y_p} + \frac{1}{z_p}
-\end{align}
-Dividing both sides by $k$, we obtain:
-\begin{align}
-\frac{4}{p \cdot k} &= \frac{1}{x_p \cdot k} + \frac{1}{y_p \cdot k} + \frac{1}{z_p \cdot k} \nonumber \\
-\frac{4}{n} &= \frac{1}{x_n} + \frac{1}{y_n} + \frac{1}{z_n}
-\end{align}
-where $x_n = k x_p$, $y_n = k y_p$, and $z_n = k z_p$. Since $k, x_p, y_p, z_p \in \mathbb{N}$, it follows that $x_n, y_n, z_n \in \mathbb{N}$. Therefore, $(x_n, y_n, z_n) \in S(n)$, implying $S(n) \neq \emptyset$.
+Let $n = 4k + 3$ for $k \in \mathbb{N}$. We consider the rational function expansion of $\frac{4}{4k+3}$. We define the triplet of variables $(x, y, z)$ as follows:
+\[ x = k + 1 \]
+\[ y = 2(4k+3)(k+1) \]
+\[ z = 2(4k+3)(k+1) \]
+We evaluate the sum of the reciprocal unit fractions corresponding to this assignment:
+\[ \frac{1}{x} + \frac{1}{y} + \frac{1}{z} = \frac{1}{k+1} + \frac{1}{2(4k+3)(k+1)} + \frac{1}{2(4k+3)(k+1)} \]
+Since the second and third fractions are identical, we sum them:
+\[ \frac{1}{2(4k+3)(k+1)} + \frac{1}{2(4k+3)(k+1)} = \frac{2}{2(4k+3)(k+1)} = \frac{1}{(4k+3)(k+1)} \]
+Substituting this back into the original sum:
+\[ \frac{1}{k+1} + \frac{1}{(4k+3)(k+1)} \]
+To combine these fractions, we identify a common denominator, which is $(4k+3)(k+1)$. We multiply the numerator and denominator of the first fraction by $(4k+3)$:
+\[ \frac{4k+3}{(4k+3)(k+1)} + \frac{1}{(4k+3)(k+1)} = \frac{4k+4}{(4k+3)(k+1)} \]
+We factor the numerator as $4(k+1)$:
+\[ \frac{4(k+1)}{(4k+3)(k+1)} \]
+Since $k \ge 0$, the term $(k+1)$ is non-zero, allowing us to cancel it from the numerator and denominator:
+\[ \frac{4}{4k+3} = \frac{4}{n} \]
+This demonstrates that $x = k+1$, $y = 2(4k+3)(k+1)$, and $z = 2(4k+3)(k+1)$ constitute a valid integer triplet solution for $n = 4k+3$. Since $k \ge 0$, all denominators are strictly positive integers.
 \end{proof}
 
-\subsection{Polynomial Parameterization for Residue Classes}
-\begin{lemma} \label{lem:res_class}
-If $p \not\equiv 1 \pmod{24}$, then $S(p) \neq \emptyset$.
+\begin{lemma}
+For any integer $k \ge 1$, if $n = 3k + 2$, then $\mathcal{E}(n)$ holds.
 \end{lemma}
+
 \begin{proof}
-We consider the possible residue classes of $p$ modulo $24$. The primes $p$ must be coprime to $24$, leaving the classes $p \equiv 1, 5, 7, 11, 13, 17, 19, 23 \pmod{24}$.
-
-For $p \equiv 23 \pmod{24}$, $p$ can be written as $p = 24k - 1$. An explicit algebraic identity gives:
-\begin{align}
-\frac{4}{24k-1} &= \frac{1}{6k} + \frac{1}{6k(24k-1)} + \frac{1}{2(24k-1)(12k-1)} + \dots
-\end{align}
-Since solving exactly takes many terms, we adopt the standard identity strategy:
-\begin{align}
-\frac{4}{24k-1} = \frac{1}{6k} + \frac{1}{6k(24k-1)} + \frac{1}{2k(24k-1)}
-\end{align}
-Wait, this is incorrect. The correct identity is:
-\begin{align}
-\frac{4}{24k-1} &= \frac{1}{6k} + \frac{1}{24k-1} + \frac{1}{6k(24k-1)}
-\end{align}
-Let $x = 6k$, $y = 24k-1$, $z = 6k(24k-1)$. For $k \ge 1$, $x, y, z \in \mathbb{N}$, thus $(x, y, z) \in S(p)$.
-
-For $p \equiv 5 \pmod{24}$, we can write $p = 24k + 5$. The identity is:
-\begin{align}
-\frac{4}{24k+5} &= \frac{1}{6k+2} + \frac{1}{2(24k+5)} + \frac{1}{(6k+2)(24k+5)}
-\end{align}
-Let $x = 6k+2$, $y = 2(24k+5)$, $z = (6k+2)(24k+5)$. Since $k \ge 0$, $x,y,z \in \mathbb{N}$, so $(x,y,z) \in S(p)$.
-
-For $p \equiv 7 \pmod{24}$, we can write $p = 24k + 7$. The identity is:
-\begin{align}
-\frac{4}{24k+7} &= \frac{1}{6k+2} + \frac{1}{24k+7} + \frac{1}{(6k+2)(24k+7)}
-\end{align}
-Let $x = 6k+2$, $y = 24k+7$, $z = (6k+2)(24k+7)$. Since $k \ge 0$, $x,y,z \in \mathbb{N}$, so $(x,y,z) \in S(p)$.
-
-For $p \equiv 11 \pmod{24}$, we can write $p = 24k + 11$. The identity is:
-\begin{align}
-\frac{4}{24k+11} &= \frac{1}{6k+3} + \frac{1}{3(24k+11)} + \frac{1}{(6k+3)(24k+11)}
-\end{align}
-Let $x = 6k+3$, $y = 3(24k+11)$, $z = (6k+3)(24k+11)$. Since $k \ge 0$, $x,y,z \in \mathbb{N}$, so $(x,y,z) \in S(p)$.
-
-For $p \equiv 13 \pmod{24}$, we can write $p = 24k + 13$. The identity is:
-\begin{align}
-\frac{4}{24k+13} &= \frac{1}{6k+4} + \frac{1}{2(24k+13)} + \frac{1}{(6k+4)(24k+13)}
-\end{align}
-Let $x = 6k+4$, $y = 2(24k+13)$, $z = (6k+4)(24k+13)$. Since $k \ge 0$, $x,y,z \in \mathbb{N}$, so $(x,y,z) \in S(p)$.
-
-For $p \equiv 17 \pmod{24}$, we can write $p = 24k + 17$. The identity is:
-\begin{align}
-\frac{4}{24k+17} &= \frac{1}{6k+5} + \frac{1}{2(24k+17)} + \frac{1}{(6k+5)(24k+17)}
-\end{align}
-Let $x = 6k+5$, $y = 2(24k+17)$, $z = (6k+5)(24k+17)$. Since $k \ge 0$, $x,y,z \in \mathbb{N}$, so $(x,y,z) \in S(p)$.
-
-For $p \equiv 19 \pmod{24}$, we can write $p = 24k + 19$. The identity is:
-\begin{align}
-\frac{4}{24k+19} &= \frac{1}{6k+5} + \frac{1}{24k+19} + \frac{1}{(6k+5)(24k+19)}
-\end{align}
-Let $x = 6k+5$, $y = 24k+19$, $z = (6k+5)(24k+19)$. Since $k \ge 0$, $x,y,z \in \mathbb{N}$, so $(x,y,z) \in S(p)$.
-
-The only class lacking a universal univariate polynomial identity under modulo 24 restrictions is $p \equiv 1 \pmod{24}$.
+Let $n = 3k + 2$ for $k \in \mathbb{N}_{>0}$.
+We define $x = k+1$.
+The difference is evaluated as:
+\[ \frac{4}{3k+2} - \frac{1}{k+1} = \frac{4(k+1) - (3k+2)}{(3k+2)(k+1)} = \frac{4k+4-3k-2}{(3k+2)(k+1)} = \frac{k+2}{(3k+2)(k+1)} \]
+We require $\frac{k+2}{(3k+2)(k+1)}$ to be represented as $\frac{1}{y} + \frac{1}{z}$.
+We use the algebraic identity $\frac{A+B}{C} = \frac{A}{C} + \frac{B}{C}$. Let $A = k+1$ and $B = 1$. Then $A+B = k+2$.
+\[ \frac{k+2}{(3k+2)(k+1)} = \frac{k+1}{(3k+2)(k+1)} + \frac{1}{(3k+2)(k+1)} \]
+Simplifying the first fraction by canceling the common factor $(k+1)$:
+\[ \frac{k+1}{(3k+2)(k+1)} = \frac{1}{3k+2} \]
+Thus, the difference decomposes exactly into two unit fractions:
+\[ \frac{1}{3k+2} + \frac{1}{(3k+2)(k+1)} \]
+We assign $y = 3k+2$ and $z = (3k+2)(k+1)$. Since $k \ge 1$, $x=k+1$, $y=3k+2$, and $z=(3k+2)(k+1)$ are all strictly positive integers.
+The full identity is:
+\[ \frac{4}{3k+2} = \frac{1}{k+1} + \frac{1}{3k+2} + \frac{1}{(3k+2)(k+1)} \]
+This concludes the proof for this congruence class.
 \end{proof}
 
 \section{Architecture for Autoformalization}
 The formal verification of the aforementioned lemmas can be implemented in Lean 4. The foundational types are specified as follows:
 
-\begin{verbatim}
+The following definitions and types present a structure for translating the problem and established modular identities into Lean 4.
+
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Nat.Prime
+import Mathlib.Data.Rat.Basic
 
-def SatisfiesErdosStraus (n : Nat) (x y z : Nat) : Prop :=
-  (x > 0) /\ (y > 0) /\ (z > 0) /\
-  (4 * x * y * z = n * (y * z + x * z + x * y))
+open Nat
 
-theorem reduction_to_primes (n : Nat) (hn : n >= 2)
-  (hp : forall p : Nat, p.Prime -> exists x y z, SatisfiesErdosStraus p x y z) :
-  exists x y z, SatisfiesErdosStraus n x y z := by
+-- Axiomatic definition of the Erd\H{o}s-Straus property for an integer n
+def SatisfiesErdosStraus (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z =>
+    x > 0 /\ y > 0 /\ z > 0 /\
+    (4 : Rat) / n = (1 : Rat) / x + (1 : Rat) / y + (1 : Rat) / z)))
+
+-- Lemma for the congruence class n = 4k + 3
+lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
   admit
 
-theorem erdos_straus_mod_4_3 (n : Nat) (h : n % 4 = 3) :
-  exists x y z : Nat, SatisfiesErdosStraus n x y z := by
+-- Lemma for the congruence class n = 3k + 2
+lemma erdos_straus_mod_3_2 (k : Nat) (hk : k >= 1) : SatisfiesErdosStraus (3 * k + 2) := by
   admit
 
-theorem prime_residue_23 (p : Nat) (k : Nat) (h : p = 24 * k - 1) (hk : k >= 1) :
-  exists x y z, SatisfiesErdosStraus p x y z := by
+-- General statement of the Erd\H{o}s-Straus conjecture
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
   admit
-\end{verbatim}
-
-The structure clearly delineates the hypotheses and defines the integer constraints without invoking division, avoiding rational arithmetic complexities in the formal system.
+\end{lstlisting}
 
 \end{document}

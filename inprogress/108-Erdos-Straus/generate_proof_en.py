@@ -117,7 +117,7 @@ The only class lacking a universal univariate polynomial identity under modulo 2
 \section{Architecture for Autoformalization}
 The formal verification of the aforementioned lemmas can be implemented in Lean 4. The foundational types are specified as follows:
 
-\begin{verbatim}
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Prime
 

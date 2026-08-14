@@ -119,7 +119,7 @@ La seule classe manquant d'une identit\'e polynomiale univari\'ee universelle so
 \section{Architecture pour l'Autoformalisation}
 La v\'erification formelle des lemmes susmentionn\'es peut \^etre impl\'ement\'ee dans Lean 4. Les types fondamentaux sont sp\'ecifi\'es comme suit :
 
-\begin{verbatim}
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Prime
 

@@ -1,148 +1,135 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
-\geometry{margin=1in}
 \usepackage{listings}
-
-\title{Rigorous Proof Architecture for the Erd\H{o}s-Straus Conjecture}
-\author{Charles EDOU NZE}
-\date{\today}
+\geometry{margin=2.5cm}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{On the Erd\H{o}s-Straus Conjecture: Algebraic Analysis and Modular Decomposition}
+\author{Charles EDOU NZE}
+\date{\today}
 
 \lstdefinelanguage{lean}{
-  keywords={import, def, theorem, lemma, by, admit, Prop, Nat, open, section, Exists, fun},
+  keywords={import, def, theorem, lemma, by, admit, Prop, Nat, open, section, Exists, fun, Set, Finset, Real, Filter, Topology},
   sensitive=true,
   comment=[l]--
 }
 
 \begin{document}
 \maketitle
+\thispagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\cfoot{\footnotesize Charles EDOU NZE, chercheur ind\'ependant}
 
 \begin{abstract}
-This document presents a structured framework and partial resolution towards the Erd\H{o}s-Straus Conjecture. It defines the formal axiomatic boundaries, establishes the contextual algebraic structures, details zero-ellipse lemmas for modular reduction, and formulates an architecture ready for automated formalization in systems such as Lean 4.
+This document formally addresses the Erd\H{o}s-Straus conjecture, which asserts that for all integers $n \ge 2$, the equation $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ possesses positive integer solutions $x, y, z$. The structure encompasses strict axiomatic definitions, a review of pertinent literature focusing on modular sieves and divisor parametrization, a decomposition into congruence classes modulo $4$ and $3$, and detailed derivations covering these classes. A formal architecture in Lean 4 is subsequently outlined.
 \vfill
-\noindent \textit{Signature: Charles EDOU NZE, chercheur ind\'ependant}
+\noindent \textit{Charles EDOU NZE, chercheur ind\'ependant}
 \end{abstract}
 
 \tableofcontents
 \newpage
 
-\section{Axiomatic Definitions and Type Specifications}
+\section{Axiomatic Definitions}
 
-Let $\mathbb{N}$ denote the set of positive integers $\{1, 2, 3, \ldots\}$.
-
-\begin{definition}[Erd\H{o}s-Straus Equation]
-For $n \in \mathbb{N}_{\geq 2}$, a solution to the Erd\H{o}s-Straus equation is an ordered triplet $(x, y, z) \in \mathbb{N}^3$ such that:
-$$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
+\begin{definition}
+Let $n \in \mathbb{N}$ with $n \ge 2$. A positive integer triplet $(x, y, z) \in (\mathbb{N}_{>0})^3$ is defined as a solution to the Erd\H{o}s-Straus Diophantine equation if it satisfies:
+\[ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} \]
 \end{definition}
 
-In polynomial form, this is equivalent to finding positive integers $x, y, z$ satisfying:
-$$ 4xyz = n(xy + yz + zx) $$
+\begin{definition}
+We define the predicate $\mathcal{E}(n)$ to be true if and only if there exists a solution triplet $(x, y, z) \in (\mathbb{N}_{>0})^3$ for a given integer $n \ge 2$.
+\end{definition}
 
-\section{Contextual Literature Research}
+\section{Contextual Literature}
 
-The Erd\H{o}s-Straus conjecture is fundamentally a problem of Diophantine equations over the rationals. Key results from the literature include:
-\begin{itemize}
-    \item \textbf{Mordell's Theorem:} Bounds on the number of solutions to Diophantine equations of degree 3.
-    \item \textbf{Webb and Schinzel (1983):} Demonstrated that the conjecture holds for all $n$ except possibly those in certain congruence classes modulo $840$.
-    \item \textbf{Elsholtz and Tao (2013):} Established upper bounds on the number of solutions to the equation $4/n = 1/x + 1/y + 1/z$.
-\end{itemize}
+The Erd\H{o}s-Straus conjecture formulates a fundamental question concerning the representation of rational numbers as sums of unit fractions. Significant advances have relied on analyzing the equation via modular arithmetic. Approaches involving modular sieves have empirically verified the conjecture up to $N = 10^{17}$ (Salez, 2014) and beyond. Theoretical studies extensively employ divisor parametrizations and polynomial identities. A prominent analytic result establishes that the number of solutions is bounded poly-logarithmically on average. The methodology developed herein leverages these polynomial identities parameterized by congruence classes.
 
-An analogy can be drawn to the weakly resolved Erd\H{o}s-Graham conjecture, where similar modular constraints dictate the density of subset sums. Recent studies by authors such as Miguel Angel Lopez have classified solutions into types, such as Type A and Type B, by defining a complete congruence system. Furthermore, Philemon Urbain Mballa has explored an unexpected connection between the discrete zeta function and the Erd\H{o}s-Straus conjecture through additive decomposition.
+\section{Lemma Isolation and Zero-Ellipse Proofs}
 
-\section{Proof Strategy and Lemmas}
+The reduction of the conjecture to prime values $n = p$ is standard, as a solution for a prime factor $p$ can be extended to composite numbers via scalar multiplication. We establish specific lemmas for distinct congruence classes.
 
-We proceed by modular reduction, examining the conjecture for prime $n$. If the conjecture holds for all primes, it holds for all integers by a simple scaling argument.
-
-\begin{lemma}[Prime Reduction Lemma]
-If the Erd\H{o}s-Straus equation has a solution for all prime numbers $p \geq 2$, then it has a solution for all integers $n \geq 2$.
+\begin{lemma}
+For any integer $k \ge 0$, if $n = 4k + 3$, then $\mathcal{E}(n)$ holds.
 \end{lemma}
+
 \begin{proof}
-Let $n = p \cdot k$, where $p$ is prime and $k \in \mathbb{N}$. Assume there exists a solution for $p$:
-$$ \frac{4}{p} = \frac{1}{a} + \frac{1}{b} + \frac{1}{c} $$
-Dividing both sides by $k$ yields:
-$$ \frac{4}{pk} = \frac{1}{ak} + \frac{1}{bk} + \frac{1}{ck} $$
-Since $n = pk$, we have:
-$$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
-where $x=ak$, $y=bk$, and $z=ck$. This completes the proof of the reduction.
+Let $n = 4k + 3$ for $k \in \mathbb{N}$. We consider the rational function expansion of $\frac{4}{4k+3}$. We define the triplet of variables $(x, y, z)$ as follows:
+\[ x = k + 1 \]
+\[ y = 2(4k+3)(k+1) \]
+\[ z = 2(4k+3)(k+1) \]
+We evaluate the sum of the reciprocal unit fractions corresponding to this assignment:
+\[ \frac{1}{x} + \frac{1}{y} + \frac{1}{z} = \frac{1}{k+1} + \frac{1}{2(4k+3)(k+1)} + \frac{1}{2(4k+3)(k+1)} \]
+Since the second and third fractions are identical, we sum them:
+\[ \frac{1}{2(4k+3)(k+1)} + \frac{1}{2(4k+3)(k+1)} = \frac{2}{2(4k+3)(k+1)} = \frac{1}{(4k+3)(k+1)} \]
+Substituting this back into the original sum:
+\[ \frac{1}{k+1} + \frac{1}{(4k+3)(k+1)} \]
+To combine these fractions, we identify a common denominator, which is $(4k+3)(k+1)$. We multiply the numerator and denominator of the first fraction by $(4k+3)$:
+\[ \frac{4k+3}{(4k+3)(k+1)} + \frac{1}{(4k+3)(k+1)} = \frac{4k+4}{(4k+3)(k+1)} \]
+We factor the numerator as $4(k+1)$:
+\[ \frac{4(k+1)}{(4k+3)(k+1)} \]
+Since $k \ge 0$, the term $(k+1)$ is non-zero, allowing us to cancel it from the numerator and denominator:
+\[ \frac{4}{4k+3} = \frac{4}{n} \]
+This demonstrates that $x = k+1$, $y = 2(4k+3)(k+1)$, and $z = 2(4k+3)(k+1)$ constitute a valid integer triplet solution for $n = 4k+3$. Since $k \ge 0$, all denominators are strictly positive integers.
 \end{proof}
 
-\begin{lemma}[Polynomial Parameterization for $p \equiv 3 \pmod 4$]
-For a prime $p \equiv 3 \pmod 4$, there exists a parameterization of solutions.
+\begin{lemma}
+For any integer $k \ge 1$, if $n = 3k + 2$, then $\mathcal{E}(n)$ holds.
 \end{lemma}
+
 \begin{proof}
-Let $p \equiv 3 \pmod 4$. This implies there exists an integer $k \ge 0$ such that $p = 4k + 3$.
-We set $x = k + 1$. Because $k \ge 0$, we have $x \ge 1$, ensuring $x \in \mathbb{Z}_{>0}$.
-Note that $x = (4k+4)/4 = (p+1)/4$.
-We evaluate the remaining difference:
-\begin{align*}
-\frac{4}{p} - \frac{1}{x} &= \frac{4}{p} - \frac{1}{k+1} \\
-&= \frac{4(k+1) - p}{p(k+1)} \\
-&= \frac{4k+4 - (4k+3)}{p(k+1)} \\
-&= \frac{1}{p(k+1)}
-\end{align*}
-We employ the standard Egyptian fraction splitting identity:
-\[ \frac{1}{A} = \frac{1}{A+1} + \frac{1}{A(A+1)} \]
-Applying this to $A = p(k+1)$, we set:
-$y = p(k+1) + 1$
-and
-$z = p(k+1)(p(k+1)+1)$
-Since $p \ge 3$ and $k \ge 0$, both $y$ and $z$ are strictly positive integers.
-By substitution:
-\begin{align*}
-\frac{1}{y} + \frac{1}{z} &= \frac{1}{p(k+1)+1} + \frac{1}{p(k+1)(p(k+1)+1)} \\
-&= \frac{p(k+1)}{p(k+1)(p(k+1)+1)} + \frac{1}{p(k+1)(p(k+1)+1)} \\
-&= \frac{p(k+1)+1}{p(k+1)(p(k+1)+1)} \\
-&= \frac{1}{p(k+1)}
-\end{align*}
-Adding $\frac{1}{x} = \frac{1}{k+1}$, we get:
-\begin{align*}
-\frac{1}{x} + \frac{1}{y} + \frac{1}{z} &= \frac{1}{k+1} + \frac{1}{p(k+1)} \\
-&= \frac{p}{p(k+1)} + \frac{1}{p(k+1)} \\
-&= \frac{p+1}{p(k+1)} \\
-&= \frac{4k+4}{p(k+1)} \\
-&= \frac{4(k+1)}{p(k+1)} \\
-&= \frac{4}{p}
-\end{align*}
-This constructs explicitly a positive integer solution for all $p \equiv 3 \pmod 4$.
+Let $n = 3k + 2$ for $k \in \mathbb{N}_{>0}$.
+We define $x = k+1$.
+The difference is evaluated as:
+\[ \frac{4}{3k+2} - \frac{1}{k+1} = \frac{4(k+1) - (3k+2)}{(3k+2)(k+1)} = \frac{4k+4-3k-2}{(3k+2)(k+1)} = \frac{k+2}{(3k+2)(k+1)} \]
+We require $\frac{k+2}{(3k+2)(k+1)}$ to be represented as $\frac{1}{y} + \frac{1}{z}$.
+We use the algebraic identity $\frac{A+B}{C} = \frac{A}{C} + \frac{B}{C}$. Let $A = k+1$ and $B = 1$. Then $A+B = k+2$.
+\[ \frac{k+2}{(3k+2)(k+1)} = \frac{k+1}{(3k+2)(k+1)} + \frac{1}{(3k+2)(k+1)} \]
+Simplifying the first fraction by canceling the common factor $(k+1)$:
+\[ \frac{k+1}{(3k+2)(k+1)} = \frac{1}{3k+2} \]
+Thus, the difference decomposes exactly into two unit fractions:
+\[ \frac{1}{3k+2} + \frac{1}{(3k+2)(k+1)} \]
+We assign $y = 3k+2$ and $z = (3k+2)(k+1)$. Since $k \ge 1$, $x=k+1$, $y=3k+2$, and $z=(3k+2)(k+1)$ are all strictly positive integers.
+The full identity is:
+\[ \frac{4}{3k+2} = \frac{1}{k+1} + \frac{1}{3k+2} + \frac{1}{(3k+2)(k+1)} \]
+This concludes the proof for this congruence class.
 \end{proof}
 
 \section{Architecture for Autoformalization}
+The formal verification of the aforementioned lemmas can be implemented in Lean 4. The foundational types are specified as follows:
 
-To facilitate formal verification, we define the structure in a pseudo-Lean 4 syntax block, establishing the required types and theorems.
+The following definitions and types present a structure for translating the problem and established modular identities into Lean 4.
 
 \begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
-import Mathlib.Tactic.Omega
-import Mathlib.Tactic.Ring
+import Mathlib.Data.Rat.Basic
 
-namespace ErdosStraus
+open Nat
 
--- Axiomatic definition of the Erdos-Straus property
+-- Axiomatic definition of the Erd\H{o}s-Straus property for an integer n
 def SatisfiesErdosStraus (n : Nat) : Prop :=
-  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
+  Exists (fun x => Exists (fun y => Exists (fun z =>
+    x > 0 /\ y > 0 /\ z > 0 /\
+    (4 : Rat) / n = (1 : Rat) / x + (1 : Rat) / y + (1 : Rat) / z)))
 
--- Complete demonstration of Lemma 3.2 based on the document's parametrization
+-- Lemma for the congruence class n = 4k + 3
 lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
-  let n := 4 * k + 3
-  let x := k + 1
-  let y := n * (k + 1) + 1
-  let z := n * (k + 1) * (n * (k + 1) + 1)
-  use x, y, z
-  refine \<by omega, by omega, by omega, ?_\>
-  dsimp [x, y, z, n]
-  ring
-
--- General Theorem (Open Conjecture for the set of residual classes)
-theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
   admit
 
-end ErdosStraus
+-- Lemma for the congruence class n = 3k + 2
+lemma erdos_straus_mod_3_2 (k : Nat) (hk : k >= 1) : SatisfiesErdosStraus (3 * k + 2) := by
+  admit
+
+-- General statement of the Erd\H{o}s-Straus conjecture
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+  admit
 \end{lstlisting}
 
 \section*{References}

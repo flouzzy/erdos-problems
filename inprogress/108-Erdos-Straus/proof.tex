@@ -1,35 +1,32 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{amsmath, amssymb, amsthm, mathrsfs}
-\usepackage{hyperref}
+\usepackage{amsmath, amssymb, amsthm}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{fancyhdr}
 \usepackage{listings}
 
-\pagestyle{fancy}
-\fancyhf{}
-\fancyfoot[C]{\thepage}
-\fancyfoot[R]{\small Charles EDOU NZE, chercheur ind\'ependant}
+\title{Rigorous Proof Architecture for the Erd\H{o}s-Straus Conjecture}
+\author{Charles EDOU NZE}
+\date{\today}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{remark}[theorem]{Remark}
 
-\title{Rigorous Resolution of the Erd\H{o}s-Straus Conjecture}
-\author{Charles EDOU NZE}
-\date{\today}
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, admit, Prop, Nat, open, section, Exists, fun},
+  sensitive=true,
+  comment=[l]--
+}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This document establishes a comprehensive framework aimed at the full resolution of the Erd\H{o}s-Straus Conjecture. It defines the formal axiomatic boundaries of the Diophantine equation $4/n = 1/x + 1/y + 1/z$, examines the algebraic contextual structures based on congruence classes, details zero-ellipse lemmas for modular reduction, and formulates an architecture ready for automated formalization in systems such as Lean 4.
-\let\thefootnote\relax\footnotetext{Charles EDOU NZE, chercheur ind\'ependant}
+This document presents a structured framework and partial resolution towards the Erd\H{o}s-Straus Conjecture. It defines the formal axiomatic boundaries, establishes the contextual algebraic structures, details zero-ellipse lemmas for modular reduction, and formulates an architecture ready for automated formalization in systems such as Lean 4.
+\vfill
+\noindent \textit{Signature: Charles EDOU NZE, chercheur ind\'ependant}
 \end{abstract}
 
 \tableofcontents
@@ -37,81 +34,90 @@ This document establishes a comprehensive framework aimed at the full resolution
 
 \section{Axiomatic Definitions and Type Specifications}
 
-Let $\mathbb{N}^*$ denote the set of strictly positive integers, $\mathbb{N}^* = \{1, 2, 3, \ldots\}$. The conjecture asserts that for all $n \in \mathbb{N}$ with $n \geq 2$, the rational number $4/n$ can be partitioned into the sum of three unit fractions.
+Let $\mathbb{N}$ denote the set of positive integers $\{1, 2, 3, \ldots\}$.
 
-\begin{definition}[Erd\H{o}s-Straus Representation]
-For an integer $n \in \mathbb{N}_{\geq 2}$, an Erd\H{o}s-Straus representation of $n$ is an ordered triplet $(x, y, z) \in (\mathbb{N}^*)^3$ satisfying the Diophantine equation:
-\begin{equation} \label{eq:es}
-\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}
-\end{equation}
+\begin{definition}[Erd\H{o}s-Straus Equation]
+For $n \in \mathbb{N}_{\geq 2}$, a solution to the Erd\H{o}s-Straus equation is an ordered triplet $(x, y, z) \in \mathbb{N}^3$ such that:
+$$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
 \end{definition}
 
 In polynomial form, this is equivalent to finding positive integers $x, y, z$ satisfying:
-\begin{equation} \label{eq:es_poly}
-4xyz = n(xy + yz + zx)
-\end{equation}
+$$ 4xyz = n(xy + yz + zx) $$
 
 \section{Contextual Literature Research}
 
 The Erd\H{o}s-Straus conjecture is fundamentally a problem of Diophantine equations over the rationals. Key results from the literature include:
 \begin{itemize}
-    \item \textbf{Mordell's Theorem:} Bounds on the number of solutions to Diophantine equations of degree 3, providing a theoretical foundation for the distribution of solutions.
+    \item \textbf{Mordell's Theorem:} Bounds on the number of solutions to Diophantine equations of degree 3.
     \item \textbf{Webb and Schinzel (1983):} Demonstrated that the conjecture holds for all $n$ except possibly those in certain congruence classes modulo $840$.
-    \item \textbf{Elsholtz and Tao (2013):} Established upper bounds on the number of solutions to the equation $4/n = 1/x + 1/y + 1/z$, showing that the number of solutions is bounded by $O(N(\log N)^{1/2})$.
-    \item \textbf{Tame Solutions:} Recent work on congruence classes of supporting the Erd\H{o}s-Straus Conjecture explores the algebraic nature of solutions when $n = 24m + 1$. A solution $(n_1, n_2, n_3)$ with $n_1 \le n_2, n_3$ where $n_1 = 6m + k$ is designated as a tame solution if $n_2$ and $n_3$ divide $(6m+k)(24m+1)$.
+    \item \textbf{Elsholtz and Tao (2013):} Established upper bounds on the number of solutions to the equation $4/n = 1/x + 1/y + 1/z$.
 \end{itemize}
 
-An analogy can be drawn to the weakly resolved Erd\H{o}s-Graham conjecture, where similar modular constraints dictate the density of subset sums.
+An analogy can be drawn to the weakly resolved Erd\H{o}s-Graham conjecture, where similar modular constraints dictate the density of subset sums. Recent studies by authors such as Miguel Angel Lopez have classified solutions into types, such as Type A and Type B, by defining a complete congruence system. Furthermore, Philemon Urbain Mballa has explored an unexpected connection between the discrete zeta function and the Erd\H{o}s-Straus conjecture through additive decomposition.
 
 \section{Proof Strategy and Lemmas}
 
 We proceed by modular reduction, examining the conjecture for prime $n$. If the conjecture holds for all primes, it holds for all integers by a simple scaling argument.
 
-\begin{lemma}[Prime Reduction Lemma] \label{lem:prime_red}
+\begin{lemma}[Prime Reduction Lemma]
 If the Erd\H{o}s-Straus equation has a solution for all prime numbers $p \geq 2$, then it has a solution for all integers $n \geq 2$.
 \end{lemma}
 \begin{proof}
 Let $n = p \cdot k$, where $p$ is prime and $k \in \mathbb{N}$. Assume there exists a solution for $p$:
 $$ \frac{4}{p} = \frac{1}{a} + \frac{1}{b} + \frac{1}{c} $$
-Dividing both sides of the equation by $k$ yields:
-$$ \frac{4}{p \cdot k} = \frac{1}{a \cdot k} + \frac{1}{b \cdot k} + \frac{1}{c \cdot k} $$
-Since $n = p \cdot k$, we can substitute $n$ into the equation:
+Dividing both sides by $k$ yields:
+$$ \frac{4}{pk} = \frac{1}{ak} + \frac{1}{bk} + \frac{1}{ck} $$
+Since $n = pk$, we have:
 $$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
-where $x=a \cdot k$, $y=b \cdot k$, and $z=c \cdot k$. Since $a, b, c \in \mathbb{N}^*$ and $k \in \mathbb{N}^*$, it follows that $x, y, z \in \mathbb{N}^*$. This explicit construction completes the proof of the reduction.
+where $x=ak$, $y=bk$, and $z=ck$. This completes the proof of the reduction.
 \end{proof}
 
-\begin{lemma}[Polynomial Parameterization Modulo 4] \label{lem:mod_4_3}
+\begin{lemma}[Polynomial Parameterization for $p \equiv 3 \pmod 4$]
 For a prime $p \equiv 3 \pmod 4$, there exists a parameterization of solutions.
 \end{lemma}
 \begin{proof}
-Let $p$ be a prime such that $p \equiv 3 \pmod 4$. Then there exists an integer $k \geq 0$ such that $p = 4k + 3$.
-We aim to find positive integers $x, y, z$ such that:
-$$ \frac{4}{p} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
-Let us choose one of the denominators, say $x$, to be a function of $p$. Specifically, let $x = k + 1$.
-Since $p = 4k + 3$, we have $k = (p - 3) / 4$. Substituting this into $x$ gives $x = (p - 3) / 4 + 1 = (p + 1) / 4$.
-Because $p \equiv 3 \pmod 4$, $p + 1$ is divisible by 4, which ensures that $x$ is a strictly positive integer.
-Substituting $x$ into the original equation yields:
-$$ \frac{4}{p} = \frac{1}{(p+1)/4} + \frac{1}{y} + \frac{1}{z} = \frac{4}{p+1} + \frac{1}{y} + \frac{1}{z} $$
-Subtracting $\frac{4}{p+1}$ from both sides, we obtain:
-$$ \frac{4}{p} - \frac{4}{p+1} = \frac{1}{y} + \frac{1}{z} $$
-Finding a common denominator for the left side gives:
-$$ \frac{4(p+1) - 4p}{p(p+1)} = \frac{4p + 4 - 4p}{p(p+1)} = \frac{4}{p(p+1)} $$
-Thus, we must find positive integers $y$ and $z$ such that:
-$$ \frac{1}{y} + \frac{1}{z} = \frac{4}{p(p+1)} $$
-Let us set $y = \frac{p(p+1)}{2}$ and $z = \frac{p(p+1)}{2}$.
-Since $p$ is a prime strictly greater than 2, $p$ is odd, and $p+1$ is even. Therefore, $p(p+1)$ is divisible by 2, and $y$ and $z$ are strictly positive integers.
-Substituting these values back into the equation yields:
-$$ \frac{1}{y} + \frac{1}{z} = \frac{1}{p(p+1)/2} + \frac{1}{p(p+1)/2} = \frac{2}{p(p+1)} + \frac{2}{p(p+1)} = \frac{4}{p(p+1)} $$
-This precisely matches the required expression. Thus, the triplet $(x, y, z) = ((p+1)/4, p(p+1)/2, p(p+1)/2)$ is a valid solution. This explicitly constructs a solution for all primes $p \equiv 3 \pmod 4$.
+Let $p \equiv 3 \pmod 4$. This implies there exists an integer $k \ge 0$ such that $p = 4k + 3$.
+We set $x = k + 1$. Because $k \ge 0$, we have $x \ge 1$, ensuring $x \in \mathbb{Z}_{>0}$.
+Note that $x = (4k+4)/4 = (p+1)/4$.
+We evaluate the remaining difference:
+\begin{align*}
+\frac{4}{p} - \frac{1}{x} &= \frac{4}{p} - \frac{1}{k+1} \\
+&= \frac{4(k+1) - p}{p(k+1)} \\
+&= \frac{4k+4 - (4k+3)}{p(k+1)} \\
+&= \frac{1}{p(k+1)}
+\end{align*}
+We employ the standard Egyptian fraction splitting identity:
+\[ \frac{1}{A} = \frac{1}{A+1} + \frac{1}{A(A+1)} \]
+Applying this to $A = p(k+1)$, we set:
+$y = p(k+1) + 1$
+and
+$z = p(k+1)(p(k+1)+1)$
+Since $p \ge 3$ and $k \ge 0$, both $y$ and $z$ are strictly positive integers.
+By substitution:
+\begin{align*}
+\frac{1}{y} + \frac{1}{z} &= \frac{1}{p(k+1)+1} + \frac{1}{p(k+1)(p(k+1)+1)} \\
+&= \frac{p(k+1)}{p(k+1)(p(k+1)+1)} + \frac{1}{p(k+1)(p(k+1)+1)} \\
+&= \frac{p(k+1)+1}{p(k+1)(p(k+1)+1)} \\
+&= \frac{1}{p(k+1)}
+\end{align*}
+Adding $\frac{1}{x} = \frac{1}{k+1}$, we get:
+\begin{align*}
+\frac{1}{x} + \frac{1}{y} + \frac{1}{z} &= \frac{1}{k+1} + \frac{1}{p(k+1)} \\
+&= \frac{p}{p(k+1)} + \frac{1}{p(k+1)} \\
+&= \frac{p+1}{p(k+1)} \\
+&= \frac{4k+4}{p(k+1)} \\
+&= \frac{4(k+1)}{p(k+1)} \\
+&= \frac{4}{p}
+\end{align*}
+This constructs explicitly a positive integer solution for all $p \equiv 3 \pmod 4$.
 \end{proof}
 
 \section{Architecture for Autoformalization}
 
 To facilitate formal verification, we define the structure in a pseudo-Lean 4 syntax block, establishing the required types and theorems.
 
-\begin{lstlisting}[language=Caml]
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Nat.Prime
 import Mathlib.Tactic.Omega
 import Mathlib.Tactic.Ring
 
@@ -119,8 +125,7 @@ namespace ErdosStraus
 
 -- Axiomatic definition of the Erdos-Straus property
 def SatisfiesErdosStraus (n : Nat) : Prop :=
-  Exists (fun x => Exists (fun y => Exists (fun z =>
-    x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
+  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
 
 -- Complete demonstration of Lemma 3.2 based on the document's parametrization
 lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
@@ -133,16 +138,19 @@ lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
   dsimp [x, y, z, n]
   ring
 
--- Prime Reduction Lemma Signature
-theorem prime_reduction (h : forall p : Nat, p.Prime -> SatisfiesErdosStraus p) :
-  forall n : Nat, n >= 2 -> SatisfiesErdosStraus n := by
-  admit
-
 -- General Theorem (Open Conjecture for the set of residual classes)
 theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
   admit
 
 end ErdosStraus
 \end{lstlisting}
+
+\section*{References}
+\begin{itemize}
+    \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
+    \item Miguel Angel Lopez (2024). \textit{A Complete Congruence System for the Erdos-Straus Conjecture}. arXiv:2404.01508v3.
+    \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
+    \item Philemon Urbain Mballa (2023). \textit{An Unexpected Connection Between the Discrete Zeta Function and the Erdos-Straus Conjecture Under Mballa's Conjecture}. arXiv:2311.08272v1.
+\end{itemize}
 
 \end{document}

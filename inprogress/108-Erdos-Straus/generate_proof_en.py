@@ -5,23 +5,31 @@ def generate_proof_en():
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amssymb, amsthm}
-\usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=1in}
+\usepackage{listings}
 
 \title{Rigorous Proof Architecture for the Erd\H{o}s-Straus Conjecture}
-\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\author{Charles EDOU NZE}
 \date{\today}
 
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, admit, Prop, Nat, open, section, Exists, fun},
+  sensitive=true,
+  comment=[l]--
+}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 This document presents a structured framework and partial resolution towards the Erd\H{o}s-Straus Conjecture. It defines the formal axiomatic boundaries, establishes the contextual algebraic structures, details zero-ellipse lemmas for modular reduction, and formulates an architecture ready for automated formalization in systems such as Lean 4.
+\vfill
+\noindent \textit{Signature: Charles EDOU NZE, chercheur ind\'ependant}
 \end{abstract}
 
 \tableofcontents
@@ -29,7 +37,7 @@ This document presents a structured framework and partial resolution towards the
 
 \section{Axiomatic Definitions and Type Specifications}
 
-Let $\mathbb{N}$ denote the set of positive integers $\{1, 2, 3, \ldots\}$. The conjecture asserts that for all $n \in \mathbb{N}$ with $n \geq 2$, the rational number $4/n$ can be partitioned into the sum of three unit fractions.
+Let $\mathbb{N}$ denote the set of positive integers $\{1, 2, 3, \ldots\}$.
 
 \begin{definition}[Erd\H{o}s-Straus Equation]
 For $n \in \mathbb{N}_{\geq 2}$, a solution to the Erd\H{o}s-Straus equation is an ordered triplet $(x, y, z) \in \mathbb{N}^3$ such that:
@@ -48,7 +56,7 @@ The Erd\H{o}s-Straus conjecture is fundamentally a problem of Diophantine equati
     \item \textbf{Elsholtz and Tao (2013):} Established upper bounds on the number of solutions to the equation $4/n = 1/x + 1/y + 1/z$.
 \end{itemize}
 
-An analogy can be drawn to the weakly resolved Erd\H{o}s-Graham conjecture, where similar modular constraints dictate the density of subset sums.
+An analogy can be drawn to the weakly resolved Erd\H{o}s-Graham conjecture, where similar modular constraints dictate the density of subset sums. Recent studies by authors such as Miguel Angel Lopez have classified solutions into types, such as Type A and Type B, by defining a complete congruence system. Furthermore, Philemon Urbain Mballa has explored an unexpected connection between the discrete zeta function and the Erd\H{o}s-Straus conjecture through additive decomposition.
 
 \section{Proof Strategy and Lemmas}
 
@@ -67,25 +75,51 @@ $$ \frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} $$
 where $x=ak$, $y=bk$, and $z=ck$. This completes the proof of the reduction.
 \end{proof}
 
-\begin{lemma}[Polynomial Parameterization]
+\begin{lemma}[Polynomial Parameterization for $p \equiv 3 \pmod 4$]
 For a prime $p \equiv 3 \pmod 4$, there exists a parameterization of solutions.
 \end{lemma}
 \begin{proof}
-Consider the case where one of the denominators is parameterized by a function of $p$. Let $x = (p+1)/4$. Since $p \equiv 3 \pmod 4$, $p+1$ is divisible by 4, so $x$ is an integer. Then:
-$$ \frac{4}{p} = \frac{1}{(p+1)/4} + \frac{1}{y} + \frac{1}{z} = \frac{4}{p+1} + \frac{1}{y} + \frac{1}{z} $$
-Solving for the remainder:
-$$ \frac{4}{p} - \frac{4}{p+1} = \frac{4(p+1) - 4p}{p(p+1)} = \frac{4}{p(p+1)} $$
-Thus we need $\frac{1}{y} + \frac{1}{z} = \frac{4}{p(p+1)}$.
-Let $y = \frac{p(p+1)}{2}$ and $z = \frac{p(p+1)}{2}$. Then:
-$$ \frac{1}{y} + \frac{1}{z} = \frac{2}{p(p+1)} + \frac{2}{p(p+1)} = \frac{4}{p(p+1)} $$
-Since $p \geq 3$, $p(p+1)/2$ is an integer. This explicitly constructs a solution for all $p \equiv 3 \pmod 4$.
+Let $p \equiv 3 \pmod 4$. This implies there exists an integer $k \ge 0$ such that $p = 4k + 3$.
+We set $x = k + 1$. Because $k \ge 0$, we have $x \ge 1$, ensuring $x \in \mathbb{Z}_{>0}$.
+Note that $x = (4k+4)/4 = (p+1)/4$.
+We evaluate the remaining difference:
+\begin{align*}
+\frac{4}{p} - \frac{1}{x} &= \frac{4}{p} - \frac{1}{k+1} \\
+&= \frac{4(k+1) - p}{p(k+1)} \\
+&= \frac{4k+4 - (4k+3)}{p(k+1)} \\
+&= \frac{1}{p(k+1)}
+\end{align*}
+We employ the standard Egyptian fraction splitting identity:
+\[ \frac{1}{A} = \frac{1}{A+1} + \frac{1}{A(A+1)} \]
+Applying this to $A = p(k+1)$, we set:
+$y = p(k+1) + 1$
+and
+$z = p(k+1)(p(k+1)+1)$
+Since $p \ge 3$ and $k \ge 0$, both $y$ and $z$ are strictly positive integers.
+By substitution:
+\begin{align*}
+\frac{1}{y} + \frac{1}{z} &= \frac{1}{p(k+1)+1} + \frac{1}{p(k+1)(p(k+1)+1)} \\
+&= \frac{p(k+1)}{p(k+1)(p(k+1)+1)} + \frac{1}{p(k+1)(p(k+1)+1)} \\
+&= \frac{p(k+1)+1}{p(k+1)(p(k+1)+1)} \\
+&= \frac{1}{p(k+1)}
+\end{align*}
+Adding $\frac{1}{x} = \frac{1}{k+1}$, we get:
+\begin{align*}
+\frac{1}{x} + \frac{1}{y} + \frac{1}{z} &= \frac{1}{k+1} + \frac{1}{p(k+1)} \\
+&= \frac{p}{p(k+1)} + \frac{1}{p(k+1)} \\
+&= \frac{p+1}{p(k+1)} \\
+&= \frac{4k+4}{p(k+1)} \\
+&= \frac{4(k+1)}{p(k+1)} \\
+&= \frac{4}{p}
+\end{align*}
+This constructs explicitly a positive integer solution for all $p \equiv 3 \pmod 4$.
 \end{proof}
 
 \section{Architecture for Autoformalization}
 
 To facilitate formal verification, we define the structure in a pseudo-Lean 4 syntax block, establishing the required types and theorems.
 
-\begin{verbatim}
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
 import Mathlib.Tactic.Omega
 import Mathlib.Tactic.Ring
@@ -96,7 +130,7 @@ namespace ErdosStraus
 def SatisfiesErdosStraus (n : Nat) : Prop :=
   Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
 
--- Complete demonstration of Lemma 2.1 based on the document's parametrization
+-- Complete demonstration of Lemma 3.2 based on the document's parametrization
 lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
   let n := 4 * k + 3
   let x := k + 1
@@ -109,17 +143,17 @@ lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
 
 -- General Theorem (Open Conjecture for the set of residual classes)
 theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
-  sorry
+  admit
 
 end ErdosStraus
-\end{verbatim}
-
+\end{lstlisting}
 
 \section*{References}
 \begin{itemize}
     \item Dagnachew Jenber Negash (2018). \textit{Solutions to Diophantine Equation of Erdos-Straus Conjecture}. arXiv:1812.05684v2.
     \item Miguel Angel Lopez (2024). \textit{A Complete Congruence System for the Erdos-Straus Conjecture}. arXiv:2404.01508v3.
     \item Miguel Angel Lopez (2022). \textit{Structure and form of the solutions of the Erdos-Straus conjecture}. arXiv:2206.10319v4.
+    \item Philemon Urbain Mballa (2023). \textit{An Unexpected Connection Between the Discrete Zeta Function and the Erdos-Straus Conjecture Under Mballa's Conjecture}. arXiv:2311.08272v1.
 \end{itemize}
 
 \end{document}

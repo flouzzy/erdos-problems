@@ -25,7 +25,7 @@ class TestGenerateProofs(unittest.TestCase):
         self.en_module.generate_proof()
 
         # Verify the file was opened for writing
-        mock_file.assert_called_with('proof.tex', 'w')
+        mock_file.assert_called_with('proof.tex', 'w', encoding='utf-8')
 
         # Get the arguments passed to write
         handle = mock_file()
@@ -43,7 +43,7 @@ class TestGenerateProofs(unittest.TestCase):
         self.fr_module.generate_proof()
 
         # Verify the file was opened for writing
-        mock_file.assert_called_with('proof.fr.tex', 'w')
+        mock_file.assert_called_with('proof.fr.tex', 'w', encoding='utf-8')
 
         # Get the arguments passed to write
         handle = mock_file()

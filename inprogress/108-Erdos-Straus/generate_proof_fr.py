@@ -6,6 +6,7 @@ def generate_proof_fr():
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{geometry}
+\usepackage{listings}
 \usepackage{fancyhdr}
 \geometry{a4paper, margin=1in}
 
@@ -119,7 +120,7 @@ La seule classe manquant d'une identit\'e polynomiale univari\'ee universelle so
 \section{Architecture pour l'Autoformalisation}
 La v\'erification formelle des lemmes susmentionn\'es peut \^etre impl\'ement\'ee dans Lean 4. Les types fondamentaux sont sp\'ecifi\'es comme suit :
 
-\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
+\begin{lstlisting}[basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Prime
 
@@ -139,7 +140,7 @@ theorem erdos_straus_mod_4_3 (n : Nat) (h : n % 4 = 3) :
 theorem prime_residue_23 (p : Nat) (k : Nat) (h : p = 24 * k - 1) (hk : k >= 1) :
   exists x y z, SatisfiesErdosStraus p x y z := by
   admit
-\end{verbatim}
+\end{lstlisting}
 
 La structure d\'eline clairement les hypoth\`eses et d\'efinit les contraintes enti\`eres sans invoquer la division, \'evitant les complexit\'es de l'arithm\'etique rationnelle dans le syst\`eme formel.
 

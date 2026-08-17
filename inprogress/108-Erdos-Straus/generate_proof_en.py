@@ -4,6 +4,7 @@ def generate_proof_en():
     tex_content = r"""\documentclass[12pt,a4paper]{article}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{geometry}
+\usepackage{listings}
 \usepackage{fancyhdr}
 \geometry{a4paper, margin=1in}
 
@@ -117,7 +118,7 @@ The only class lacking a universal univariate polynomial identity under modulo 2
 \section{Architecture for Autoformalization}
 The formal verification of the aforementioned lemmas can be implemented in Lean 4. The foundational types are specified as follows:
 
-\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
+\begin{lstlisting}[basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Prime
 
@@ -137,7 +138,7 @@ theorem erdos_straus_mod_4_3 (n : Nat) (h : n % 4 = 3) :
 theorem prime_residue_23 (p : Nat) (k : Nat) (h : p = 24 * k - 1) (hk : k >= 1) :
   exists x y z, SatisfiesErdosStraus p x y z := by
   admit
-\end{verbatim}
+\end{lstlisting}
 
 The structure clearly delineates the hypotheses and defines the integer constraints without invoking division, avoiding rational arithmetic complexities in the formal system.
 

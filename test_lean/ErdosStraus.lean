@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Erdős-Straus Conjecture: Formally Verified Modulo 24 Reduction in Lean 4
+# Erdős-Straus Conjecture: Formally Verified Universal Parameterizations in Lean 4
 
 The Erdős-Straus conjecture asserts that for all integers $n \ge 2$,
 the Diophantine equation
@@ -10,16 +10,37 @@ admits a solution in positive integers $(x, y, z) \in \mathbb{N}_{>0}^3$.
 Equivalently, cleared of denominators:
   $$ 4 x y z = n (x y + y z + x z) $$
 
-In this file, we prove the Master Reduction Theorem:
-Every integer $n \ge 2$ with $n \not\equiv 1 \pmod{24}$ admits an explicit,
-formally verified solution in positive integers.
-This covers 23 out of 24 congruence classes (95.83% of all natural numbers).
+In this file, we prove:
+1. The **Universal 3-Parameter Schinzel-Mordell Theorem**:
+   For any parameters $(a, b, c) \in (\mathbb{N}_{>0})^3$, if $4abc = c \cdot n + a + b$,
+   then $(x, y, z) = (ab, acn, bcn)$ is an exact positive integer solution.
+2. The **Master Modulo 24 Reduction Theorem**:
+   Every integer $n \ge 2$ with $n \not\equiv 1 \pmod{24}$ admits a solution in $(\mathbb{N}_{>0})^3$.
+   This covers $23/24 = 95.83\%$ of all residue classes.
 -/
 
 set_option linter.unusedVariables false
 
 def is_erdos_straus_sol (n x y z : ℕ) : Prop :=
   x > 0 ∧ y > 0 ∧ z > 0 ∧ 4 * x * y * z = n * (x * y + y * z + x * z)
+
+/--
+Universal 3-Parameter Schinzel-Mordell Theorem:
+For any positive parameters a, b, c, if 4 * a * b * c = c * n + a + b,
+then (ab, acn, bcn) is an exact solution to the Erdős-Straus equation.
+-/
+theorem erdos_straus_universal_identity (a b c n : ℕ)
+    (ha : a > 0) (hb : b > 0) (hc : c > 0) (hn_pos : n > 0)
+    (h_eq : 4 * a * b * c = c * n + a + b) :
+    is_erdos_straus_sol n (a * b) (a * c * n) (b * c * n) := by
+  have hx : a * b > 0 := by positivity
+  have hy : a * c * n > 0 := by positivity
+  have hz : b * c * n > 0 := by positivity
+  refine ⟨hx, hy, hz, ?_⟩
+  have h_lhs : 4 * (a * b) * (a * c * n) * (b * c * n) = (4 * a * b * c) * a * b * c * n^2 := by ring
+  have h_rhs : n * (a * b * (a * c * n) + a * c * n * (b * c * n) + a * b * (b * c * n)) =
+      (c * n + a + b) * a * b * c * n^2 := by ring
+  rw [h_lhs, h_rhs, h_eq]
 
 /-- Case n ≡ 0 mod 2, i.e., n = 2k (k ≥ 1) : 4/(2k) = 1/k + 1/(2k) + 1/(2k) -/
 theorem erdos_straus_even (k : ℕ) (hk : k ≥ 1) :

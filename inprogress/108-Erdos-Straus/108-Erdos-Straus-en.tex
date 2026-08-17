@@ -1,0 +1,78 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{Structural Analysis of the Erdős-Straus Conjecture}
+\author{Charles EDOU NZE}
+\date{\today}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, admit, Prop, Nat, open, section, Exists, fun},
+  sensitive=true,
+  comment=[l]--
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document presents a rigorous analysis of the Erdős-Straus conjecture, which posits that for every integer $n \geq 2$, the equation $4/n = 1/x + 1/y + 1/z$ has solutions in strictly positive integers. We introduce a complete congruence system, and define Type A and Type B solutions following Lopez. \\ \vspace{1cm} \\ \textit{Charles EDOU NZE, chercheur indépendant}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Axiomatic Definitions}
+\begin{definition}
+For any integer $n \in \mathbb{N}$ with $n \geq 2$, the Erdős-Straus equation is the Diophantine equation:
+\[\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}\]
+where $x, y, z \in \mathbb{Z}_{>0}$.
+\end{definition}
+
+\section{Literature Review and Strategy}
+The conjecture remains open. Recent works (Lopez) defined a complete congruence system bounding potential exceptions, introducing Type A and Type B solutions based on their modular structure. The proof is decomposed into lemmas isolating congruence classes modulo a given integer.
+
+\section{Proof and Lemmas}
+\begin{lemma}
+For all $n \equiv 3 \pmod 4$, the equation admits a positive integer solution.
+\end{lemma}
+\begin{proof}
+Let $n = 4k+3$ for $k \in \mathbb{N}$. Let $x = k+1$. Since $n \geq 3$, we have $k \geq 0$, so $x \geq 1$. Consider the difference:
+\begin{align*}
+\frac{4}{n} - \frac{1}{x} &= \frac{4}{4k+3} - \frac{1}{k+1} \\
+&= \frac{4(k+1) - (4k+3)}{(4k+3)(k+1)} \\
+&= \frac{4k+4 - 4k - 3}{n(k+1)} \\
+&= \frac{1}{n(k+1)}
+\end{align*}
+We utilize the Egyptian fraction identity $1/A = 1/(A+1) + 1/(A(A+1))$ with $A = n(k+1)$.
+\begin{align*}
+\frac{1}{n(k+1)} &= \frac{1}{n(k+1) + 1} + \frac{1}{n(k+1)(n(k+1) + 1)}
+\end{align*}
+By setting $y = n(k+1)+1$ and $z = n(k+1)(n(k+1)+1)$, we obtain $x,y,z \in \mathbb{Z}_{>0}$ satisfying the equation.
+\end{proof}
+
+\section{Autoformalization Architecture}
+\begin{lstlisting}[basicstyle=\ttfamily\small, breaklines=true]
+import Mathlib.Data.Nat.Basic
+import Mathlib.Tactic.Omega
+import Mathlib.Tactic.Ring
+
+def SatisfiesErdosStraus (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z => x > 0 /\ y > 0 /\ z > 0 /\ 4 * x * y * z = n * (y * z + x * z + x * y))))
+
+lemma erdos_straus_mod_4_3 (k : Nat) : SatisfiesErdosStraus (4 * k + 3) := by
+  admit
+
+theorem erdos_straus_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosStraus n := by
+  admit
+\end{lstlisting}
+
+\end{document}

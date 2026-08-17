@@ -6,6 +6,7 @@ def generate_proof_fr():
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{geometry}
+\usepackage{listings}
 \usepackage{fancyhdr}
 \usepackage{listings}
 \geometry{a4paper, margin=1in}

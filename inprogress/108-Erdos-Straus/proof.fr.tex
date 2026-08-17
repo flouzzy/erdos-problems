@@ -3,6 +3,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{fancyhdr}
 \usepackage{listings}
 \usepackage{fancyhdr}
 \geometry{a4paper, margin=1in}
@@ -18,11 +20,6 @@
 
 \begin{document}
 \maketitle
-\thispagestyle{fancy}
-\fancyhf{}
-\renewcommand{\headrulewidth}{0pt}
-\cfoot{\footnotesize Charles EDOU NZE, chercheur ind\'ependant}
-
 \begin{abstract}
 Nous pr\'esentons une investigation rigoureuse de la conjecture d'Erd\H{o}s-Straus, qui affirme que l'\'equation diophantienne $4/n = 1/x + 1/y + 1/z$ admet des solutions enti\`eres positives pour tout entier $n \ge 2$. En nous appuyant sur la litt\'erature \'etablie telle que "Solutions to Diophantine Equation of Erdos-Straus Conjecture", nous formalisons le probl\`eme \`a travers des d\'efinitions axiomatiques strictes, analysons les congruences modulaires sous-jacentes, et \'etablissons des param\'etrisations polynomiales pour les classes r\'esiduelles. De plus, nous construisons une architecture explicite pour l'autoformalisation dans Lean 4 afin d'assurer la v\'erification symbolique.
 \end{abstract}

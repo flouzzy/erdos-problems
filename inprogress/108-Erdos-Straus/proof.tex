@@ -15,8 +15,13 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{corollary}[theorem]{Corollary}
 
+\title{Rigorous Formulation and Modular Reduction of the Erd\H{o}s-Straus Conjecture}
+\author{Charles EDOU NZE}
+\date{\today}
+
 \begin{document}
 \maketitle
+
 \begin{abstract}
 We present a rigorous investigation into the Erd\H{o}s-Straus conjecture, which asserts that the diophantine equation $4/n = 1/x + 1/y + 1/z$ admits positive integer solutions for every integer $n \ge 2$. Building upon established literature such as "Solutions to Diophantine Equation of Erdos-Straus Conjecture", we formalize the problem through strict axiomatic definitions, analyze the underlying modular congruences, and establish polynomial parameterizations for residual classes. Furthermore, we construct an explicit scaffolding for autoformalization in Lean 4 to ensure symbolic verification.
 \end{abstract}
@@ -109,7 +114,6 @@ The only class lacking a universal univariate polynomial identity under modulo 2
 \end{proof}
 
 \section{Architecture for Autoformalization}
-The formal verification of the aforementioned lemmas can be implemented in Lean 4. The foundational types are specified as follows:
 
 \begin{lstlisting}[basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic

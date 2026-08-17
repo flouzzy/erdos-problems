@@ -17,8 +17,13 @@
 \newtheorem{definition}[theorem]{D\'efinition}
 \newtheorem{corollary}[theorem]{Corollaire}
 
+\title{Formulation Rigoureuse et R\'eduction Modulaire de la Conjecture d'Erd\H{o}s-Straus}
+\author{Charles EDOU NZE}
+\date{\today}
+
 \begin{document}
 \maketitle
+
 \begin{abstract}
 Nous pr\'esentons une investigation rigoureuse de la conjecture d'Erd\H{o}s-Straus, qui affirme que l'\'equation diophantienne $4/n = 1/x + 1/y + 1/z$ admet des solutions enti\`eres positives pour tout entier $n \ge 2$. En nous appuyant sur la litt\'erature \'etablie telle que "Solutions to Diophantine Equation of Erdos-Straus Conjecture", nous formalisons le probl\`eme \`a travers des d\'efinitions axiomatiques strictes, analysons les congruences modulaires sous-jacentes, et \'etablissons des param\'etrisations polynomiales pour les classes r\'esiduelles. De plus, nous construisons une architecture explicite pour l'autoformalisation dans Lean 4 afin d'assurer la v\'erification symbolique.
 \end{abstract}
@@ -111,7 +116,6 @@ La seule classe manquant d'une identit\'e polynomiale univari\'ee universelle so
 \end{proof}
 
 \section{Architecture pour l'Autoformalisation}
-La v\'erification formelle des lemmes susmentionn\'es peut \^etre impl\'ement\'ee dans Lean 4. Les types fondamentaux sont sp\'ecifi\'es comme suit :
 
 \begin{lstlisting}[basicstyle=\ttfamily\small, breaklines=true]
 import Mathlib.Data.Nat.Basic

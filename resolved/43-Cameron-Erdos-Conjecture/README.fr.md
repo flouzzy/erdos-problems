@@ -1,12 +1,15 @@
-[🇬🇧 English Version](README.md)
+# 43 - Conjecture de Cameron-Erdos
 
-# La Conjecture de Cameron-Erdős
+## Énoncé du Problème
 
-**Statut : En cours (Solutions partielles avancées)**
+La conjecture de Cameron-Erdős stipule que le nombre de sous-ensembles sans somme de $\{1, 2, \dots, N\}$ est $O(2^{N/2})$. Un sous-ensemble $A$ est sans somme s'il n'existe pas d'éléments $x, y, z \in A$ tels que $x + y = z$.
 
-## 1. Introduction
-La conjecture de Cameron-Erdős est un problème majeur en combinatoire additive concernant le nombre de sous-ensembles sans somme des $N$ premiers entiers. Un ensemble d'entiers est dit sans somme s'il ne contient aucun élément $x, y, z$ tel que $x + y = z$.
-La conjecture stipule que le nombre de tels sous-ensembles de $\{1, 2, \dots, N\}$ est $O(2^{N/2})$.
+Cette conjecture a été proposée par Peter Cameron et Paul Erdős en 1990. Elle a été prouvée indépendamment par Ben Green (2004) et Alexander Sapozhenko (2003).
 
-## 2. Définitions Axiomatiques
-(À rédiger)
+## Formalisation et Stratégie de Preuve
+
+Notre stratégie pour prouver cette conjecture comprend :
+1. La définition formelle des ensembles sans somme et l'énoncé de la conjecture.
+2. Une revue de la littérature contextuelle, notamment les méthodes de Green et Sapozhenko.
+3. L'établissement de lemmes bornant le nombre de sous-ensembles sans somme dominés par des entiers impairs et pairs, en utilisant des bornes combinatoires et des conteneurs d'hypergraphes.
+4. L'architecture de la feuille de route d'auto-formalisation à l'aide de l'assistant de preuve Lean 4.

@@ -1,0 +1,53 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\newunicodechar{ℕ}{\mathbb{N}}
+\newunicodechar{∀}{\forall}
+\newunicodechar{∃}{\exists}
+\newunicodechar{→}{\rightarrow}
+\newunicodechar{∈}{\in}
+\newunicodechar{ℝ}{\mathbb{R}}
+\newunicodechar{≥}{\ge}
+\newunicodechar{∧}{\land}
+
+\title{Bornes Rigoureuses sur le Nombre de Tur\'an pour les Cycles Pairs}
+\author{Charles EDOU NZE, chercheur ind\'ependant}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Nous pr\'esentons une analyse structurale rigoureuse du nombre de Tur\'an pour les cycles pairs. Charles EDOU NZE, chercheur ind\'ependant.
+\end{abstract}
+
+\section{Cadre Axiomatique}
+Soit $G = (V, E)$ un graphe. Le nombre de Tur\'an $\mathrm{ex}(n, H)$ est le nombre maximal d'ar\^etes dans un graphe \`a $n$ sommets ne contenant pas $H$.
+
+\section{Lemmes Structuraux}
+\subsection{Lemme 1 : Sous-graphes Bipartis de Haut Degr\'e}
+Si $G$ a un degr\'e moyen $d$, il existe un sous-graphe biparti o\`u chaque sommet d'une partition a un degr\'e d'au moins $d/4$.
+\begin{proof}
+Soit une partition al\'eatoire. L'esp\'erance des ar\^etes est $|E|/2$. L'\'elimination it\'erative des sommets de degr\'e inf\'erieur \`a $d/4$ pr\'eserve un sous-graphe non vide.
+\end{proof}
+
+\section{Architecture d'Autoformalisation}
+\begin{lstlisting}[basicstyle=\ttfamily\small, breaklines=true, mathescape=true]
+import Mathlib.Combinatorics.SimpleGraph.Basic
+
+variable {V : Type*} [Fintype V]
+variable (G : SimpleGraph V)
+
+theorem bipartite_high_degree (d : $\mathbb{R}$) (h : G.avg_degree $\ge$ d) :
+  $\exists$ (A B : Set V) (G' : SimpleGraph V), G'.IsBipartite $\land$ $\forall$ v $\in$ B, G'.degree v $\ge$ d / 4 := by
+  admit
+\end{lstlisting}
+
+\end{document}

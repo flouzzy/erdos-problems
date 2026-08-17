@@ -7,7 +7,7 @@ class TestGenerateProof(unittest.TestCase):
     @patch('builtins.open', new_callable=mock_open)
     def test_generate_proof_en(self, mock_file):
         generate_proof_en()
-        mock_file.assert_called_with('inprogress/108-Erdos-Straus/proof.tex', 'w', encoding='utf-8')
+        mock_file.assert_called_with('proof.tex', 'w', encoding='utf-8')
 
         # Verify specific structural elements
         handle = mock_file()
@@ -20,7 +20,7 @@ class TestGenerateProof(unittest.TestCase):
     @patch('builtins.open', new_callable=mock_open)
     def test_generate_proof_fr(self, mock_file):
         generate_proof_fr()
-        mock_file.assert_called_with('inprogress/108-Erdos-Straus/proof.fr.tex', 'w', encoding='utf-8')
+        mock_file.assert_called_with('proof.fr.tex', 'w', encoding='utf-8')
 
         # Verify specific structural elements
         handle = mock_file()

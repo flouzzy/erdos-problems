@@ -1,14 +1,15 @@
-[🇫🇷 Version Française](README.fr.md)
+# 43 - Cameron-Erdos Conjecture
 
-# The Cameron-Erdős Conjecture
+## Problem Statement
 
-**Status: In Progress (Advanced Partial Solutions)**
+The Cameron-Erdős conjecture states that the number of sum-free subsets of $\{1, 2, \dots, N\}$ is $O(2^{N/2})$. A subset $A$ is sum-free if there are no elements $x, y, z \in A$ such that $x + y = z$.
 
-## 1. Introduction
-The Cameron-Erdős Conjecture is a major problem in additive combinatorics concerning the number of sum-free subsets of the first $N$ integers. A set of integers is sum-free if it contains no elements $x, y, z$ such that $x + y = z$.
-The conjecture states that the number of such subsets of $\{1, 2, \dots, N\}$ is $O(2^{N/2})$.
+This conjecture was proposed by Peter Cameron and Paul Erdős in 1990. It was independently proven by Ben Green (2004) and Alexander Sapozhenko (2003).
 
-This problem touches upon deep structural characteristics of integers under addition and involves Fourier analysis and probabilistic methods in combinatorics.
+## Formalization and Proof Strategy
 
-## 2. Axiomatic Definitions
-(To be written)
+Our strategy to prove this conjecture involves:
+1. Formally defining sum-free sets and stating the conjecture.
+2. Reviewing the contextual literature, particularly the methods used by Green and Sapozhenko.
+3. Establishing lemmas bounding the number of sum-free subsets dominated by odd and even integers, using combinatorial bounds and hypergraph containers.
+4. Architecting the auto-formalization roadmap using the Lean 4 theorem prover.

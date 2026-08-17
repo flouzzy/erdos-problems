@@ -6,6 +6,7 @@ def generate_proof_en():
 \usepackage{geometry}
 \usepackage{listings}
 \usepackage{fancyhdr}
+\usepackage{listings}
 \geometry{a4paper, margin=1in}
 
 \title{Rigorous Analysis of the Erd\H{o}s-Straus Conjecture: Modular Congruences and Algorithmic Reduction}
@@ -25,7 +26,7 @@ def generate_proof_en():
 \cfoot{\footnotesize Charles EDOU NZE, chercheur ind\'ependant}
 
 \begin{abstract}
-We present a rigorous investigation into the Erd\H{o}s-Straus conjecture, which asserts that the diophantine equation $4/n = 1/x + 1/y + 1/z$ admits positive integer solutions for every integer $n \ge 2$. Building upon established literature such as "Solutions to Diophantine Equation of Erdos-Straus Conjecture", we formalize the problem through strict axiomatic definitions, analyze the underlying modular congruences, and establish polynomial parameterizations for residual classes. Furthermore, we construct an explicit scaffolding for autoformalization in Lean 4 to ensure symbolic verification.
+We present a rigorous investigation into the Erd\H{o}s-Straus conjecture, which asserts that the diophantine equation $4/n = 1/x + 1/y + 1/z$ admits positive integer solutions for every integer $n \ge 2$. Building upon established literature as found in the literature, we formalize the problem through strict axiomatic definitions, analyze the underlying modular congruences, and establish polynomial parameterizations for residual classes. Furthermore, we construct an explicit scaffolding for autoformalization in Lean 4 to ensure symbolic verification.
 \end{abstract}
 
 \section{Axiomatic Definitions and Problem Statement}
@@ -41,7 +42,7 @@ A triplet $(x, y, z) \in \mathbb{N}^3$ is said to be a \textbf{valid solution} f
 \end{definition}
 
 \section{Contextual Literature}
-Recent explorations into the structure of solutions, notably documented in "Solutions to Diophantine Equation of Erdos-Straus Conjecture", highlight that solutions can often be derived through modular restrictions and polynomial parameterization. A prevalent strategy is to divide the integers into residue classes modulo $24$ or $840$, mapping subsets of the primes to explicit polynomial forms that satisfy the equation.
+Recent explorations into the structure of solutions, highlight that solutions can often be derived through modular restrictions and polynomial parameterization. For example, one approach involves parameterizing $n = 4k+1$, dividing it into residue cases for $k$. As observed in literature, $k=3l+1$ and $k=3l+2$ often lead to immediate unit fractions, narrowing the challenging cases to particular residue classes.
 
 \section{Lemmas and Step-by-Step Proofs}
 
@@ -144,7 +145,7 @@ The structure clearly delineates the hypotheses and defines the integer constrai
 
 \end{document}
 """
-    with open('inprogress/108-Erdos-Straus/proof.tex', 'w', encoding='utf-8') as f:
+    with open('proof.tex', 'w', encoding='utf-8') as f:
         f.write(tex_content)
 
 if __name__ == '__main__':

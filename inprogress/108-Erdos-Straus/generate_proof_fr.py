@@ -8,6 +8,7 @@ def generate_proof_fr():
 \usepackage{geometry}
 \usepackage{listings}
 \usepackage{fancyhdr}
+\usepackage{listings}
 \geometry{a4paper, margin=1in}
 
 \title{Analyse Rigoureuse de la Conjecture d'Erd\H{o}s-Straus : Congruences Modulaires et R\'eduction Algorithmique}
@@ -27,7 +28,7 @@ def generate_proof_fr():
 \cfoot{\footnotesize Charles EDOU NZE, chercheur ind\'ependant}
 
 \begin{abstract}
-Nous pr\'esentons une investigation rigoureuse de la conjecture d'Erd\H{o}s-Straus, qui affirme que l'\'equation diophantienne $4/n = 1/x + 1/y + 1/z$ admet des solutions enti\`eres positives pour tout entier $n \ge 2$. En nous appuyant sur la litt\'erature \'etablie telle que "Solutions to Diophantine Equation of Erdos-Straus Conjecture", nous formalisons le probl\`eme \`a travers des d\'efinitions axiomatiques strictes, analysons les congruences modulaires sous-jacentes, et \'etablissons des param\'etrisations polynomiales pour les classes r\'esiduelles. De plus, nous construisons une architecture explicite pour l'autoformalisation dans Lean 4 afin d'assurer la v\'erification symbolique.
+Nous pr\'esentons une investigation rigoureuse de la conjecture d'Erd\H{o}s-Straus, qui affirme que l'\'equation diophantienne $4/n = 1/x + 1/y + 1/z$ admet des solutions enti\`eres positives pour tout entier $n \ge 2$. En nous appuyant sur la litt\'erature \'etablie telle que trouv\'ee dans la litt\'erature, nous formalisons le probl\`eme \`a travers des d\'efinitions axiomatiques strictes, analysons les congruences modulaires sous-jacentes, et \'etablissons des param\'etrisations polynomiales pour les classes r\'esiduelles. De plus, nous construisons une architecture explicite pour l'autoformalisation dans Lean 4 afin d'assurer la v\'erification symbolique.
 \end{abstract}
 
 \section{D\'efinitions Axiomatiques et \'Enonc\'e du Probl\`eme}
@@ -43,7 +44,7 @@ Un triplet $(x, y, z) \in \mathbb{N}^3$ est dit \textbf{solution valide} pour un
 \end{definition}
 
 \section{Litt\'erature Contextuelle}
-Les explorations r\'ecentes sur la structure des solutions, notamment document\'ees dans "Solutions to Diophantine Equation of Erdos-Straus Conjecture", soulignent que les solutions peuvent souvent \^etre d\'eriv\'ees \`a travers des restrictions modulaires et des param\'etrisations polynomiales. Une strat\'egie pr\'evalente consiste \`a diviser les entiers en classes de r\'esidus modulo $24$ ou $840$, en associant des sous-ensembles des nombres premiers \`a des formes polynomiales explicites qui satisfont l'\'equation.
+Les explorations r\'ecentes sur la structure des solutions, soulignent que les solutions peuvent souvent \^etre d\'eriv\'ees \`a travers des restrictions modulaires et des param\'etrisations polynomiales. Par exemple, une approche implique de param\'etrer $n = 4k+1$, le divisant en cas r\'esiduels pour $k$. Comme observ\'e dans la litt\'erature, $k=3l+1$ et $k=3l+2$ m\'enent souvent \`a des fractions unitaires imm\'ediates, r\'eduisant les cas difficiles \`a des classes de r\'esidus particuli\`eres.
 
 \section{Lemmes et Preuves \'Etape par \'Etape}
 
@@ -146,7 +147,7 @@ La structure d\'eline clairement les hypoth\`eses et d\'efinit les contraintes e
 
 \end{document}
 """
-    with open('inprogress/108-Erdos-Straus/proof.fr.tex', 'w', encoding='utf-8') as f:
+    with open('proof.fr.tex', 'w', encoding='utf-8') as f:
         f.write(tex_content)
 
 if __name__ == '__main__':

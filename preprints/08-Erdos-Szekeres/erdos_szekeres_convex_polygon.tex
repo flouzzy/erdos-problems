@@ -345,25 +345,49 @@ def pD : Point2D := ⟨2, 1⟩
 
 theorem four_points_distinct :
     pA ≠ pB ∧ pA ≠ pC ∧ pA ≠ pD ∧ pB ≠ pC ∧ pB ≠ pD ∧ pC ≠ pD := by
-  decide
+  unfold pA pB pC pD
+  refine ⟨by decide, by decide, by decide, by decide, by decide, by decide⟩
 
 theorem four_points_general_position :
     orientation pA pB pC ≠ 0 ∧
     orientation pA pB pD ≠ 0 ∧
     orientation pA pC pD ≠ 0 ∧
     orientation pB pC pD ≠ 0 := by
-  decide
+  unfold orientation pA pB pC pD
+  refine ⟨by norm_num, by norm_num, by norm_num, by norm_num⟩
 
 theorem pD_inside_triangle_ABC :
     orientation pA pB pD > 0 ∧
     orientation pB pC pD > 0 ∧
     orientation pC pA pD > 0 := by
-  decide
+  unfold orientation pA pB pC pD
+  refine ⟨by norm_num, by norm_num, by norm_num⟩
 
 def four_point_set : Finset Point2D := {pA, pB, pC, pD}
 
 theorem four_point_set_card : four_point_set.card = 4 := by
-  decide
+  unfold four_point_set
+  rw [card_insert_of_notMem]
+  · rw [card_insert_of_notMem]
+    · rw [card_insert_of_notMem]
+      · rw [card_singleton]
+      · intro h_mem; simp only [mem_singleton] at h_mem
+        have : pC ≠ pD := by unfold pC pD; decide
+        exact this h_mem
+    · intro h_mem; simp only [mem_insert, mem_singleton] at h_mem
+      rcases h_mem with h | h
+      · have : pB ≠ pC := by unfold pB pC; decide
+        exact this h
+      · have : pB ≠ pD := by unfold pB pD; decide
+        exact this h
+  · intro h_mem; simp only [mem_insert, mem_singleton] at h_mem
+    rcases h_mem with h | h | h
+    · have : pA ≠ pB := by unfold pA pB; decide
+      exact this h
+    · have : pA ≠ pC := by unfold pA pC; decide
+      exact this h
+    · have : pA ≠ pD := by unfold pA pD; decide
+      exact this h
 
 theorem erdos_szekeres_lower_bound_4 : 2^(4 - 2) + 1 = 5 := by
   decide

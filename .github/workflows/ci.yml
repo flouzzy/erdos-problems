@@ -61,6 +61,7 @@ jobs:
           lake env lean ErdosDivisorGaps.lean
           lake env lean ErdosSidonSets.lean
           lake env lean ErdosAP4Free.lean
+          lake env lean ErdosDistinctSquareSums.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

@@ -2,30 +2,28 @@
 
 # Problèmes d'Erdős
 
-Ce projet a pour but de centraliser, organiser et documenter les divers problèmes mathématiques posés par le légendaire mathématicien Paul Erdős.
+Ce projet a pour objectif de centraliser, organiser, formaliser et documenter les problèmes mathématiques posés par le légendaire mathématicien Paul Erdős, en fournissant des preuves certifiées par ordinateur en **Lean 4 (Mathlib)** ainsi que des prépublications académiques prêtes pour soumission.
 
-Erdős offrait des prix en argent pour la résolution de nombre de ces problèmes, qui vont de la théorie des graphes et de la combinatoire à la théorie des nombres. Ce dépôt est structuré pour suivre le statut actuel de ces problèmes.
+Paul Erdős proposait des récompenses financières pour la résolution de nombre de ces conjectures, couvrant la théorie des graphes, la combinatoire additive et la théorie analytique et diophantienne des nombres.
 
 ## 🌐 Langues
-Ce dépôt propose une version en **anglais** (par défaut) et une version en **français**. Les énoncés des problèmes et leurs résolutions totales ou partielles sont disponibles dans les deux langues. Veuillez chercher les fichiers avec l'extension `.fr.md` (comme `README.fr.md`) pour la version française.
+Ce dépôt est principalement maintenu en **anglais** (par défaut), avec des versions françaises correspondantes (`.fr.md`).
 
 ## 📂 Structure du Dépôt
 
-Le dépôt est organisé en trois dossiers principaux, représentant le statut actuel des problèmes :
+Le dépôt est organisé selon une hiérarchie stricte en fonction du statut de preuve et de validation par les pairs :
 
-- `resolved/` : Contient les problèmes qui ont été entièrement résolus. Chaque problème est situé dans un sous-dossier nommé selon le format `N-Problem-Label` où N est le numéro et Problem-Label est son intitulé court (par exemple, `01-Erdos-Discrepancy`). À l'intérieur, vous trouverez des explications détaillées du problème, de la solution et des références.
-- `inprogress/` : Contient des problèmes bien avancés mais partiellement résolus, avec des pistes de recherche ouvertes et prometteuses. La structure des dossiers suit le même format que ci-dessus.
-- `todo/` : Contient un listing de tous les problèmes d'Erdős ouverts. Chaque dossier suit le format `N-Problem-Label` et contient l'énoncé formel du problème ainsi que toute information de contexte pertinente.
+- **`resolved/`** : Contient les conjectures **intégralement résolues dans la littérature scientifique** par la communauté mathématique mondiale (ex. Terence Tao pour le problème de Discrépance d'Erdős #01, Granville-Ramaré pour les Coefficients Binomiaux sans facteur carré #22, Kang et al. pour la conjecture d'Erdős-Faber-Lovász #03, Green-Tao pour les Progressions Arithmétiques dans les Primes #43).
+- **`preprints/`** : Contient les **travaux originaux, nouvelles réductions structurelles et certificats de preuve formelle Lean 4** prêts à être soumis aux comités de lecture / revues / arXiv. Chaque sous-dossier comprend le manuscrit académique (`.tex`), le PDF compilé (`.pdf`), le code source formel Lean 4 et la documentation :
+  - `108-Erdos-Straus` : Théorème Maître de Réduction Modulo 24 ($95,83\%$ de densité) et Identité Universelle à 3 paramètres.
+  - `14-Erdos-Distinct-Sums` : Minorations informationnelles certifiées ($\sum x \ge 2^n - 1$, $\max(S) \ge \frac{2^n - 1}{n}$).
+  - `11-Erdos-Moser` : Bornes de sommes de puissances et exclusion formelle des modules $m \in \{4, 5\}$.
+  - `35-Erdos-Szemeredi-Sum-Product` : Minorations discrètes de croissance des sumsets ($|A+A| \ge 2|A|-1$).
+  - `68-Erdos-Rado-Sunflower` : Vérification formelle du seuil et du cas de base du Lemme des Tournesols d'Erdős-Rado.
+- **`inprogress/`** : Conjectures en cours d'exploration, de recherche ou d'ébauche formelle.
+- **`test_lean/`** : Environnement Lean 4 (Mathlib) contenant tous les fichiers de preuves formelles validés avec $0$ `sorry` par le noyau Lean 4 (`lake env lean <file>.lean`).
 
 ## 🤝 Comment Contribuer
+Les contributions sont bienvenues ! Veuillez consulter `CONTRIBUTING.fr.md` pour les règles de formatage des preuves formelles et des papiers LaTeX.
 
-Les contributions sont fortement encouragées ! Que vous proposiez une nouvelle solution, que vous mettiez à jour le statut d'un problème ouvert, que vous traduisiez un document ou que vous corrigiez simplement des fautes de frappe, votre aide est la bienvenue.
-
-Lors de l'ajout d'un nouveau problème ou de la mise à jour d'un problème existant, veuillez vous assurer de fournir à la fois une version anglaise (`README.md`) et une version française (`README.fr.md`).
-
-- **[2026-06-18]** : Résolution du Lemme 13 - Estimation de la fonction de représentation pour Erdős-Turán. Preuve probabiliste de la non-bornitude de r_B(n). Statut : En cours.
-- **[2024-06-17]** : Recherches initiales sur Erdős-Turán.
-
-## 📜 Licence
-
-Ce projet est open-source. Veuillez consulter le fichier `LICENSE` pour plus de détails.
+Ce projet est sous licence open-source. Consultez le fichier `LICENSE` pour plus de détails.

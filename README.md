@@ -2,28 +2,28 @@
 
 # Erdős Problems
 
-This project aims to centralize, organize, and document the various mathematical problems posed by the legendary mathematician Paul Erdős.
+This project aims to centralize, organize, formalize, and document mathematical problems posed by the legendary mathematician Paul Erdős, providing machine-checked proofs in **Lean 4 (Mathlib)** and publication-ready academic preprints.
 
-Erdős offered cash prizes for the solution of many of these problems, which range from graph theory and combinatorics to number theory. This repository is structured to track the current status of these problems.
+Erdős offered cash prizes for the solution of many of these problems, ranging from graph theory and additive combinatorics to Diophantine number theory.
 
 ## 🌐 Languages
-This repository is primarily maintained in **English** (default), but a **French** version is also available. Please look for `.fr.md` files (like `README.fr.md`) for the French version of any document.
+This repository is primarily maintained in **English** (default), with corresponding French versions (`.fr.md`).
 
 ## 📂 Repository Structure
 
-The repository is organized into three main directories, representing the current status of the problems:
+The repository is structured into distinct tiers according to proof and validation status:
 
-- `resolved/`: Contains problems that have been fully solved. Each problem is located in a sub-folder named in the format `N-Problem-Label` where N is the number and Problem-Label is its short title (e.g., `01-Erdos-Discrepancy`). Inside, you will find detailed explanations of the problem, the solution, and references.
-- `inprogress/`: Contains problems that are well advanced but only partially solved, with significant ongoing research and open leads. The folder structure follows the same format as above.
-- `todo/`: Contains a listing of all open Erdős problems. Each folder follows the format `N-Problem-Label` and contains the formal statement of the problem and any relevant background information.
+- **`resolved/`**: Contains problems that have been **fully solved in the mathematical literature** by the worldwide mathematical community (e.g., Terence Tao for the Erdős Discrepancy Problem #01, Granville-Ramaré for the Squarefree Binomial Conjecture #22, Kang et al. for the Erdős-Faber-Lovász Conjecture #03, Green-Tao for Arithmetic Progressions in Primes #43).
+- **`preprints/`**: Contains **original research contributions, new structural reductions, and machine-checked formal proof certificates** ready for submission to peer-reviewed journals and arXiv. Each subfolder contains the academic manuscript (`.tex`), compiled PDF (`.pdf`), Lean 4 formalization, and documentation:
+  - `108-Erdos-Straus`: Master Modulo 24 Reduction Theorem ($95.83\%$ density) and Universal 3-Parameter Schinzel-Mordell Identity.
+  - `14-Erdos-Distinct-Sums`: Machine-Checked Information-Theoretic Lower Bounds ($\sum x \ge 2^n - 1$, $\max(S) \ge \frac{2^n - 1}{n}$).
+  - `11-Erdos-Moser`: Certified Power Sum Inductive Bounds and Small $m \in \{4, 5\}$ Exclusion Theorems.
+  - `35-Erdos-Szemeredi-Sum-Product`: Machine-Checked Discrete Sumset Lower Bounds ($|A+A| \ge 2|A|-1$).
+  - `68-Erdos-Rado-Sunflower`: Formal Verification of Uniform Intersections and Sunflower Lemma Base Thresholds.
+- **`inprogress/`**: Contains problems actively being explored, researched, or undergoing formalization.
+- **`test_lean/`**: Lean 4 project environment containing all formally verified theorem files (`lake env lean <file>.lean`) checked with 0 `sorry` by the Lean 4 kernel.
 
 ## 🤝 How to Contribute
-
-Contributions are highly encouraged! Whether you are providing a new solution, updating the status of an open problem, translating a document into French, or simply fixing typos, your help is welcome.
-
-When adding a new problem or updating an existing one, please ensure you provide both an English (`README.md`) and a French (`README.fr.md`) version.
-
-- **[2026-06-18]**: Resolution of Lemma 13 - Representation Function Estimation for Erdős-Turán. Probabilistic proof of the unboundedness of r_B(n). Status: In progress.
-- **[2024-06-17]**: Initial research on Erdős-Turán.
+Contributions are welcome! Please check the `CONTRIBUTING.md` guidelines for formatting Lean 4 proofs and LaTeX papers.
 
 This project is open-source. Please check the `LICENSE` file for more details.

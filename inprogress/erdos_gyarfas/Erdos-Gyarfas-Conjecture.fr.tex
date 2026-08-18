@@ -1,0 +1,101 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+
+\newtheorem{theoreme}{Th\'eor\`eme}[section]
+\newtheorem{lemme}[theoreme]{Lemme}
+\newtheorem{conjecture}[theoreme]{Conjecture}
+\newtheorem{definition}[theoreme]{D\'efinition}
+
+\title{Analyse et R\'esultats Partiels sur la Conjecture d'Erd\H{o}s-Gy\'arf\'as}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+La conjecture d'Erd\H{o}s-Gy\'arf\'as postule que tout graphe dont le degr\'e minimal est d'au moins 3 contient un cycle simple dont la longueur est une puissance de deux. Dans ce document, nous formalisons la conjecture, passons en revue la litt\'erature pertinente en th\'eorie extr\'emale des graphes, et pr\'esentons une analyse structurelle rigoureuse \'etape par \'etape vers des r\'esolutions partielles, en concluant par une architecture pour la formalisation automatis\'ee dans Lean 4.
+\end{abstract}
+
+\section{Introduction et \'Enonc\'e Formel}
+
+Formul\'ee en 1995 par Paul Erd\H{o}s et Andr\'as Gy\'arf\'as, la conjecture relie des conditions locales de degr\'e \`a la pr\'esence de longueurs de cycles sp\'ecifiques.
+
+\begin{definition}[Graphe et Degr\'e Minimal]
+Soit $G = (V, E)$ un graphe fini, simple et non orient\'e. Le degr\'e minimal de $G$, not\'e $\delta(G)$, est d\'efini par $\min_{v \in V} \deg(v)$.
+\end{definition}
+
+\begin{definition}[Cycle Puissance de Deux]
+Un cycle simple $C$ dans $G$ est une suite de sommets distincts $v_1, v_2, \dots, v_k$ tels que $(v_i, v_{i+1}) \in E$ pour $1 \le i \le k-1$, et $(v_k, v_1) \in E$. La longueur de $C$ est $k$. Un cycle puissance de deux est un cycle de longueur $k = 2^m$ pour un certain entier $m \ge 2$.
+\end{definition}
+
+\begin{conjecture}[Erd\H{o}s-Gy\'arf\'as]
+Si un graphe simple fini $G$ satisfait $\delta(G) \ge 3$, alors $G$ contient un cycle simple de longueur $2^m$ pour un certain entier $m \ge 2$.
+\end{conjecture}
+
+\section{Recherche de Litt\'erature Contextuelle}
+
+Des recherches computationnelles approfondies ont \'et\'e men\'ees. Royle a d\'emontr\'e que tout contre-exemple doit avoir au moins 17 sommets. Markstr\"om a ensuite cherch\'e des contre-exemples cubiques, \'etablissant qu'un contre-exemple cubique doit avoir au moins 30 sommets, et a trouv\'e des graphes cubiques sur 24 sommets dont les seuls cycles puissance de deux ont une longueur de 16.
+
+Analytiquement, on sait que la conjecture est vraie pour des sous-classes sp\'ecifiques. Heckman et Krakovski (2013) l'ont prouv\'ee pour les graphes planaires cubiques 3-connexes. Carr (2025) a prouv\'e que les graphes de diam\`etre 2 et de degr\'e minimal au moins 3 contiennent un cycle de longueur 4 ou 8. Des relaxations plus faibles impliquant des degr\'es moyens ont \'egalement \'et\'e explor\'ees ; Sudakov et Verstra\"ete (2008) ont montr\'e que les graphes dont le degr\'e moyen est exponentiel en le logarithme it\'er\'e du nombre de sommets contiennent un cycle de longueur puissance de deux.
+
+\section{M\'ethodologie et Analyse Structurelle}
+
+Nous analysons l'espace des cycles des graphes satisfaisant $\delta(G) \ge 3$. Une approche standard pour trouver des longueurs de cycles sp\'ecifiques consiste \`a \'etudier les chemins longs et leurs fermetures.
+
+\subsection{Lemme 1 : Existence d'un Cycle de Longueur au Moins 4}
+
+\begin{lemme}
+Soit $G = (V, E)$ un graphe simple fini avec $\delta(G) \ge 3$. Alors $G$ contient un cycle simple de longueur au moins 4.
+\end{lemme}
+
+\begin{proof}
+Soit $P = v_1, v_2, \dots, v_k$ un chemin de longueur maximale dans $G$. Puisque $G$ est fini, un tel chemin maximal existe.
+Consid\'erons le sommet $v_1$. Parce que $P$ est maximal, tous les voisins de $v_1$ doivent se trouver sur le chemin $P$ ; sinon, le chemin pourrait \^etre \'etendu \`a un chemin plus long, contredisant la maximalit\'e.
+Soient les voisins de $v_1$ not\'es $v_{i_1}, v_{i_2}, \dots, v_{i_d}$, o\`u $d = \deg(v_1) \ge \delta(G) \ge 3$.
+Supposons que les voisins sont ordonn\'es de telle sorte que $2 \le i_1 < i_2 < \dots < i_d \le k$.
+Clairement, $v_{i_1} = v_2$ est adjacent \`a $v_1$ sur le chemin. Les ar\^etes $(v_1, v_{i_j})$ pour $j \ge 2$ cr\'eent des cycles lorsqu'elles sont combin\'ees avec le sous-chemin de $P$ de $v_1$ \`a $v_{i_j}$.
+La longueur du cycle form\'e par l'ar\^ete $(v_1, v_{i_d})$ et le segment de chemin de $v_1$ \`a $v_{i_d}$ est exactement $i_d$.
+Puisque $d \ge 3$, le sommet $v_1$ a au moins 3 voisins distincts sur le chemin.
+Les indices de ces voisins sont des entiers distincts strictement sup\'erieurs \`a 1.
+Par cons\'equent, le plus grand indice $i_d$ doit \^etre d'au moins $d \ge 3$. Cependant, $v_1$ et $v_2$ repr\'esentent les deux premiers sommets.
+Puisque les voisins sont distincts et que $v_2$ est l'un d'eux, le troisi\`eme voisin doit avoir un indice d'au moins 4.
+Ainsi, $i_d \ge 4$.
+La s\'equence de sommets $v_1, v_2, \dots, v_{i_d}, v_1$ forme un cycle simple de longueur $i_d \ge 4$.
+\end{proof}
+
+\section{Architecture pour l'Autoformalisation}
+
+Ce qui suit formalise les d\'efinitions et la conjecture principale dans Lean 4.
+
+\begin{verbatim}
+import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Combinatorics.SimpleGraph.Connectivity
+
+open SimpleGraph
+
+variable {V : Type*} [Fintype V] (G : SimpleGraph V)
+
+def min_degree_at_least_three (G : SimpleGraph V) : Prop :=
+  \forall v : V, G.degree v \ge 3
+
+def is_power_of_two (n : \mathbb{N}) : Prop :=
+  \exists m : \mathbb{N}, m \ge 2 \land n = 2^m
+
+def has_power_of_two_cycle (G : SimpleGraph V) : Prop :=
+  \exists (c : G.Walk v v), c.IsCycle \land is_power_of_two c.length
+
+theorem erdos_gyarfas_conjecture :
+  min_degree_at_least_three G \to has_power_of_two_cycle G := by
+  sorry
+\end{verbatim}
+
+\end{document}

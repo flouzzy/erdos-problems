@@ -1,0 +1,101 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{Analysis and Partial Results on the Erd\H{o}s-Gy\'arf\'as Conjecture}
+\author{Charles EDOU NZE\thanks{Charles EDOU NZE, chercheur ind\'ependant}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The Erd\H{o}s-Gy\'arf\'as conjecture posits that every graph with minimum degree at least 3 contains a simple cycle whose length is a power of two. In this document, we formalize the conjecture, review relevant extremal graph theory literature, and present a rigorous step-by-step structural analysis towards partial resolutions, concluding with an architecture for automated formalization in Lean 4.
+\end{abstract}
+
+\section{Introduction and Formal Statement}
+
+Formulated in 1995 by Paul Erd\H{o}s and Andr\'as Gy\'arf\'as, the conjecture connects local degree conditions to the presence of specific cycle lengths.
+
+\begin{definition}[Graph and Minimum Degree]
+Let $G = (V, E)$ be a finite, simple, undirected graph. The minimum degree of $G$, denoted $\delta(G)$, is defined as $\min_{v \in V} \deg(v)$.
+\end{definition}
+
+\begin{definition}[Power-of-Two Cycle]
+A simple cycle $C$ in $G$ is a sequence of distinct vertices $v_1, v_2, \dots, v_k$ such that $(v_i, v_{i+1}) \in E$ for $1 \le i \le k-1$, and $(v_k, v_1) \in E$. The length of $C$ is $k$. A power-of-two cycle is a cycle of length $k = 2^m$ for some integer $m \ge 2$.
+\end{definition}
+
+\begin{conjecture}[Erd\H{o}s-Gy\'arf\'as]
+If a finite simple graph $G$ satisfies $\delta(G) \ge 3$, then $G$ contains a simple cycle of length $2^m$ for some integer $m \ge 2$.
+\end{conjecture}
+
+\section{Contextual Literature Search}
+
+Extensive computational searches have been conducted. Royle demonstrated that any counterexample must have at least 17 vertices. Markstr\"om later searched for cubic counterexamples, establishing that a cubic counterexample must have at least 30 vertices, and found cubic graphs on 24 vertices whose only power-of-two cycles have length 16.
+
+Analytically, the conjecture is known to hold for specific subclasses. Heckman and Krakovski (2013) proved it for 3-connected cubic planar graphs. Carr (2025) proved that graphs with diameter 2 and minimum degree at least 3 contain a cycle of length 4 or 8. Weaker relaxations involving average degrees have also been explored; Sudakov and Verstra\"ete (2008) showed that graphs with average degree exponential in the iterated logarithm of the number of vertices contain a cycle of length a power of two.
+
+\section{Methodology and Structural Analysis}
+
+We analyze the cycle space of graphs satisfying $\delta(G) \ge 3$. A standard approach in finding specific cycle lengths involves studying long paths and their closures.
+
+\subsection{Lemma 1: Existence of a Cycle of Length at Least 4}
+
+\begin{lemma}
+Let $G = (V, E)$ be a finite simple graph with $\delta(G) \ge 3$. Then $G$ contains a simple cycle of length at least 4.
+\end{lemma}
+
+\begin{proof}
+Let $P = v_1, v_2, \dots, v_k$ be a path of maximal length in $G$. Since $G$ is finite, such a maximal path exists.
+Consider the vertex $v_1$. Because $P$ is maximal, all neighbors of $v_1$ must lie on the path $P$; otherwise, the path could be extended to a longer path, contradicting maximality.
+Let the neighbors of $v_1$ be $v_{i_1}, v_{i_2}, \dots, v_{i_d}$, where $d = \deg(v_1) \ge \delta(G) \ge 3$.
+Assume the neighbors are ordered such that $2 \le i_1 < i_2 < \dots < i_d \le k$.
+Clearly, $v_{i_1} = v_2$ is adjacent to $v_1$ on the path. The edges $(v_1, v_{i_j})$ for $j \ge 2$ create cycles when combined with the subpath of $P$ from $v_1$ to $v_{i_j}$.
+The length of the cycle formed by the edge $(v_1, v_{i_d})$ and the path segment from $v_1$ to $v_{i_d}$ is exactly $i_d$.
+Since $d \ge 3$, the vertex $v_1$ has at least 3 distinct neighbors on the path.
+The indices of these neighbors are distinct integers strictly greater than 1.
+Therefore, the largest index $i_d$ must be at least $d \ge 3$. However, $v_1$ and $v_2$ account for the first two vertices.
+Since the neighbors are distinct and $v_2$ is one of them, the third neighbor must have an index of at least 4.
+Thus, $i_d \ge 4$.
+The sequence of vertices $v_1, v_2, \dots, v_{i_d}, v_1$ forms a simple cycle of length $i_d \ge 4$.
+\end{proof}
+
+\section{Architecture for Autoformalization}
+
+The following formalizes the definitions and the main conjecture in Lean 4.
+
+\begin{verbatim}
+import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Combinatorics.SimpleGraph.Connectivity
+
+open SimpleGraph
+
+variable {V : Type*} [Fintype V] (G : SimpleGraph V)
+
+def min_degree_at_least_three (G : SimpleGraph V) : Prop :=
+  \forall v : V, G.degree v \ge 3
+
+def is_power_of_two (n : \mathbb{N}) : Prop :=
+  \exists m : \mathbb{N}, m \ge 2 \land n = 2^m
+
+def has_power_of_two_cycle (G : SimpleGraph V) : Prop :=
+  \exists (c : G.Walk v v), c.IsCycle \land is_power_of_two c.length
+
+theorem erdos_gyarfas_conjecture :
+  min_degree_at_least_three G \to has_power_of_two_cycle G := by
+  sorry
+\end{verbatim}
+
+\end{document}

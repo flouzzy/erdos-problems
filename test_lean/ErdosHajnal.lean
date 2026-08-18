@@ -48,6 +48,7 @@ noncomputable def hom_num (G : SimpleGraph V) : ℕ :=
   max (clique_num G) (indep_num G)
 
 /-- A set is a clique in $Gᶜ$ iff it is an independent set in $G$ -/
+
 theorem clique_in_compl_iff (G : SimpleGraph V) (S : Finset V) :
     is_clique_set Gᶜ S ↔ is_indep_set G S := by
   unfold is_clique_set is_indep_set
@@ -84,7 +85,7 @@ theorem complete_graph_hom_ge :
       simp only [mem_filter, mem_univ, true_and]
       exact complete_graph_is_clique V
     have h_le : (Finset.univ : Finset V).card ≤ (Finset.univ.filter (fun S => is_clique_set (⊤ : SimpleGraph V) S)).sup Finset.card :=
-      Finset.le_sup (f := Finset.card) h_mem
+      Finset.le_sup h_mem
     rw [card_univ] at h_le
     exact h_le
   · exact le_max_left _ _

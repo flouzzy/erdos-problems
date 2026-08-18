@@ -2,38 +2,35 @@
 
 # Contributing to Erdős Problems
 
-Thank you for your interest in contributing to the **Erdős Problems**! This document provides guidelines for contributing to ensure that all problem statements, proofs, and discussions meet the rigorous standards expected in this project.
+Thank you for your interest in contributing to **Erdős Problems**! This document outlines guidelines for repository organization, formal proof standards, and contribution workflows.
+
+---
 
 ## 🌐 Bilingual Requirement
 
-This repository is strictly bilingual.
-
+This repository is strictly bilingual:
 - **English** is the default language (`.md` files).
-- **French** translations must be provided for every document and problem (`.fr.md` files).
+- **French** translations must be provided for every documentation and problem file (`.fr.md` files).
 
-When adding or updating a problem, ensure that both language versions are created and kept in sync. The French version must maintain a highly rigorous, academic mathematical tone.
+---
 
-## 📂 Repository Structure & Naming Convention
+## 📂 Repository Structure & Cleanliness Guidelines
 
-The repository is organized into three main directories:
+To maintain an uncluttered and publication-grade repository, all contributions must follow the structure outlined in [`ARCHITECTURE.md`](ARCHITECTURE.md):
 
-- `resolved/`: For problems that have been fully solved.
-- `inprogress/`: For problems that are partially solved or have significant ongoing research.
-- `todo/`: For all open Erdős problems.
+1. **`preprints/`**: For original mathematical solutions, structural reductions, and formal Lean 4 certificates ready for publication/submission.
+2. **`resolved/`**: For problems fully resolved by the worldwide mathematical community in peer-reviewed literature.
+3. **`inprogress/`**: For active research drafts and ongoing explorations.
+4. **`scripts/`**: All automated tools, benchmarks, and generator scripts.
+5. **`tests/`**: All test files (`test_*.py`). Never place loose test files in the root folder.
+6. **`test_lean/`**: All Lean 4 proof files and Mathlib dependencies.
 
-When adding a new problem or moving an existing one, you must create a directory following the strict naming convention:
-`[Number]-[Problem-Name]`
-*(e.g., `01-Sum-of-Reciprocals-of-Primes`)*
+---
 
-Inside the directory, place all relevant files, such as `README.md`, `README.fr.md`, and any supporting documentation or proofs.
+## 📐 Mathematical Rigor & Formal Verification in Lean 4
 
-## 📐 Mathematical Rigor and Autoformalization
+This repository maintains the highest standard of mathematical rigor:
 
-This repository adheres to strict mathematical rigor to facilitate future autoformalization into Lean 4. Please observe the following guidelines:
-
-1. **Strict Axiomatic Definitions:** Mathematical statements must be translated into strict axiomatic definitions. Every variable and set must be explicitly typed.
-2. **No Logical Shortcuts:** Never use logical shortcuts. All steps, index changes, bounds, and principles applied must be written out explicitly.
-3. **Lean 4 Proof Sketch:** Proofs must be structured with an architecture for autoformalization. They must present a 'Proof Sketch' that is directly translatable into the Lean 4 formal proof assistant.
-4. **Explicit Elements:** Theorems, Lemmas, input variables, and hypotheses must be clearly typed and structured.
-
-By following these guidelines, you help ensure that the repository remains a precise, highly formal, and accessible catalog of Paul Erdős's mathematical challenges. We look forward to your contributions!
+1. **Zero-Sorry Policy:** Any formalized theorem must compile with **0 `sorry`**, **0 ad-hoc axioms**, and pass all Lean 4 kernel checks (`lake env lean <filename>.lean`).
+2. **Standard LaTeX Publications:** Every preprint in `preprints/` must provide a self-contained, publication-ready LaTeX manuscript (`.tex`) and compiled PDF (`.pdf`) using standard arXiv format.
+3. **Explicit Typing & Axiomatic Foundations:** All mathematical objects, bounds, indices, and assumptions must be explicitly typed and proved.

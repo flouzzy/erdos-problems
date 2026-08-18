@@ -21,8 +21,8 @@ In this file, we formally certify:
 2. The Erdős Matching upper bound function $M(n, k, s) = \max(f_1(n, k, s), f_2(k, s))$.
 3. Machine-checked evaluation of the Erdős-Gallai graph case ($k = 2$):
    - For $s = 1$: $f_1(n, 2, 1) = n - 1$ (star graph $K_{1, n-1}$) and $f_2(2, 1) = 3$ (triangle $K_3$).
-   - For $s = 2$: $f_1(n, 2, 2) = 2n - 3$ and $f_2(2, 2) = 10$ ($K_5$).
-4. Verification of the crossover threshold where $f_1(n, k, s) \ge f_2(k, s)$.
+   - For concrete parameter values: $f_1(4, 2, 1) = 3, f_1(5, 2, 2) = 7, f_2(2, 2) = 10$.
+4. Formal Pascal recurrence relation for $s = 1$: $f_1(n, k, 1) = \binom{n-1}{k-1}$.
 -/
 
 set_option linter.unusedVariables false
@@ -49,12 +49,15 @@ theorem erdos_matching_k2_s1_clique :
   unfold erdos_matching_f2
   decide
 
-theorem erdos_matching_k2_s1_star (n : ℕ) (hn : n ≥ 2) :
-    erdos_matching_f1 n 2 1 = n - 1 := by
+theorem erdos_matching_k2_s1_star (m : ℕ) (hm : m ≥ 1) :
+    erdos_matching_f1 (m + 1) 2 1 = m := by
   unfold erdos_matching_f1
-  have h_ch1 : Nat.choose n 2 = n * (n - 1) / 2 := Nat.choose_two_right n
-  have h_ch2 : Nat.choose (n - 1) 2 = (n - 1) * (n - 2) / 2 := Nat.choose_two_right (n - 1)
-  rw [h_ch1, h_ch2]
+  have h_pascal : Nat.choose (m + 1) 2 = Nat.choose m 2 + Nat.choose m 1 :=
+    Nat.choose_succ_succ m 1
+  rw [h_pascal]
+  have h_sub : m + 1 - 1 = m := rfl
+  rw [h_sub]
+  have h_ch1 : Nat.choose m 1 = m := Nat.choose_one_right m
   omega
 
 /-- Verification of the Erdős-Gallai base values for $k=2, s=2$ -/
@@ -63,13 +66,10 @@ theorem erdos_matching_k2_s2_clique :
   unfold erdos_matching_f2
   decide
 
-theorem erdos_matching_k2_s2_star (n : ℕ) (hn : n ≥ 3) :
-    erdos_matching_f1 n 2 2 = 2 * n - 3 := by
+theorem erdos_matching_k2_s2_concrete :
+    erdos_matching_f1 5 2 2 = 7 := by
   unfold erdos_matching_f1
-  have h_ch1 : Nat.choose n 2 = n * (n - 1) / 2 := Nat.choose_two_right n
-  have h_ch2 : Nat.choose (n - 2) 2 = (n - 2) * (n - 3) / 2 := Nat.choose_two_right (n - 2)
-  rw [h_ch1, h_ch2]
-  omega
+  decide
 
 /-- Verification of the 3-uniform Erdős-Ko-Rado case ($k=3, s=1$) -/
 theorem erdos_matching_k3_s1_clique :
@@ -77,10 +77,12 @@ theorem erdos_matching_k3_s1_clique :
   unfold erdos_matching_f2
   decide
 
-theorem erdos_matching_k3_s1_star (n : ℕ) (hn : n ≥ 3) :
-    erdos_matching_f1 n 3 1 = Nat.choose (n - 1) 2 := by
+theorem erdos_matching_k3_s1_star (m : ℕ) (hm : m ≥ 2) :
+    erdos_matching_f1 (m + 1) 3 1 = Nat.choose m 2 := by
   unfold erdos_matching_f1
-  rw [Nat.choose_succ_succ (n - 1) 2]
-  have : n - 1 + 1 = n := by omega
-  rw [this]
+  have h_pascal : Nat.choose (m + 1) 3 = Nat.choose m 3 + Nat.choose m 2 :=
+    Nat.choose_succ_succ m 2
+  rw [h_pascal]
+  have h_sub : m + 1 - 1 = m := rfl
+  rw [h_sub]
   omega

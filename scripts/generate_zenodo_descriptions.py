@@ -587,48 +587,6 @@ METADATA = {
         "msc": "11M26, 11M06, 43A25, 68V20, 58B34",
         "keywords": "Riemann Hypothesis, Weil Explicit Formula, Weil Positivity Criterion, Noncommutative Geometry, Trace Formulas, Prime Power Distributions, Formal Verification, Lean 4, Mathlib",
         "lean_file": "test_lean/RiemannWeilPositivity.lean"
-    },
-    "Smale-14-Lorenz-Attractor": {
-        "title": "On the Lorenz Attractor and Smale's 14th Problem",
-        "subtitle": "A Detailed Treatise on Validated Interval Arithmetic, Normal Form Theory, Geometric Strange Attractors, and Certified Proofs",
-        "abstract": "Smale's 14th Problem (Steve Smale, 2000) asks whether the classical Lorenz dynamical system (Edward Lorenz, 1963): dx/dt = σ(y - x), dy/dt = x(ρ - z) - y, dz/dt = xy - βz with standard parameter values σ = 10, ρ = 28, β = 8/3 admits a robust geometric strange attractor with hyperbolic structure. In 2002, Warwick Tucker solved Smale's 14th problem in the affirmative using rigorous computer-assisted interval arithmetic and normal form theory.",
-        "key_results": [
-            "<strong>Uniform Phase Space Volume Contraction:</strong> Non-elliptical proof that $\\operatorname{div} F = -\\sigma - 1 - \\beta = -41/3 < 0$, ensuring exponential phase space volume decay.",
-            "<strong>Complete Equilibrium Classification:</strong> Exact algebraic derivation of the origin $(0,0,0)$ and symmetric fixed points $C_\\pm = (\\pm 6\\sqrt{2}, \\pm 6\\sqrt{2}, 27)$.",
-            "<strong>Tucker's Computational Hyperbolicity Architecture:</strong> Rigorous validation of Poincaré return maps, invariant cone fields, and trapping regions.",
-            "<strong>100% Machine-Checked Verification in Lean 4:</strong> Divergence identities, equilibrium coordinates, and Jacobian properties are machine-certified with 0 axioms, 0 linter warnings, and 0 sorry placeholders via Lean 4 and Mathlib."
-        ],
-        "msc": "37D45, 34C28, 37C10, 68V20, 65G20",
-        "keywords": "Smale's 14th Problem, Lorenz Attractor, Chaotic Dynamics, Strange Attractor, Validated Interval Arithmetic, Poincaré Maps, Formal Verification, Lean 4, Mathlib",
-        "lean_file": "test_lean/Smale14LorenzAttractor.lean"
-    },
-    "Smale-17-Polynomial-Solving": {
-        "title": "On Polynomial System Solving in Average Polynomial Time and Smale's 17th Problem",
-        "subtitle": "A Detailed Treatise on Projective Newton Homotopies, Condition Metric Geometry, Beltrán-Pardo Randomization, and Pierre Lairez's Theorem",
-        "abstract": "Smale's 17th Problem (Steve Smale, 2000) asks: 'Can a zero of n complex polynomial equations in n+1 homogeneous variables be found on average in polynomial time with respect to the input size N?' Between 2008 and 2016, this foundational challenge in numerical algebraic geometry was completely resolved through a sequence of breakthroughs by Carlos Beltrán, Luis Miguel Pardo, Felipe Cucker, Peter Bürgisser, and Pierre Lairez.",
-        "key_results": [
-            "<strong>Input Space and Bézout Root Geometry:</strong> Exact formulation of the complex projective space dimension $N = \\sum \\binom{n+d_i}{d_i}$ and root count $\\mathcal{D} = \\prod d_i$.",
-            "<strong>Shub-Smale Solution Variety:</strong> Theoretical architecture of the condition number $\\mu_{\\text{norm}}(f, \\zeta)$ and Riemannian condition metric.",
-            "<strong>Pierre Lairez's Resolution (2016):</strong> Complete analysis of the deterministic continuation algorithm achieving $T_{\\text{avg}}(N) = O(N^6)$.",
-            "<strong>100% Machine-Checked Verification in Lean 4:</strong> Bézout bounds, projective input dimensions, and combinatorial binomial coefficients are machine-certified with 0 axioms, 0 linter warnings, and 0 sorry placeholders via Lean 4 and Mathlib."
-        ],
-        "msc": "68Q25, 65H10, 14Q20, 68V20, 14N05",
-        "keywords": "Smale's 17th Problem, Polynomial System Solving, Average Polynomial Time, Homotopy Continuation, Projective Newton Method, Bézout Theorem, Formal Verification, Lean 4, Mathlib",
-        "lean_file": "test_lean/Smale17PolynomialSolving.lean"
-    },
-    "Smale-07-Sphere-Point-Distribution": {
-        "title": "On the Minimal Logarithmic Energy on the 2-Sphere and Smale's 7th Problem",
-        "subtitle": "A Detailed Treatise on the Thomson Problem, Platonic Polyhedral Configurations, Asymptotic Expansions, and Certified Proofs",
-        "abstract": "Smale's 7th Problem (Steve Smale, 2000) asks for a polynomial-time algorithm to produce configurations of N points x_1, ..., x_N on the unit 2-sphere S^2 = {x ∈ ℝ^3 | ||x|| = 1} whose logarithmic interaction energy: E(x_1, ..., x_N) := ∑_{1 ≤ i < j ≤ N} ln(1 / ||x_i - x_j||) satisfies E(x_1, ..., x_N) - min E_N ≤ c ln N for a universal constant c > 0. This problem is intimately connected to the classical Thomson problem in mathematical physics, polynomial conditioning, and spherical designs.",
-        "key_results": [
-            "<strong>Continuous & Discrete Potential Theory on $\\mathbb{S}^2$:</strong> Rigorous definition of the logarithmic energy functional and its equilibrium measure.",
-            "<strong>Exact Energies of Platonic Configurations:</strong> Explicit calculations of pairwise distances and logarithmic energies for $N=2$ (antipodal), $N=3$ (equilateral), $N=4$ (regular tetrahedron), and $N=6$ (regular octahedron).",
-            "<strong>Asymptotic Expansion of Minimal Energy:</strong> Deep pedagogical review of the Brauchart-Hardin-Saff (2012) asymptotic formula $\\min E_N = \\frac{1}{2} N^2 (1 - \\ln 2) - \\frac{1}{2} N \\ln N + C_{\\mathbb{S}^2} N + o(N)$.",
-            "<strong>100% Machine-Checked Verification in Lean 4:</strong> Distance metric identities on $\\mathbb{S}^2$, Platonic squared distances, and combinatorial pair counts $\\binom{N}{2}$ are machine-certified with 0 axioms, 0 linter warnings, and 0 sorry placeholders via Lean 4 and Mathlib."
-        ],
-        "msc": "31C12, 52A40, 68W25, 68V20, 41A60",
-        "keywords": "Smale's 7th Problem, Thomson Problem, Logarithmic Energy, Spherical Potential Theory, Platonic Solids, Asymptotics, Formal Verification, Lean 4, Mathlib",
-        "lean_file": "test_lean/Smale07SphereEnergy.lean"
     }
 }
 

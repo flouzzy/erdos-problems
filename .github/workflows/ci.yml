@@ -67,9 +67,6 @@ jobs:
           lake env lean RiemannLiCriterion.lean
           lake env lean RiemannNymanBeurling.lean
           lake env lean RiemannWeilPositivity.lean
-          lake env lean Smale14LorenzAttractor.lean
-          lake env lean Smale17PolynomialSolving.lean
-          lake env lean Smale07SphereEnergy.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

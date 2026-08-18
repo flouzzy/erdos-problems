@@ -46,6 +46,7 @@ jobs:
           lake env lean ErdosHeilbronn.lean
           lake env lean ErdosFaberLovasz.lean
           lake env lean ErdosSelfridge.lean
+          lake env lean ErdosSchinzelSierpinski.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

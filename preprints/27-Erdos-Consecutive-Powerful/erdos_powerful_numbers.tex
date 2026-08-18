@@ -16,7 +16,7 @@
     linkcolor=blue!70!black,
     citecolor=red!70!black,
     urlcolor=teal!70!black,
-    pdftitle={Machine-Checked Existence and Impossibility Theorems for Consecutive Powerful Numbers in Lean 4},
+    pdftitle={On the Erdos Conjecture on Consecutive Powerful Numbers},
     pdfauthor={Charles EDOU NZE},
 }
 
@@ -58,12 +58,12 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\textit{Erd\H{o}s Problem \#27: Consecutive Powerful Numbers}}
+\fancyhead[L]{\small\textit{On the Erd\H{o}s Conjecture on Consecutive Powerful Numbers}}
 \fancyhead[R]{\small\textit{C. EDOU NZE}}
 \fancyfoot[C]{\thepage}
 
-\title{\textbf{\Large Machine-Checked Existence and Impossibility Theorems for Consecutive Powerful Numbers in Lean 4}\\[0.5em]
-\large Certified Diophantine Multiplicities and 4-Consecutive Obstructions}
+\title{\textbf{\Large On the Erd\H{o}s Conjecture on Consecutive Powerful Numbers}\\[0.5em]
+\large Certified Diophantine Multiplicities, Obstruction Theorems, and Formal Verification}
 
 \author{\textbf{Charles EDOU NZE}\thanks{Independent Researcher. Email: \texttt{charles@edounze.com}. Code repository: \href{https://github.com/flouzzy/erdos-problems}{github.com/flouzzy/erdos-problems}}}
 \date{\today}
@@ -73,7 +73,7 @@
 \maketitle
 
 \begin{abstract}
-A positive integer $n$ is defined to be \emph{powerful} (or $2$-full / square-full) if for every prime $p$, $p \mid n \implies p^2 \mid n$. In Problem \#27 of his collection, Paul Erd\H{o}s investigated the distribution of consecutive powerful numbers. In this paper, we construct a fully verified formalization of consecutive powerful numbers in the \textbf{Lean 4} interactive theorem prover (via \texttt{Mathlib}). Specifically, we prove: (1) $(8, 9)$ forms an exact consecutive pair of powerful numbers ($8 = 2^3, 9 = 3^2$), (2) no integer $m \equiv 2 \pmod 4$ can be powerful, (3) \emph{The Four Consecutive Impossibility Theorem}: there do not exist four consecutive powerful integers $(n, n+1, n+2, n+3)$, and (4) any hypothetical triplet of consecutive powerful numbers $(n, n+1, n+2)$ must strictly satisfy $n \equiv 3 \pmod 4$. The complete formalization is certified by the Lean 4 kernel with zero axioms, zero linter warnings, and zero \texttt{sorry} placeholders.
+A positive integer $n$ is defined to be \emph{powerful} (or $2$-full / square-full) if for every prime $p$, $p \mid n \implies p^2 \mid n$. In Problem \#27 of his collection, Paul Erd\H{o}s investigated the distribution of consecutive powerful numbers. In this paper, we study this conjecture and present a machine-checked verification in the \textbf{Lean 4} interactive theorem prover (via \texttt{Mathlib}). Specifically, we prove: (1) $(8, 9)$ forms an exact consecutive pair of powerful numbers ($8 = 2^3, 9 = 3^2$), (2) no integer $m \equiv 2 \pmod 4$ can be powerful, (3) \emph{The Four Consecutive Impossibility Theorem}: there do not exist four consecutive powerful integers $(n, n+1, n+2, n+3)$, and (4) any hypothetical triplet of consecutive powerful numbers $(n, n+1, n+2)$ must strictly satisfy $n \equiv 3 \pmod 4$. The complete formalization is certified by the Lean 4 kernel with zero axioms, zero linter warnings, and zero \texttt{sorry} placeholders.
 \end{abstract}
 
 \vspace{0.5em}

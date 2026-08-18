@@ -67,6 +67,7 @@ jobs:
           lake env lean RiemannLiCriterion.lean
           lake env lean RiemannNymanBeurling.lean
           lake env lean RiemannWeilPositivity.lean
+          lake env lean Smale14LorenzAttractor.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

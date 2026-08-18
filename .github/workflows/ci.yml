@@ -33,6 +33,10 @@ jobs:
           lake env lean ErdosSzemerediSumProduct.lean
           lake env lean ErdosRadoSunflower.lean
           lake env lean RiemannCriteria.lean
+          lake env lean ErdosSzekeres.lean
+          lake env lean ErdosTuranAdditive.lean
+          lake env lean ErdosGraham.lean
+          lake env lean ErdosHajnal.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

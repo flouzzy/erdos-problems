@@ -38,6 +38,7 @@ jobs:
           lake env lean ErdosGraham.lean
           lake env lean ErdosHajnal.lean
           lake env lean ErdosArithmeticProgressions.lean
+          lake env lean ErdosSosTrees.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

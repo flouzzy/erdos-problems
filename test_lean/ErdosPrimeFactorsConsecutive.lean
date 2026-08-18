@@ -31,17 +31,24 @@ open scoped Classical
 
 /-- Theorem: Consecutive integers are coprime: $\gcd(n, n+1) = 1$ -/
 theorem consecutive_coprime (n : ℕ) : Nat.Coprime n (n + 1) := by
-  exact Nat.coprime_self_add_one n
+  have h1 : Nat.gcd n (n + 1) ∣ n := Nat.gcd_dvd_left n (n + 1)
+  have h2 : Nat.gcd n (n + 1) ∣ (n + 1) := Nat.gcd_dvd_right n (n + 1)
+  obtain ⟨k1, hk1⟩ := h1
+  obtain ⟨k2, hk2⟩ := h2
+  have h_gcd_dvd : Nat.gcd n (n + 1) ∣ 1 := by
+    use k2 - k1
+    omega
+  exact Nat.dvd_one.mp h_gcd_dvd
 
 /-- Theorem: No prime divides both $n$ and $n+1$ -/
 theorem prime_not_dvd_both (n : ℕ) (p : ℕ) (hp : Nat.Prime p) :
     ¬ (p ∣ n ∧ p ∣ (n + 1)) := by
-  rintro ⟨h1, h2⟩
-  have hdvd : p ∣ (n + 1 - n) := Nat.dvd_sub (Nat.le_succ n) h2 h1
-  have h_one : n + 1 - n = 1 := by omega
-  rw [h_one] at hdvd
-  have hp_ge_2 := hp.two_le
-  have hp_le_1 := Nat.le_of_dvd (by decide) hdvd
+  rintro ⟨⟨k1, hk1⟩, ⟨k2, hk2⟩⟩
+  have hp_dvd_one : p ∣ 1 := by
+    use k2 - k1
+    omega
+  have hp_le_one := Nat.le_of_dvd (by decide) hp_dvd_one
+  have hp_ge_two := hp.two_le
   omega
 
 /-- Certified evaluation for $n = 8$: $8 \times 9 = 72$ has prime factor 3 -/

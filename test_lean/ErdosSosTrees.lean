@@ -58,6 +58,7 @@ theorem exists_vertex_degree_ge (G : SimpleGraph V) (k : ℕ) [Nonempty V]
   rw [card_univ] at h_sum_le
   have h_sum_deg : sum_degrees G = ∑ v : V, G.degree v := rfl
   rw [← h_sum_deg, handshaking_identity] at h_sum_le
+  rw [mul_comm (k - 1) (Fintype.card V)] at h_dense
   omega
 
 /-- For star trees $S_k = K_{1, k}$, a graph with $2|E| > (k-1)|V|$ contains a vertex with at least $k$ neighbors -/

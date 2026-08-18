@@ -52,7 +52,7 @@ theorem erdos_matching_k2_s1_clique :
 theorem erdos_matching_k2_s1_star (m : ℕ) (hm : m ≥ 1) :
     erdos_matching_f1 (m + 1) 2 1 = m := by
   unfold erdos_matching_f1
-  have h_pascal : Nat.choose (m + 1) 2 = Nat.choose m 2 + Nat.choose m 1 :=
+  have h_pascal : Nat.choose (m + 1) 2 = Nat.choose m 1 + Nat.choose m 2 :=
     Nat.choose_succ_succ m 1
   rw [h_pascal]
   have h_sub : m + 1 - 1 = m := rfl
@@ -80,7 +80,7 @@ theorem erdos_matching_k3_s1_clique :
 theorem erdos_matching_k3_s1_star (m : ℕ) (hm : m ≥ 2) :
     erdos_matching_f1 (m + 1) 3 1 = Nat.choose m 2 := by
   unfold erdos_matching_f1
-  have h_pascal : Nat.choose (m + 1) 3 = Nat.choose m 3 + Nat.choose m 2 :=
+  have h_pascal : Nat.choose (m + 1) 3 = Nat.choose m 2 + Nat.choose m 3 :=
     Nat.choose_succ_succ m 2
   rw [h_pascal]
   have h_sub : m + 1 - 1 = m := rfl

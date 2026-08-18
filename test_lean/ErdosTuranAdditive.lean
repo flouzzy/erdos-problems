@@ -25,6 +25,8 @@ set_option linter.unusedVariables false
 
 open Finset
 
+set_option linter.unusedSimpArgs false
+
 /-- The representation set of pairs in $A \times A$ summing to $n$ -/
 def rep_set (A : Set ℕ) [DecidablePred (· ∈ A)] (n : ℕ) : Finset (ℕ × ℕ) :=
   (Finset.range (n + 1) ×ˢ Finset.range (n + 1)).filter
@@ -60,10 +62,12 @@ theorem rep_count_univ (n : ℕ) :
     · rintro ⟨⟨ha, hb⟩, hab⟩
       use a
       refine ⟨ha, ?_⟩
-      ext <;> simp only [hab]
-      omega
+      ext
+      · rfl
+      · dsimp; omega
     · rintro ⟨a', ha', heq⟩
-      rcases Prod.mk.injEq.mp heq with ⟨rfl, rfl⟩
+      simp only [Prod.mk.injEq] at heq
+      rcases heq with ⟨rfl, rfl⟩
       refine ⟨⟨ha', by omega⟩, by omega⟩
   rw [h_bij]
   rw [card_image_of_injective]

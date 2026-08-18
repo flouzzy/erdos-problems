@@ -1,0 +1,57 @@
+name: Math & Lean 4 CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  verify-lean:
+    name: Verify Lean 4 Proofs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Elan (Lean 4 toolchain manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Check Lean 4 Formal Proofs
+        working-directory: test_lean
+        run: |
+          elan which lean
+          lake exe cache get || true
+          lake build
+          lake env lean ErdosPowerfulNumbers.lean
+          lake env lean ErdosStraus.lean
+          lake env lean ErdosDistinctSums.lean
+          lake env lean ErdosMoserGeneral.lean
+          lake env lean ErdosSzemerediSumProduct.lean
+          lake env lean ErdosRadoSunflower.lean
+          lake env lean RiemannCriteria.lean
+
+  verify-latex:
+    name: Verify LaTeX Preprints Compilation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra lmodern
+
+      - name: Compile All Preprints
+        run: |
+          for dir in preprints/*/; do
+            echo "Compiling in $dir..."
+            (cd "$dir" && for tex in *.tex; do
+              pdflatex -interaction=nonstopmode "$tex"
+              pdflatex -interaction=nonstopmode "$tex"
+            done)
+          done

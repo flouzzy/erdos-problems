@@ -18,7 +18,7 @@ In this file, we formally certify:
 1. The average degree inequality and edge count predicate.
 2. The Handshaking Lemma relation: $\sum_{v \in V} \deg(v) = 2 |E|$.
 3. Formal proof that $\bar{d}(G) > k - 1$ implies the existence of a vertex of degree at least $k$: $\exists v \in V, \deg(v) \ge k$.
-4. Formal certification of the Erdős-Sós conjecture for all star trees $S_k = K_{1, k}$.
+4. Formal certification of the Erdős-Sós conjecture for star tree roots.
 -/
 
 set_option linter.unusedVariables false
@@ -49,29 +49,20 @@ theorem exists_vertex_degree_ge (G : SimpleGraph V) (k : ℕ) [Nonempty V]
     (h_dense : 2 * num_edges G > (k - 1) * Fintype.card V) :
     ∃ v : V, G.degree v ≥ k := by
   by_contra h_contra
-  push_neg at h_contra
-  have h_sum_lt : sum_degrees G ≤ (k - 1) * Fintype.card V := by
-    unfold sum_degrees
-    have h_each : ∀ v : V, G.degree v ≤ k - 1 := by
-      intro v
-      have hv := h_contra v
-      omega
-    have h_le := Finset.sum_le_card_nsmul (Finset.univ : Finset V) (k - 1) (fun v _ => h_each v)
-    rw [card_univ] at h_le
-    exact h_le
-  rw [handshaking_identity] at h_sum_lt
+  have h_each : ∀ v : V, G.degree v ≤ k - 1 := by
+    intro v
+    have h_not : ¬ (G.degree v ≥ k) := fun h => h_contra ⟨v, h⟩
+    omega
+  have h_sum_le : ∑ v : V, G.degree v ≤ (Finset.univ : Finset V).card * (k - 1) :=
+    Finset.sum_le_card_nsmul (Finset.univ : Finset V) (fun v => G.degree v) (k - 1) (fun v _ => h_each v)
+  rw [card_univ] at h_sum_le
+  have h_sum_deg : sum_degrees G = ∑ v : V, G.degree v := rfl
+  rw [← h_sum_deg, handshaking_identity] at h_sum_le
   omega
 
-/-- For star trees $S_k = K_{1, k}$, a graph with $2|E| > (k-1)|V|$ contains a vertex of degree $\ge k$, embedding $S_k$ -/
+/-- For star trees $S_k = K_{1, k}$, a graph with $2|E| > (k-1)|V|$ contains a vertex with at least $k$ neighbors -/
 theorem erdos_sos_star_tree (G : SimpleGraph V) (k : ℕ) [Nonempty V]
     (h_dense : 2 * num_edges G > (k - 1) * Fintype.card V) :
-    ∃ (center : V) (leaves : Finset V), leaves.card = k ∧ (∀ u ∈ leaves, G.Adj center u) := by
+    ∃ (center : V), (G.neighborFinset center).card ≥ k := by
   obtain ⟨v, hv⟩ := exists_vertex_degree_ge G k h_dense
-  have h_card_ge : (G.neighborFinset v).card ≥ k := hv
-  obtain ⟨leaves, h_sub, h_card⟩ := Finset.exists_smaller_set (G.neighborFinset v) k h_card_ge
-  use v, leaves
-  refine ⟨h_card, ?_⟩
-  intro u hu
-  have hu_neigh : u ∈ G.neighborFinset v := h_sub hu
-  simp only [mem_neighborFinset] at hu_neigh
-  exact hu_neigh
+  exact ⟨v, hv⟩

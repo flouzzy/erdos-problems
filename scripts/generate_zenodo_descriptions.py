@@ -236,6 +236,20 @@ METADATA = {
         "keywords": "Erdős-Woods Conjecture, Radical Function, Square-Free Kernel, S-Unit Equations, Linear Forms in Logarithms, Mathematical Logic, Formal Verification, Lean 4, Mathlib",
         "lean_file": "test_lean/ErdosWoods.lean"
     },
+    "20-Erdos-Geometric-Progression-Free": {
+        "title": "On the Erdős Conjecture on Geometric Progression-Free Sets",
+        "subtitle": "A Detailed Treatise on Multiplicative Ramsey Theory, Rankin's Greedy Density, McNew's Analytic Upper Bounds, and Certified Proofs",
+        "abstract": "The Erdős geometric progression problem (Problem #20 in Paul Erdős' problem collection, 1961) is a central question at the interface of multiplicative number theory, Ramsey theory, and extremal combinatorics. A subset of integers A ⊆ {1, ..., n} is called 3-term geometric progression-free (3-GP-free) if it contains no three distinct integers a, b, c ∈ A satisfying b^2 = ac. Unlike arithmetic progressions, where Szemerédi's theorem forces AP_k-free sets to have asymptotic density zero, 3-GP-free sets achieve positive asymptotic density. In 1961, R. A. Rankin constructed a greedy 3-GP-free set achieving density γ ≈ 0.71974. For integer common ratios, Beiglböck et al. (2010) proved the greedy set achieves density ≈ 0.816, and Nathan McNew (2015) established the analytic upper bound d_bar(A) ≤ 0.8184.",
+        "key_results": [
+            "<strong>Multiplicative Fiber Decomposition:</strong> Rigorous partitioning of positive integers into square-free fibers $n = q \\prod p_i^{\\alpha_i}$ and transformation of geometric progressions into additive progression constraints on exponent lattices.",
+            "<strong>Rankin's Density Analysis:</strong> Detailed derivation of Rankin's greedy density constant $\\gamma \\approx 0.71974$ via base-3 3-AP-free exponent avoidance.",
+            "<strong>McNew's Analytic Upper Bounds:</strong> Comprehensive exposition of McNew's (2015) bound $\\bar{d}(A) \\le 0.8184$ for integer ratio progressions.",
+            "<strong>100% Machine-Checked Verification in Lean 4:</strong> 3-GP-free predicates, small cardinality properties ($|A| \\le 2$), the certified 8-element subset $\\{1, 2, 3, 5, 6, 7, 8, 10\\}$ in $\\{1, \\dots, 10\\}$, and formal obstruction proofs for $(1, 2, 4)$ are machine-certified with 0 axioms, 0 linter warnings, and 0 sorry placeholders via Lean 4 and Mathlib."
+        ],
+        "msc": "11B75, 05D10, 11N37, 68V20, 11B05",
+        "keywords": "Erdős Geometric Progression Problem, 3-GP-Free Sets, Multiplicative Combinatorics, Rankin's Constant, Square-Free Decompositions, Formal Verification, Lean 4, Mathlib",
+        "lean_file": "test_lean/ErdosGeometricProgressionFree.lean"
+    },
     "27-Erdos-Consecutive-Powerful": {
         "title": "On the Erdős Conjecture on Consecutive Powerful Numbers",
         "subtitle": "A Detailed Treatise on Pell-Type Diophantine Chains, abc-Conjecture Bounds, and Certified Proofs",

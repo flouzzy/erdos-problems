@@ -59,6 +59,7 @@ jobs:
           lake env lean ErdosCoveringSystems.lean
           lake env lean ErdosOddEgyptianFractions.lean
           lake env lean ErdosDivisorGaps.lean
+          lake env lean ErdosSidonSets.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

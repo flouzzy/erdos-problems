@@ -1,0 +1,150 @@
+import os
+
+def generate_english_latex():
+    latex_content = r"""\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{On the Erd\H{o}s-Sierpi\'nski Conjecture: Algebraic Analysis and Modular Decomposition}
+\author{Charles EDOU NZE}
+\date{\today}
+
+\lstdefinelanguage{lean}{
+  keywords={import, def, theorem, lemma, by, admit, Prop, Nat, open, section, Exists, fun, Set, Finset, Real, Filter, Topology},
+  sensitive=true,
+  comment=[l]--
+}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{abstract}
+This document formally addresses the Erd\H{o}s-Sierpi\'nski conjecture, which asserts that for all integers $n \ge 2$, the equation $\frac{5}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$ possesses positive integer solutions $x, y, z$. The structure encompasses strict axiomatic definitions, a review of pertinent literature focusing on modular sieves and divisor parametrization, a decomposition into congruence classes modulo $5$ and $4$, and detailed derivations covering these classes. A formal architecture in Lean 4 is subsequently outlined.
+\vfill
+\noindent \textit{Charles EDOU NZE, chercheur ind\'ependant}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Axiomatic Definitions}
+
+\begin{definition}
+Let $n \in \mathbb{N}$ with $n \ge 2$. A positive integer triplet $(x, y, z) \in (\mathbb{N}_{>0})^3$ is defined as a solution to the Erd\H{o}s-Sierpi\'nski Diophantine equation if it satisfies:
+\[ \frac{5}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z} \]
+\end{definition}
+
+\begin{definition}
+We define the predicate $\mathcal{E}(n)$ to be true if and only if there exists a solution triplet $(x, y, z) \in (\mathbb{N}_{>0})^3$ for a given integer $n \ge 2$.
+\end{definition}
+
+\section{Contextual Literature}
+
+The Erd\H{o}s-Sierpi\'nski conjecture formulates a fundamental question concerning the representation of rational numbers as sums of unit fractions, generalizing the well-known Erd\H{o}s-Straus equation $\frac{4}{n} = \frac{1}{x} + \frac{1}{y} + \frac{1}{z}$. Significant advances have relied on analyzing the equation via modular arithmetic. Approaches involving modular sieves have empirically verified the conjecture up to massive bounds. Theoretical studies extensively employ divisor parametrizations and polynomial identities, similar to the methods of Webb and others. A prominent analytic result establishes that the number of solutions is bounded poly-logarithmically on average. The methodology developed herein leverages these polynomial identities parameterized by specific congruence classes.
+
+\section{Lemma Isolation and Zero-Ellipse Proofs}
+
+The reduction of the conjecture to prime values $n = p$ is standard, as a solution for a prime factor $p$ can be extended to composite numbers via scalar multiplication. We establish specific lemmas for distinct congruence classes.
+
+\begin{lemma}
+For any integer $k \ge 0$, if $n = 5k + 4$, then $\mathcal{E}(n)$ holds.
+\end{lemma}
+
+\begin{proof}
+Let $n = 5k + 4$ for $k \in \mathbb{N}$. We consider the rational function expansion of $\frac{5}{5k+4}$. We define the triplet of variables $(x, y, z)$ as follows:
+\[ x = k + 1 \]
+\[ y = 2(5k+4)(k+1) \]
+\[ z = 2(5k+4)(k+1) \]
+We evaluate the sum of the reciprocal unit fractions corresponding to this assignment:
+\[ \frac{1}{x} + \frac{1}{y} + \frac{1}{z} = \frac{1}{k+1} + \frac{1}{2(5k+4)(k+1)} + \frac{1}{2(5k+4)(k+1)} \]
+Since the second and third fractions are identical, we sum them:
+\[ \frac{1}{2(5k+4)(k+1)} + \frac{1}{2(5k+4)(k+1)} = \frac{2}{2(5k+4)(k+1)} = \frac{1}{(5k+4)(k+1)} \]
+Substituting this back into the original sum:
+\[ \frac{1}{k+1} + \frac{1}{(5k+4)(k+1)} \]
+To combine these fractions, we identify a common denominator, which is $(5k+4)(k+1)$. We multiply the numerator and denominator of the first fraction by $(5k+4)$:
+\[ \frac{5k+4}{(5k+4)(k+1)} + \frac{1}{(5k+4)(k+1)} = \frac{5k+5}{(5k+4)(k+1)} \]
+We factor the numerator as $5(k+1)$:
+\[ \frac{5(k+1)}{(5k+4)(k+1)} \]
+Since $k \ge 0$, the term $(k+1)$ is non-zero, allowing us to cancel it from the numerator and denominator:
+\[ \frac{5}{5k+4} = \frac{5}{n} \]
+This demonstrates that $x = k+1$, $y = 2(5k+4)(k+1)$, and $z = 2(5k+4)(k+1)$ constitute a valid integer triplet solution for $n = 5k+4$. Since $k \ge 0$, all denominators are strictly positive integers.
+\end{proof}
+
+\begin{lemma}
+For any integer $k \ge 1$, if $n = 4k + 3$, then $\mathcal{E}(n)$ holds.
+\end{lemma}
+
+\begin{proof}
+Let $n = 4k + 3$ for $k \in \mathbb{N}_{>0}$.
+We define $x = k+1$.
+The difference is evaluated as:
+\[ \frac{5}{4k+3} - \frac{1}{k+1} = \frac{5(k+1) - (4k+3)}{(4k+3)(k+1)} = \frac{5k+5-4k-3}{(4k+3)(k+1)} = \frac{k+2}{(4k+3)(k+1)} \]
+We require $\frac{k+2}{(4k+3)(k+1)}$ to be represented as $\frac{1}{y} + \frac{1}{z}$.
+We use the algebraic identity $\frac{A+B}{C} = \frac{A}{C} + \frac{B}{C}$. Let $A = k+1$ and $B = 1$. Then $A+B = k+2$.
+\[ \frac{k+2}{(4k+3)(k+1)} = \frac{k+1}{(4k+3)(k+1)} + \frac{1}{(4k+3)(k+1)} \]
+Simplifying the first fraction by canceling the common factor $(k+1)$:
+\[ \frac{k+1}{(4k+3)(k+1)} = \frac{1}{4k+3} \]
+Thus, the difference decomposes exactly into two unit fractions:
+\[ \frac{1}{4k+3} + \frac{1}{(4k+3)(k+1)} \]
+We assign $y = 4k+3$ and $z = (4k+3)(k+1)$. Since $k \ge 1$, $x=k+1$, $y=4k+3$, and $z=(4k+3)(k+1)$ are all strictly positive integers.
+The full identity is:
+\[ \frac{5}{4k+3} = \frac{1}{k+1} + \frac{1}{4k+3} + \frac{1}{(4k+3)(k+1)} \]
+This concludes the proof for this congruence class.
+\end{proof}
+
+\section{Architecture for Autoformalization}
+The formal verification of the aforementioned lemmas can be implemented in Lean 4. The foundational types are specified as follows:
+
+The following definitions and types present a structure for translating the problem and established modular identities into Lean 4.
+
+\begin{lstlisting}[language=lean, basicstyle=\ttfamily\small, breaklines=true]
+import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Rat.Basic
+
+open Nat
+
+-- Axiomatic definition of the Erd\H{o}s-Sierpi\'nski property for an integer n
+def SatisfiesErdosSierpinski (n : Nat) : Prop :=
+  Exists (fun x => Exists (fun y => Exists (fun z =>
+    x > 0 /\ y > 0 /\ z > 0 /\
+    (5 : Rat) / n = (1 : Rat) / x + (1 : Rat) / y + (1 : Rat) / z)))
+
+-- Lemma for the congruence class n = 5k + 4
+lemma erdos_sierpinski_mod_5_4 (k : Nat) : SatisfiesErdosSierpinski (5 * k + 4) := by
+  admit
+
+-- Lemma for the congruence class n = 4k + 3
+lemma erdos_sierpinski_mod_4_3 (k : Nat) (hk : k >= 1) : SatisfiesErdosSierpinski (4 * k + 3) := by
+  admit
+
+-- General statement of the Erd\H{o}s-Sierpi\'nski conjecture
+theorem erdos_sierpinski_conjecture (n : Nat) (hn : n >= 2) : SatisfiesErdosSierpinski n := by
+  admit
+\end{lstlisting}
+
+\section*{References}
+\begin{itemize}
+    \item Webb, W. A. (1970). \textit{On $4/n = 1/x + 1/y + 1/z$}. Proceedings of the American Mathematical Society, 25(3), 578-584.
+    \item Vaughan, R. C. (1970). \textit{On a problem of Erd\H{o}s, Straus and Schinzel}. Mathematika, 17(2), 193-198.
+    \item Sierpi\'nski, W. (1956). \textit{Sur les d\'ecompositions de nombres rationnels en fractions primaires}. Mathesis, 65, 16-32.
+\end{itemize}
+
+\end{document}
+"""
+    with open("proof.tex", "w", encoding="utf-8") as f:
+        f.write(latex_content)
+    print("Generated proof.tex")
+
+if __name__ == "__main__":
+    generate_english_latex()

@@ -196,43 +196,44 @@ open Finset SimpleGraph
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-def is_clique_set (G : SimpleGraph V) [DecidableRel G.Adj] (S : Finset V) : Prop :=
+def is_clique_set (G : SimpleGraph V) (S : Finset V) : Prop :=
   ∀ u v, u ∈ S → v ∈ S → u ≠ v → G.Adj u v
 
-def is_indep_set (G : SimpleGraph V) [DecidableRel G.Adj] (S : Finset V) : Prop :=
+def is_indep_set (G : SimpleGraph V) (S : Finset V) : Prop :=
   ∀ u v, u ∈ S → v ∈ S → u ≠ v → ¬ G.Adj u v
 
-noncomputable def clique_num (G : SimpleGraph V) [DecidableRel G.Adj] : ℕ :=
+noncomputable def clique_num (G : SimpleGraph V) : ℕ :=
   Finset.sup (Finset.univ.filter (fun S => is_clique_set G S)) Finset.card
 
-noncomputable def indep_num (G : SimpleGraph V) [DecidableRel G.Adj] : ℕ :=
+noncomputable def indep_num (G : SimpleGraph V) : ℕ :=
   Finset.sup (Finset.univ.filter (fun S => is_indep_set G S)) Finset.card
 
-noncomputable def hom_num (G : SimpleGraph V) [DecidableRel G.Adj] : ℕ :=
+noncomputable def hom_num (G : SimpleGraph V) : ℕ :=
   max (clique_num G) (indep_num G)
 
-theorem clique_in_compl_iff (G : SimpleGraph V) [DecidableRel G.Adj] (S : Finset V) :
+theorem clique_in_compl_iff (G : SimpleGraph V) (S : Finset V) :
     is_clique_set Gᶜ S ↔ is_indep_set G S := by
   unfold is_clique_set is_indep_set
   constructor
   · intro h u v hu hv hne
     have h_adj := h u v hu hv hne
-    simp only [compl_adj, hne, not_true_eq_false, false_or] at h_adj
-    exact h_adj
+    rw [compl_adj] at h_adj
+    exact h_adj.2
   · intro h u v hu hv hne
-    have h_nadj := h u v hu hv hne
-    simp only [compl_adj, hne, not_true_eq_false, false_or]
-    exact h_nadj
+    rw [compl_adj]
+    exact ⟨hne, h u v hu hv hne⟩
 
 theorem complete_graph_is_clique (V : Type*) [Fintype V] [DecidableEq V] :
     is_clique_set (⊤ : SimpleGraph V) (Finset.univ : Finset V) := by
   intro u v hu hv hne
-  simp only [top_adj, hne, not_false_eq_true]
+  rw [top_adj]
+  exact hne
 
 theorem empty_graph_is_indep (V : Type*) [Fintype V] [DecidableEq V] :
     is_indep_set (⊥ : SimpleGraph V) (Finset.univ : Finset V) := by
   intro u v hu hv hne
-  simp only [bot_adj, not_false_eq_true]
+  rw [bot_adj]
+  exact not_false
 
 theorem complete_graph_hom_ge :
     hom_num (⊤ : SimpleGraph V) ≥ Fintype.card V := by

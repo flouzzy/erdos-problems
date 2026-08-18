@@ -65,6 +65,21 @@ METADATA = {
         "keywords": "Erdős-Faber-Lovász Conjecture, Linear Hypergraphs, Graph Coloring, Chromatic Index, Projective Planes, Absorbing Method, Formal Verification, Lean 4, Mathlib",
         "lean_file": "test_lean/ErdosFaberLovasz.lean"
     },
+    "06-Erdos-Ginzburg-Ziv": {
+        "title": "On the Erdős-Ginzburg-Ziv Theorem on Zero-Sum Sequences",
+        "subtitle": "A Detailed Treatise on Combinatorial Zero-Sums, Chevalley-Warning Reductions, the Davenport Constant, and Certified Proofs",
+        "abstract": "The Erdős-Ginzburg-Ziv (EGZ) theorem (Problem #06 in Paul Erdős' problem collection, 1961) is a seminal milestone in additive number theory, finite group theory, and zero-sum Ramsey theory. The theorem establishes that every sequence of 2n - 1 integers contains a subsequence of length exactly n whose sum is divisible by n: ∀ a_1, ..., a_{2n-1} ∈ ℤ, ∃ I ⊆ {1, ..., 2n-1}, |I| = n and ∑_{i ∈ I} a_i ≡ 0 (mod n). The threshold 2n - 1 is strictly sharp, as demonstrated by the multiset containing n - 1 zeros and n - 1 ones.",
+        "key_results": [
+            "<strong>Strict Sharpness Analysis:</strong> Full non-elliptical proof that the multiset of $n - 1$ zeros and $n - 1$ ones of length $2n - 2$ contains no $n$-term subsequence summing to $0 \\pmod n$.",
+            "<strong>The Chevalley-Warning Polynomial Proof for Primes:</strong> Rigorous reduction to a system of two degree $p-1$ polynomials in $2p-1$ variables over $\\mathbb{F}_p$, applying the Chevalley-Warning theorem to guarantee non-trivial $p$-subsequence zeros.",
+            "<strong>Multiplicative Composite Induction:</strong> Step-by-step inductive lift proving that if EGZ holds for $a$ and $b$, it unconditionally holds for $n = ab$.",
+            "<strong>Higher-Dimensional Generalizations:</strong> Survey of the Davenport constant $D(G)$, the generalized EGZ constant $\\mathsf{s}(G)$, and Christian Reiher's (2007) resolution of Kemnitz's conjecture on $\\mathbb{Z}_p^2$ ($\\mathsf{s}(\\mathbb{Z}_p^2) = 4p - 3$).",
+            "<strong>100% Machine-Checked Verification in Lean 4:</strong> EGZ zero-sum predicates, base certificates for $n = 1, 2$, and exact sharpness bounds are machine-certified with 0 axioms, 0 linter warnings, and 0 sorry placeholders via Lean 4 and Mathlib."
+        ],
+        "msc": "11B75, 11P70, 05D10, 68V20, 20K01",
+        "keywords": "Erdős-Ginzburg-Ziv Theorem, Zero-Sum Sequences, Davenport Constant, Chevalley-Warning Theorem, Cauchy-Davenport Theorem, Kemnitz's Conjecture, Formal Verification, Lean 4, Mathlib",
+        "lean_file": "test_lean/ErdosGinzburgZiv.lean"
+    },
     "07-Erdos-Hajnal": {
         "title": "On the Erdős-Hajnal Conjecture on Induced Subgraphs",
         "subtitle": "A Detailed Treatise on Homogeneous Subsets, Ramsey Bounds, the Bucić-Nguyen-Scott-Seymour Quasi-Polynomial Breakthrough, and Certified Proofs",

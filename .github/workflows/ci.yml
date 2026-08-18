@@ -50,6 +50,7 @@ jobs:
           lake env lean ErdosCentralBinomialSquareFree.lean
           lake env lean ErdosReciprocalSumsAPFree.lean
           lake env lean ErdosCameronSumFree.lean
+          lake env lean ErdosGinzburgZiv.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

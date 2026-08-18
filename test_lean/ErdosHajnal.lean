@@ -20,6 +20,7 @@ In this file, we formally certify:
 
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
 
 open scoped Classical
 open Finset SimpleGraph
@@ -82,7 +83,8 @@ theorem complete_graph_hom_ge :
     have h_mem : (Finset.univ : Finset V) ∈ Finset.univ.filter (fun S => is_clique_set (⊤ : SimpleGraph V) S) := by
       simp only [mem_filter, mem_univ, true_and]
       exact complete_graph_is_clique V
-    have h_le := Finset.le_sup h_mem
+    have h_le : (Finset.univ : Finset V).card ≤ (Finset.univ.filter (fun S => is_clique_set (⊤ : SimpleGraph V) S)).sup Finset.card :=
+      Finset.le_sup (f := Finset.card) h_mem
     rw [card_univ] at h_le
     exact h_le
   · exact le_max_left _ _

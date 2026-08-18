@@ -64,6 +64,7 @@ jobs:
           lake env lean ErdosDistinctSquareSums.lean
           lake env lean ErdosPrimeFactorsConsecutive.lean
           lake env lean RiemannRedhefferMertens.lean
+          lake env lean RiemannLiCriterion.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

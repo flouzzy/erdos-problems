@@ -56,6 +56,7 @@ jobs:
           lake env lean ErdosSquareFreeSumset.lean
           lake env lean ErdosPrimitiveAbundant.lean
           lake env lean ErdosRogersTriangleFree.lean
+          lake env lean ErdosCoveringSystems.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

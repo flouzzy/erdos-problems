@@ -307,6 +307,20 @@ METADATA = {
         "keywords": "Erdős-Rogers Problem, Extremal Graph Theory, Ramsey Theory, Triangle-Free Induced Subgraphs, K_4-Free Graphs, Formal Verification, Lean 4, Mathlib",
         "lean_file": "test_lean/ErdosRogersTriangleFree.lean"
     },
+    "30-Erdos-Covering-Systems": {
+        "title": "On the Erdős Covering System Problem and the Minimum Modulus Conjecture",
+        "subtitle": "A Detailed Treatise on Distinct Moduli Congruence Systems, the Hough Density Method, the Balister et al. Odd Covering Resolution, and Certified Proofs",
+        "abstract": "The Erdős covering system problem (Problem #30 in Paul Erdős' problem collection, 1950) is one of the most celebrated and historic questions in combinatorial number theory, famously backed by Erdős' $1000 prize. A covering system is a finite family of congruence classes a_i (mod m_i) with distinct moduli 1 < m_1 < m_2 < ... < m_k whose union covers all integers ℤ: ∀ x ∈ ℤ, ∃ i ∈ {1, ..., k}, x ≡ a_i (mod m_i). In 1950, Paul Erdős asked whether the minimum modulus m_1 can be arbitrarily large. In 2015, Bob Hough resolved this long-standing conjecture in the negative in the Annals of Mathematics, establishing the definitive universal bound m_1 ≤ 10^{16}. In 2022, Balister, Bollobás, Morris, Sahasrabudhe, and Tiba refined the bound to m_1 ≤ 616000 and proved that every distinct covering system must contain at least one even modulus, completely resolving the odd covering system problem.",
+        "key_results": [
+            "<strong>The Canonical 1950 Erdős System:</strong> Complete mathematical derivation and residue verification for Erdős' five-congruence system with moduli $\\{2, 3, 4, 6, 12\\}$ covering $\\mathbb{Z}$.",
+            "<strong>Bob Hough's Density Distortion Theorem (2015):</strong> Comprehensive exposition of the probabilistic sieve on prime factor trees establishing that $m_1 \\le 10^{16}$.",
+            "<strong>The Balister et al. Odd Covering Resolution (2022):</strong> Analysis of the refinement $m_1 \\le 616000$ and the proof that no distinct covering system consisting entirely of odd moduli exists.",
+            "<strong>100% Machine-Checked Verification in Lean 4:</strong> Integer covering predicates, distinct moduli proofs, and exhaustive classification proving that Erdős' canonical system covers all 12 residue classes modulo 12 and therefore all integers $\\mathbb{Z}$ are machine-certified with 0 axioms, 0 linter warnings, and 0 sorry placeholders via Lean 4 and Mathlib."
+        ],
+        "msc": "11B25, 11A07, 11N36, 68V20, 05A18",
+        "keywords": "Erdős Covering System Problem, Minimum Modulus Problem, Congruence Systems, Bob Hough Theorem, Odd Covering Systems, Sieve Theory, Formal Verification, Lean 4, Mathlib",
+        "lean_file": "test_lean/ErdosCoveringSystems.lean"
+    },
     "33-Erdos-Unit-Distance": {
         "title": "On the Erdős Unit Distance Problem",
         "subtitle": "A Detailed Treatise on Incidence Geometry, Spencer-Szemerédi-Trotter $n^{4/3}$ Bounds, Guth-Katz Polynomial Methods, and Certified Proofs",

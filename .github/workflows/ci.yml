@@ -51,6 +51,7 @@ jobs:
           lake env lean ErdosReciprocalSumsAPFree.lean
           lake env lean ErdosCameronSumFree.lean
           lake env lean ErdosGinzburgZiv.lean
+          lake env lean ErdosPrimeGapsOscillation.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

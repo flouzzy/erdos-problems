@@ -41,6 +41,7 @@ jobs:
           lake env lean ErdosSosTrees.lean
           lake env lean ErdosMatching.lean
           lake env lean ErdosUnitDistance.lean
+          lake env lean ErdosGyarfas.lean
 
   verify-latex:
     name: Verify LaTeX Preprints Compilation

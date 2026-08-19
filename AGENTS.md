@@ -33,6 +33,13 @@ Ce document régit les règles d'architecture, de rangement et de rigueur scient
 - **Certification Formelle Lean 4 à l'Appui (0 `sorry`, 0 axiome)** : Toute soumission doit être accompagnée de son fichier `.lean` compilant avec succès via le noyau Lean 4 et Mathlib, fournissant au comité d'évaluation une preuve informatique infaillible et reproductible.
 - **Titres Mathématiques Directs et Épurés** : Le titre principal d'un article dans `preprints/` doit être rigoureusement centré sur la conjecture ou le problème mathématique lui-même (ex. *"On the Erdős Conjecture on Consecutive Powerful Numbers"*), et non formulé sous forme de log technique d'informatique. La certification Lean 4 est précisée dans le sous-titre, l'abstract et la section dédiée.
 - **Interdiction de l'étiquetage méta de style** : Ne JAMAIS mentionner "style Terence Tao" ou "(style Terence Tao)" dans les titres, textes, READMEs ou communications. Le style rigoureux, didactique et non-elliptique doit être appliqué naturellement sans étiquetage superflu.
+- **Illustrations et Diagrammes Géométriques Pertinents (TikZ & tikz-cd)** : 
+  - Inclure systématiquement des schémas géométriques, diagrammes commutatifs (`tikz-cd`), arbres combinatoires ou graphes de cribles/densités lorsque cela éclaire la combinatoire ou l'arithmétique de la démonstration.
+  - Veiller à la robustesse syntaxique (ex. grouper par accolades `{...}` les étiquettes complexes dans `tikzcd` contenant des virgules ou symboles mathématiques).
+- **Conformité Stricte aux Standards de Publication Académique Pure (AMS / Annals of Mathematics)** :
+  - **Symbole de Halmos $\blacksquare$** : Utiliser impérativement `\renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}` pour marquer clairement la complétion de chaque démonstration en fin d'environnement `\begin{proof} ... \end{proof}`.
+  - **Proscription du Formatage et Vocabulaire Corporatif** : Ne JAMAIS inclure de « Tableau Récapitulatif Exécutif » ou de terminologie managériale/entreprise. Les résultats majeurs sont annoncés dans l'Introduction (*Section 1 : Introduction and Main Results*).
+  - **Section Conclusive Académique** : Intituler sobrement la dernière section *« Concluding Remarks and Open Problems »* (ou *« Perspectives and Open Directions »*) pour discuter des obstructions mathématiques fondamentales, des questions ouvertes et des horizons de formalisation interactive.
 - **Préparation Complète pour l'Évaluation par les Pairs** : Fournir systématiquement le PDF compilé via `pdflatex`, le code source `.tex`, le fichier de test `.lean`, ainsi que les métadonnées de dépôt (`presentation.md` avec classification MSC 2020 et abstract bilingue/anglais standard).
 
 ---

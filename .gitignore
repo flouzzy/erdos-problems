@@ -15,6 +15,9 @@ __pycache__/
 
 # Lean / Lake build artifacts
 .lake/
+**/.lake/
+test_lean/.lake/
+test_lean/TestLeanPkg/
 *.olean
 *.ilean
 *.c

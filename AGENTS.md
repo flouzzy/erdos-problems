@@ -19,9 +19,11 @@ Ce document régit les règles d'architecture, de rangement et de rigueur scient
 
 ---
 
-## 3. Standard de Preuve Formelle 100% Lean 4
+## 3. Standard de Preuve Formelle 100% Lean 4 & Règles Mathlib
 - Toute preuve affirmant une fiabilité de 100% doit être vérifiée sans exception par le compilateur Lean 4 (`lake env lean <fichier>.lean`) avec **0 `sorry`**, **0 erreur**, **0 avertissement** et **0 axiome ad hoc**.
-- Chaque article associé dans `preprints/` doit être rigoureusement documenté en anglais (style arXiv) et compilé en PDF avec `pdflatex`.
+- **Arithmétique rationnelle (`ℚ` / `Rat`)** : Utiliser impérativement `norm_num` (ou `ring`) pour toute égalité ou inégalité sur `ℚ`, car `decide` échoue à réduire le type `Decidable` des rationnels dans le noyau Lean 4.
+- **Structures d'opérateurs polynomiaux** : Utiliser `[CommRing R]` avec la tactique `ring` pour les calculs dans les sous-anneaux polynomiaux, ou `noncomm_ring` dans le cadre non-commutatif.
+- **Racines de monômes & puissances** : Utiliser `by_contra` et `pow_ne_zero d hx` pour démontrer l'unicité des racines non nulles dans un anneau intègre.
 
 ---
 
@@ -29,5 +31,11 @@ Ce document régit les règles d'architecture, de rangement et de rigueur scient
 - **Titres Mathématiques Directs et Épurés** : Le titre principal d'un article dans `preprints/` doit être rigoureusement centré sur la conjecture ou le problème mathématique lui-même (ex. *"On the Erdős Conjecture on Consecutive Powerful Numbers"*), et non formulé sous forme de log technique d'informatique. La certification Lean 4 est précisée dans le sous-titre, l'abstract et la section dédiée.
 - **Démonstrations Intégrales sans Ellipse** : Chaque lemme, corollaire et théorème doit être démontré étape par étape, sans raccourci ni omission calculatoire.
 - **Profondeur & Pédagogie Monographique** : Les manuscrits doivent adopter une structure riche et didactique (table des matières, contexte historique, exemples numériques détaillés, liens avec les grandes conjectures contemporaines telles que l'hypothèse $abc$ ou le théorème de Szemerédi-Trotter).
-- **Métadonnées de Publication (Zenodo / arXiv)** : Pour toute soumission externe, préparer des résumés structurés en HTML riche avec équations LaTeX/MathJax, garanties de vérification formelle (0 `sorry`), classification MSC et références bibliographiques complètes.
+- **Métadonnées de Publication (Zenodo / arXiv)** : Pour toute soumission externe, préparer des résumés structurés en HTML riche et Markdown avec équations LaTeX/MathJax, garanties de vérification formelle (0 `sorry`), classification MSC et références bibliographiques complètes (`scripts/generate_zenodo_descriptions.py`).
+
+---
+
+## 5. Gestion Disque & Cache `.lake` Partagé
+- **Liaison symbolique multi-dépôt** : Partager le cache `.lake` (~8 Go) entre dépôts via lien symbolique (`ln -s ...`) pour préserver l'espace disque du serveur.
+- **`.gitignore`** : Toujours ignorer `.lake` et `test_lean/.lake` sans slash final pour éviter que Git ne suive les liens symboliques.
 

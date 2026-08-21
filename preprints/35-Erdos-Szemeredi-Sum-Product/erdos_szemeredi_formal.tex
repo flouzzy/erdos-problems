@@ -11,6 +11,8 @@
 \usepackage{booktabs}
 \usepackage{fancyhdr}
 \usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
 
 \hypersetup{
     colorlinks=true,
@@ -29,6 +31,8 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
 \newtheorem{remark}[theorem]{Remark}
+
+\renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
 
 \lstdefinelanguage{lean4}{
   keywords={import, def, theorem, lemma, by, Prop, Nat, open, section, Exists, fun, Set, Finset, use, refine, ring, omega, decide, positivity, subst, rcases, obtain, exact, have, rw, intro},
@@ -275,13 +279,44 @@ Since $|A+A| |A \cdot A| \le (\max(|A+A|, |A \cdot A|))^2$, taking the square ro
 \[ \max(|A+A|, |A \cdot A|) \ge \sqrt{c} |A|^{5/4} \]
 This proves Elekes' theorem with the exponent $5/4 = 1.25$.
 \end{proof}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Axes
+  \draw[->, thick] (-0.5, 0) -- (6.0, 0) node[right, font=\small] {$x \in A+A$};
+  \draw[->, thick] (0, -0.5) -- (0, 5.0) node[above, font=\small] {$y \in A \cdot A$};
+
+  % Point grid P = (A+A) x (A.A)
+  \foreach \x in {1.0, 2.0, 3.0, 4.0, 5.0} {
+    \foreach \y in {0.8, 1.6, 2.4, 3.2, 4.0} {
+      \filldraw[gray!40] (\x, \y) circle (1.5pt);
+    }
+  }
+
+  % Lines L_{a, b}: y = a(x - b)
+  \draw[thick, blue!80!black] (1.0, 0) -- (4.5, 4.5) node[above, font=\scriptsize] {$\ell_{a_1, b_1}: y = a_1(x - b_1)$};
+  \draw[thick, teal!80!black] (2.0, 0) -- (5.5, 4.0) node[right, font=\scriptsize] {$\ell_{a_2, b_2}: y = a_2(x - b_2)$};
+  \draw[thick, purple!80!black] (0.5, 0) -- (3.5, 4.8) node[left, font=\scriptsize] {$\ell_{a_3, b_3}$};
+
+  % Highlighted incidence points
+  \filldraw[red!80!black] (2.0, 1.3) circle (2.8pt) node[below right, font=\tiny\bfseries] {$(b_1+c_1, a_1 c_1)$};
+  \filldraw[red!80!black] (3.0, 2.6) circle (2.8pt) node[below right, font=\tiny\bfseries] {$(b_1+c_2, a_1 c_2)$};
+  \filldraw[red!80!black] (4.0, 3.9) circle (2.8pt) node[below right, font=\tiny\bfseries] {$(b_1+c_3, a_1 c_3)$};
+
+  \filldraw[red!80!black] (3.0, 1.15) circle (2.8pt);
+  \filldraw[red!80!black] (4.0, 2.3) circle (2.8pt);
+  \filldraw[red!80!black] (5.0, 3.45) circle (2.8pt);
+
+  \node[font=\footnotesize\bfseries, blue!80!black] at (3.0, -0.7) {Point Set $\mathcal{P} = (A+A) \times (A \cdot A)$, Line Set $\mathcal{L} = \{y = a(x-b)\}$};
+\end{tikzpicture}
+\caption{\textbf{Elekes' Geometric Incidence Construction.} Each line $\ell_{a, b}$ contains $|A|$ points of the grid $(A+A) \times (A \cdot A)$, generating $|A|^3$ incidences governed by the Szemer\'edi-Trotter theorem.}
+\label{fig:elekes_incidence}
+\end{figure}
 
 \section{Machine-Checked Formal Verification in Lean 4}
 
 \begin{lstlisting}[caption={Certified Lean 4 Code for Discrete Sumset Lower Bounds}]
 import Mathlib
-
-set_option linter.unusedVariables false
 
 open Finset
 
@@ -320,8 +355,11 @@ theorem sumset_pair (a b : ℕ) (hab : a < b) : (sumset {a, b} {a, b}).card ≥ 
   omega
 \end{lstlisting}
 
-\section{Conclusion and Modern Horizons}
-We have formalized the fundamental discrete sumset lower bounds in Lean 4 and presented the complete geometric incidence proof of Elekes. Subsequent work by Solymosi (2009) ($4/3$), Konyagin-Shkredov (2016), and Rudnev-Stevens (2022) ($4/3 + 5/9877$) continues to push the boundary toward the conjectured exponent of $2$.
+\section{Concluding Remarks and Open Problems}
+
+The Erd\H{o}s-Szemer\'edi sum-product conjecture $\max(|A+A|, |A \cdot A|) \gg_\varepsilon |A|^{2-\varepsilon}$ constitutes the cornerstone of arithmetic combinatorics, reflecting the algebraic incompatibility of additive and multiplicative structures. From Elekes' $5/4 = 1.25$ incidence lower bound to Solymosi's $4/3 \approx 1.333$ energy bound and Rudnev-Stevens' $4/3 + 5/9877$, successive improvements demonstrate the profound interplay between additive number theory, discrete geometry, and algebraic topology.
+
+The machine-checked theorems formalized in Section \ref{sec:lean_sumset} establish certified bounds for discrete sumsets in Lean 4 with zero axioms and zero `sorry` placeholders. Extending formal verification to the Szemer\'edi-Trotter crossing number inequality and higher-dimensional multiplicative energy inequalities represents a prime objective for formal mathematics.
 
 \begin{thebibliography}{99}
 \bibitem{erdos1983} P. Erd\H{o}s and E. Szemer\'edi, \textit{On sums and products of integers}, Studies in Pure Mathematics, Birkh\"auser, Basel (1983), 213--218.

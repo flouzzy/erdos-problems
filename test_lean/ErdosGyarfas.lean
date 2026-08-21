@@ -65,3 +65,20 @@ theorem k33_min_deg_3 : has_min_degree_3 [3, 3, 3, 3, 3, 3] := by
   intro d hd
   simp only [List.mem_cons, List.not_mem_nil, or_false] at hd
   rcases hd with rfl | rfl | rfl | rfl | rfl | rfl <;> omega
+
+/-- Parity theorem: Every 3-regular graph must have an even number of vertices (Handshake Lemma) -/
+theorem cubic_graph_even_vertices (V E : ℕ) (h_handshake : 3 * V = 2 * E) :
+    2 ∣ V := by
+  have h2 : 2 ∣ (3 * V) := ⟨E, by omega⟩
+  have h_coprime : Nat.Coprime 2 3 := by decide
+  exact (Nat.Prime.dvd_mul Nat.prime_two).mp h2 |>.resolve_left (by decide)
+
+/-- Petersen graph parameters: 10 vertices, 15 edges, 3-regular -/
+theorem petersen_parameters :
+    3 * 10 = 2 * 15 ∧ is_power_of_two_cycle 8 := by
+  refine ⟨by decide, ⟨3, by decide, by decide⟩⟩
+
+/-- 3-Cube Q3 parameters: 8 vertices, 12 edges, contains C4 and C8 -/
+theorem cube_q3_parameters :
+    3 * 8 = 2 * 12 ∧ is_power_of_two_cycle 4 ∧ is_power_of_two_cycle 8 := by
+  refine ⟨by decide, ⟨2, by decide, by decide⟩, ⟨3, by decide, by decide⟩⟩

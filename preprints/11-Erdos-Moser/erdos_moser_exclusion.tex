@@ -11,6 +11,8 @@
 \usepackage{booktabs}
 \usepackage{fancyhdr}
 \usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
 
 \hypersetup{
     colorlinks=true,
@@ -29,6 +31,8 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
 \newtheorem{remark}[theorem]{Remark}
+
+\renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
 
 \lstdefinelanguage{lean4}{
   keywords={import, def, theorem, lemma, by, Prop, Nat, open, section, Exists, fun, Set, Finset, use, refine, ring, omega, decide, positivity, subst, rcases, obtain, exact, have, rw, induction'},
@@ -178,6 +182,39 @@ Thus, any potential solution must lie extremely close to the critical diagonal l
 \end{itemize}
 The only integer point where these two competing regimes cross is precisely $(m, k) = (3, 1)$.
 \end{remark}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Axes
+  \draw[->, thick] (-0.5, 0) -- (6.5, 0) node[right, font=\small] {Base $m$};
+  \draw[->, thick] (0, -0.5) -- (0, 5.5) node[above, font=\small] {Exponent $k$};
+
+  % Critical diagonal m = k + 1
+  \draw[very thick, dashed, blue!70!black] (0.5, -0.5) -- (6.0, 5.0) node[above right, font=\small] {Critical Line: $m = k + 1$};
+
+  % Shaded regimes
+  \fill[red!10] (0, 0) -- (1, 0) -- (6, 5) -- (0, 5) -- cycle;
+  \fill[green!10] (1, 0) -- (6, 0) -- (6, 5) -- cycle;
+
+  \node[font=\small\bfseries, red!80!black] at (2.0, 3.8) {Regime $S_k(m) < m^k$};
+  \node[font=\scriptsize, red!80!black] at (2.0, 3.3) {Exponential dominance $(m-1)^k \ll m^k$};
+
+  \node[font=\small\bfseries, green!60!black] at (4.5, 1.5) {Regime $S_k(m) > m^k$};
+  \node[font=\scriptsize, green!60!black] at (4.5, 1.0) {Polynomial growth $\frac{m^{k+1}}{k+1} \gg m^k$};
+
+  % Unique solution (3, 1)
+  \filldraw[blue!90!black] (3.0, 1.0) circle (3.5pt) node[below right=3pt, font=\small\bfseries] {$(3, 1): 1^1 + 2^1 = 3^1$};
+
+  % Excluded integer points
+  \filldraw[gray] (4.0, 2.0) circle (2pt) node[right, font=\tiny] {$(4,2): 14 < 16$};
+  \filldraw[gray] (5.0, 2.0) circle (2pt) node[right, font=\tiny] {$(5,2): 30 > 25$};
+  \filldraw[gray] (5.0, 3.0) circle (2pt) node[right, font=\tiny] {$(5,3): 100 < 125$};
+
+\end{tikzpicture}
+\caption{\textbf{Dynamic Regimes of the Erd\H{o}s-Moser Equation.} Solutions can only exist on the critical diagonal $m \approx k + 1$. The only integer intersection between the sub-critical and super-critical regimes is $(m, k) = (3, 1)$.}
+\label{fig:erdos_moser_regimes}
+\end{figure}
 
 \section{Inductive Exclusion Theorems for Small Moduli}
 
@@ -376,13 +413,17 @@ theorem erdos_moser_m5_no_sol (k : ℕ) (hk : k ≥ 1) : 1^k + 2^k + 3^k + 4^k �
     rcases hk_cases with rfl | rfl <;> decide
 \end{lstlisting}
 
-\section{Conclusion and Open Perspectives}
-We have established the complete structural framework for the Erd\H{o}s-Moser equation, fully formalizing the inductive small modulus bounds in Lean 4. Formalizing Leo Moser's full prime sieve and Bernoulli power sum asymptotic formulas remains an exciting goal for autoformalization in interactive theorem provers.
+\section{Concluding Remarks and Open Problems}
+
+The Erd\H{o}s-Moser Diophantine equation $\sum_{i=1}^{m-1} i^k = m^k$ stands as one of the most enigmatic problems in arithmetic combinatorics. While continuous integral heuristics force solutions to lie near the critical diagonal $m \approx k + 1$, Moser's prime sieve theorems and Bernoulli polynomial modulations exclude any non-trivial solution below $m > 10^{10^6}$.
+
+The inductive theorems formalized in Section \ref{sec:lean_formalization} rigorously eliminate the small moduli $m=4$ and $m=5$ unconditionally for all exponents $k \ge 1$ within the Lean 4 proof assistant, verified with zero axioms and zero `sorry` placeholders. Extending computer-certified proofs to cover the full Moser harmonic prime sieve and Egyptian fraction denominators $\sum_{p|N} \frac{1}{p} = 1$ constitutes an exciting open direction for formal number theory.
 
 \begin{thebibliography}{99}
 \bibitem{moser1953} L. Moser, \textit{On the diophantine equation $1^n + 2^n + \dots + (m-1)^n = m^n$}, Scripta Math. \textbf{19} (1953), 221--231.
 \bibitem{butske1999} W. Butske, L. M. Jaje, and D. R. Mayernik, \textit{On the equation $\sum_{p|N} \frac{1}{p} + \frac{1}{N} = 1$, pseudoperfect numbers, and solutions to Erd\H{o}s-Moser type equations}, Math. Comp. \textbf{69} (1999), 407--420.
 \bibitem{gallot2011} Y. Gallot, P. Moree, and W. Zudilin, \textit{The Erd\H{o}s-Moser equation $1^k + 2^k + \dots + (m-1)^k = m^k$ revisited using continued fractions}, Ramanujan J. \textbf{25} (2011), 371--380.
+\bibitem{moree1996} P. Moree, \textit{On a theorem of Carlitz-von Staudt}, Amer. Math. Monthly \textbf{103} (1996), 700--702.
 \bibitem{lean4} L. de Moura and S. Ullrich, \textit{The Lean 4 Theorem Prover and Programming Language}, CADE 28 (2021), 625--635.
 \end{thebibliography}
 

@@ -1,0 +1,38 @@
+name: Auto Merge Pull Requests
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to auto-merge'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-automerge:
+    name: Auto-merge Pull Request
+    runs-on: ubuntu-latest
+    if: github.actor == 'charlesen' || github.actor == 'flouzzy' || endsWith(github.actor, '[bot]')
+    steps:
+      - name: Auto-merge Pull Request via GitHub CLI
+        run: |
+          PR_NUM="${{ github.event.pull_request.number || github.event.inputs.pr_number }}"
+          if [ -z "$PR_NUM" ]; then
+            echo "No PR number provided. Checking open PRs..."
+            OPEN_PRS=$(gh pr list --state open --json number -q '.[].number')
+            for pr in $OPEN_PRS; do
+              echo "Auto-merging PR #$pr..."
+              gh pr merge "$pr" --merge --auto || gh pr merge "$pr" --merge --admin || gh pr merge "$pr" --merge || true
+            done
+          else
+            echo "Auto-merging PR #$PR_NUM..."
+            gh pr merge "$PR_NUM" --merge --auto || gh pr merge "$PR_NUM" --merge --admin || gh pr merge "$PR_NUM" --merge || true
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
